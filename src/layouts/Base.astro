@@ -34,6 +34,9 @@ const alternates = langs.map((l) => ({
   hreflang: l,
   href: new URL(switchPath(Astro.url.pathname, l), Astro.site ?? site.url).href,
 }));
+// Vercel Web Analytics: the script is served by Vercel itself, so only add it
+// to builds that run there (it would 404 on other hosts).
+const onVercel = process.env.VERCEL === '1';
 const ogImage = new URL(image, Astro.site ?? site.url).href;
 
 // Markets we target in search: the UAE first, then the wider GCC.
@@ -144,6 +147,7 @@ const breadcrumbSchema = title && {
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     {breadcrumbSchema && !noindex && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
+    {onVercel && <script is:inline defer src="/_vercel/insights/script.js"></script>}
     <slot name="head" />
   </head>
   <body>
