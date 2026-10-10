@@ -41,7 +41,7 @@ import { process, projects, values } from '../data/site';
         </div>
       </div>
       <div class="showcases">
-        {projects.slice(0, 2).map((p, i) => <ProjectShowcase project={p} index={i} />)}
+        {projects.filter((p) => p.featured).map((p, i) => <ProjectShowcase project={p} index={i} />)}
       </div>
     </div>
   </section>

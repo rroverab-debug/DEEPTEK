@@ -167,21 +167,130 @@ export const process = [
   },
 ] as const;
 
+export type WorkCategory = {
+  id: string;
+  title: string;
+  lead: string;
+};
+
+// Sections on the Work page, in display order.
+export const workCategories: WorkCategory[] = [
+  {
+    id: 'websites',
+    title: 'Websites for brands and businesses',
+    lead: 'Fast, bilingual, responsive websites that look right on every screen and turn visitors into enquiries.',
+  },
+  {
+    id: 'saas',
+    title: 'SaaS products',
+    lead: 'Subscription software designed, built and hosted for scale, from first prototype to paying customers.',
+  },
+  {
+    id: 'hr-operations',
+    title: 'HR and operations',
+    lead: 'Internal tools that take the paperwork out of hiring, onboarding, approvals and reporting.',
+  },
+  {
+    id: 'marketing',
+    title: 'Digital marketing campaigns',
+    lead: 'Search, social and paid campaigns planned around revenue and measured honestly.',
+  },
+  {
+    id: 'ai-it',
+    title: 'AI automation and IT',
+    lead: 'Reliable infrastructure and practical automation that save time every week.',
+  },
+];
+
 export type Project = {
   slug: string;
+  category: WorkCategory['id'];
+  featured?: boolean;
   title: string;
   sector: string;
   services: string[];
   summary: string;
   outcome: string;
-  scene: 'inbox' | 'fleet' | 'growth' | 'flow';
+  scene: 'website' | 'saas' | 'hr' | 'campaign' | 'inbox' | 'fleet' | 'growth' | 'flow';
 };
 
 // Sample engagements that illustrate the kind of work DeepTek does.
 // Replace with real client case studies (with permission) as projects launch.
 export const projects: Project[] = [
   {
+    slug: 'hospitality-website',
+    category: 'websites',
+    featured: true,
+    title: 'A bilingual brand website for a hospitality group',
+    sector: 'Hospitality',
+    services: ['Web', 'Branding'],
+    summary:
+      'Three restaurants and a café sharing an outdated site that was slow on phones and only in English.',
+    outcome:
+      'One responsive Arabic and English site with menus, locations and table booking, loading in under a second on mobile.',
+    scene: 'website',
+  },
+  {
+    slug: 'salon-saas',
+    category: 'saas',
+    featured: true,
+    title: 'Booking software for salons and spas',
+    sector: 'Beauty and wellness',
+    services: ['SaaS', 'Product design'],
+    summary:
+      'A founder with a salon booking idea, a list of interested owners and no product or technical team.',
+    outcome:
+      'A subscription platform with online booking, staff calendars, payments and reminders, launched in stages.',
+    scene: 'saas',
+  },
+  {
+    slug: 'hr-onboarding',
+    category: 'hr-operations',
+    title: 'Hiring and onboarding in one place',
+    sector: 'Retail',
+    services: ['HR systems', 'Automation'],
+    summary:
+      'A retailer hiring every month, tracking contracts, visas and equipment across email threads and spreadsheets.',
+    outcome:
+      'An onboarding portal with checklists, document tracking and leave approvals, so nothing is missed on day one.',
+    scene: 'hr',
+  },
+  {
+    slug: 'finance-reporting',
+    category: 'hr-operations',
+    title: 'Month-end reporting without the spreadsheets',
+    sector: 'Professional services',
+    services: ['AI Automation', 'Data'],
+    summary: 'A finance team spending three days a month copying figures between systems.',
+    outcome: 'Automated data collection and a live dashboard, with exceptions flagged for review.',
+    scene: 'flow',
+  },
+  {
+    slug: 'realestate-growth',
+    category: 'marketing',
+    title: 'Search-led growth for a property brokerage',
+    sector: 'Real estate',
+    services: ['Digital Marketing', 'Web'],
+    summary:
+      'A brokerage relying on listing portals, paying more each quarter for leads it did not own.',
+    outcome: 'A fast bilingual site, local SEO and tracked campaigns that bring enquiries directly.',
+    scene: 'growth',
+  },
+  {
+    slug: 'ramadan-campaign',
+    category: 'marketing',
+    title: 'A seasonal campaign for a retail brand',
+    sector: 'Retail and e-commerce',
+    services: ['Paid social', 'Content'],
+    summary:
+      'A fashion retailer whose seasonal promotions relied on discounts, with no clear view of which ads paid back.',
+    outcome:
+      'A planned Ramadan campaign across Meta and Google with bilingual creative, tracked from ad to sale.',
+    scene: 'campaign',
+  },
+  {
     slug: 'clinic-automation',
+    category: 'ai-it',
     title: 'Patient enquiries, answered in minutes',
     sector: 'Healthcare',
     services: ['AI Automation', 'Web'],
@@ -192,6 +301,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'trading-it',
+    category: 'ai-it',
     title: 'IT foundations for a growing trading company',
     sector: 'Trade and logistics',
     services: ['IT Solutions', 'Security'],
@@ -199,25 +309,6 @@ export const projects: Project[] = [
       'A team of forty working from shared passwords, personal email accounts and an unmanaged office network.',
     outcome: 'Managed devices, company accounts with multi-factor sign-in, daily backups and a documented setup.',
     scene: 'fleet',
-  },
-  {
-    slug: 'realestate-growth',
-    title: 'Search-led growth for a property brokerage',
-    sector: 'Real estate',
-    services: ['Digital Marketing', 'Web'],
-    summary:
-      'A brokerage relying on listing portals, paying more each quarter for leads it did not own.',
-    outcome: 'A fast bilingual site, local SEO and tracked campaigns that bring enquiries directly.',
-    scene: 'growth',
-  },
-  {
-    slug: 'finance-reporting',
-    title: 'Month-end reporting without the spreadsheets',
-    sector: 'Professional services',
-    services: ['AI Automation', 'Data'],
-    summary: 'A finance team spending three days a month copying figures between systems.',
-    outcome: 'Automated data collection and a live dashboard, with exceptions flagged for review.',
-    scene: 'flow',
   },
 ];
 

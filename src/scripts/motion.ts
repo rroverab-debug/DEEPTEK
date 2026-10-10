@@ -178,6 +178,8 @@ function scenes() {
               { clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power1.inOut' },
               pos,
             );
+          } else if (fx === 'grow-y') {
+            tl.from(el, { scaleY: 0, duration: 0.7, ease: 'power2.out' }, pos);
           } else if (fx === 'grow-x') {
             tl.from(el, { scaleX: 0, duration: 0.9, ease: 'power2.inOut' }, pos);
           } else {
@@ -187,8 +189,11 @@ function scenes() {
           el.querySelectorAll<HTMLElement>('[data-fx="type"]').forEach((t) => {
             tl.from(t, { clipPath: 'inset(0 100% 0 0)', duration: 1.3, ease: 'none' }, '>-0.1');
           });
-          el.querySelectorAll<HTMLElement>('[data-fx="grow-x"]').forEach((g) => {
+          el.querySelectorAll<HTMLElement>('[data-fx="grow-x"]:not([data-step])').forEach((g) => {
             tl.from(g, { scaleX: 0, duration: 0.9, ease: 'power2.inOut' }, '<');
+          });
+          el.querySelectorAll<HTMLElement>('[data-fx="grow-y"]').forEach((g, j) => {
+            tl.from(g, { scaleY: 0, duration: 0.6, ease: 'power2.out' }, j === 0 ? '<' : '<0.06');
           });
           el.querySelectorAll<SVGElement>('[data-fx="draw"]').forEach((d) => {
             tl.fromTo(d, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut' }, '<');
@@ -198,6 +203,7 @@ function scenes() {
           });
           el.querySelectorAll<HTMLElement>('[data-fx="count"]').forEach((c) => {
             const to = Number(c.dataset.to ?? c.textContent);
+            const decimals = Number(c.dataset.decimals ?? 0);
             const obj = { v: 0 };
             tl.fromTo(
               obj,
@@ -207,7 +213,7 @@ function scenes() {
                 duration: 1.1,
                 ease: 'power2.out',
                 onUpdate: () => {
-                  c.textContent = String(Math.round(obj.v));
+                  c.textContent = obj.v.toFixed(decimals);
                 },
               },
               '<',

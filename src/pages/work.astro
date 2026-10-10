@@ -3,7 +3,12 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { projects } from '../data/site';
+import { projects, workCategories } from '../data/site';
+
+const groups = workCategories
+  .map((c) => ({ ...c, items: projects.filter((p) => p.category === c.id) }))
+  .filter((g) => g.items.length > 0);
+const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
 
 const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitality', 'Retail and e-commerce', 'Professional services'];
 ---
@@ -18,11 +23,52 @@ const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitalit
     lead="These sample engagements show the problems we are set up to solve. Full client case studies will be published here as projects launch, with each client’s permission."
   />
 
-  <section class="section" aria-label="Sample projects">
-    <div class="container showcases">
-      {projects.map((p, i) => <ProjectShowcase project={p} index={i} detailed />)}
+  <nav class="cat-nav" aria-label="Work categories">
+    <div class="container">
+      <ul role="list">
+        {
+          groups.map((g, i) => (
+            <li>
+              <a href={`#${g.id}`}>
+                <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+                {g.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
-  </section>
+  </nav>
+
+  {
+    groups.map((g, i) => (
+      <section class="cat section" id={g.id} aria-labelledby={`${g.id}-title`}>
+        <div class="container">
+          <header class="cat-head">
+            <span class="cat-index" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div class="cat-text">
+              <h2 id={`${g.id}-title`} data-split>
+                {g.title}
+              </h2>
+              <p class="lead" data-reveal>
+                {g.lead}
+              </p>
+            </div>
+            <span class="mono cat-count" data-reveal>
+              {g.items.length} {g.items.length === 1 ? 'project' : 'projects'}
+            </span>
+          </header>
+          <div class="showcases">
+            {g.items.map((p) => (
+              <ProjectShowcase project={p} index={position(p.slug)} detailed />
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
 
   <section class="section theme-night sectors" aria-labelledby="sectors-title">
     <div class="container">
@@ -46,10 +92,114 @@ const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitalit
   <CallToAction heading="Could your project be next?" />
 </Base>
 
+<script>
+  // Highlight the category currently on screen in the sticky navigation.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.cat-nav a')];
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        links.forEach((a) => {
+          const on = a.hash === `#${e.target.id}`;
+          if (on) {
+            a.setAttribute('aria-current', 'true');
+            a.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          } else a.removeAttribute('aria-current');
+        });
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px' },
+  );
+  document.querySelectorAll('.cat').forEach((s) => io.observe(s));
+</script>
+
 <style>
+  .cat-nav {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .cat-nav ul {
+    display: flex;
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+  .cat-nav a {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  .cat-nav a:hover,
+  .cat-nav a[aria-current='true'] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .cat-nav a .mono {
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .cat {
+    scroll-margin-top: calc(var(--header-h) + 3.5rem);
+  }
+  .cat + .cat {
+    border-top: 1px solid var(--line);
+  }
+  .cat-head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(3rem, 7vw, 6rem);
+  }
+  @media (min-width: 56rem) {
+    .cat-head {
+      grid-template-columns: 1fr 3fr auto;
+      align-items: start;
+    }
+  }
+  .cat-index {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 500;
+    letter-spacing: -0.06em;
+    line-height: 0.85;
+    color: var(--muted);
+  }
+  .cat-text {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .cat-text h2 {
+    font-size: var(--fs-2xl);
+    max-width: 16ch;
+  }
+  .cat-count {
+    color: var(--muted);
+    padding-top: 0.5rem;
+  }
   .showcases {
     display: grid;
-    gap: clamp(4.5rem, 11vw, 10rem);
+    gap: clamp(4.5rem, 11vw, 9rem);
   }
   .sector-list {
     border-top: 1px solid var(--line);
