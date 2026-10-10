@@ -24,11 +24,11 @@ function lineReveals() {
         gsap.set(el, { visibility: 'visible' });
         return gsap.from(self.lines, {
           yPercent: 110,
-          duration: 1.1,
+          duration: 0.7,
           ease: 'power4.out',
-          stagger: 0.08,
-          delay: immediate ? 0.15 : 0,
-          scrollTrigger: immediate ? undefined : { trigger: el, start: 'top 88%', once: true },
+          stagger: 0.05,
+          delay: immediate ? 0.1 : 0,
+          scrollTrigger: immediate ? undefined : { trigger: el, start: 'top 95%', once: true },
         });
       },
     });
@@ -39,14 +39,15 @@ function fades() {
   gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
     gsap.fromTo(
       el,
-      { opacity: 0, y: 28 },
+      { opacity: 0, y: 16 },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
+        duration: 0.6,
         ease: EASE,
-        delay: Number(el.dataset.delay ?? 0),
-        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+        // Authored delays are for the hero; keep them short so nothing waits.
+        delay: Number(el.dataset.delay ?? 0) * 0.5,
+        scrollTrigger: { trigger: el, start: 'top 97%', once: true },
       },
     );
   });
@@ -54,14 +55,14 @@ function fades() {
   gsap.utils.toArray<HTMLElement>('[data-reveal-stagger]').forEach((group) => {
     gsap.fromTo(
       group.children,
-      { opacity: 0, y: 24 },
+      { opacity: 0, y: 14 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.9,
+        duration: 0.55,
         ease: EASE,
-        stagger: 0.08,
-        scrollTrigger: { trigger: group, start: 'top 88%', once: true },
+        stagger: 0.04,
+        scrollTrigger: { trigger: group, start: 'top 95%', once: true },
       },
     );
   });
@@ -82,7 +83,7 @@ function progressiveText() {
             opacity: 1,
             ease: 'none',
             stagger: 0.1,
-            scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: 0.6 },
+            scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 40%', scrub: 0.2 },
           },
         );
       },
@@ -113,7 +114,7 @@ function rails(mm: gsap.MatchMedia) {
           start: 'top top',
           end: () => `+=${distance()}`,
           pin: true,
-          scrub: 0.8,
+          scrub: 0.3,
           invalidateOnRefresh: true,
           onUpdate(self) {
             if (bar) bar.style.transform = `scaleX(${self.progress})`;
@@ -135,17 +136,19 @@ function rails(mm: gsap.MatchMedia) {
   });
 }
 
-// Project images open from a slightly inset frame as they enter.
+// Project images open from a slightly inset frame as they enter. Plays on
+// its own clock once triggered, so it never waits for the visitor to scroll.
 function showcases() {
   gsap.utils.toArray<HTMLElement>('[data-showcase]').forEach((el) => {
     const media = el.querySelector<HTMLElement>('[data-showcase-media]');
     const inner = el.querySelector<HTMLElement>('[data-showcase-inner]');
     if (!media) return;
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 35%', scrub: 0.6 },
+      defaults: { duration: 0.8, ease: 'power3.out' },
+      scrollTrigger: { trigger: el, start: 'top 92%', once: true },
     });
-    tl.fromTo(media, { clipPath: 'inset(10% 8% 10% 8%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none' }, 0);
-    if (inner) tl.fromTo(inner, { scale: 1.12 }, { scale: 1, ease: 'none' }, 0);
+    tl.fromTo(media, { clipPath: 'inset(6% 5% 6% 5%)' }, { clipPath: 'inset(0% 0% 0% 0%)' }, 0);
+    if (inner) tl.fromTo(inner, { scale: 1.06 }, { scale: 1 }, 0);
   });
 }
 
@@ -161,13 +164,13 @@ function scenes() {
       groups.set(n, [...(groups.get(n) ?? []), el]);
     });
 
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3, paused: true, defaults: { ease: EASE } });
-    tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.1, paused: true, defaults: { ease: EASE } });
+    tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: 0.25 });
 
     [...groups.keys()]
       .sort((a, b) => a - b)
       .forEach((n) => {
-        const at = `>-0.15`;
+        const at = `>-0.3`;
         groups.get(n)!.forEach((el, i) => {
           const pos = i === 0 ? at : '<0.08';
           const fx = el.dataset.fx;
@@ -224,12 +227,14 @@ function scenes() {
         });
       });
 
-    tl.to({}, { duration: 2.8 });
-    tl.to(stage, { opacity: 0, duration: 0.5, ease: 'power1.in' });
+    tl.to({}, { duration: 6 });
+    tl.to(stage, { opacity: 0, duration: 0.3, ease: 'power1.in' });
+    // The build-up plays at double speed; the hold above is scaled too (about 3s).
+    tl.timeScale(2);
 
     ScrollTrigger.create({
       trigger: scene,
-      start: 'top 85%',
+      start: 'top bottom',
       end: 'bottom 10%',
       onToggle: (self) => (self.isActive ? tl.play() : tl.pause()),
     });
@@ -254,6 +259,11 @@ function parallax() {
 function init() {
   const mm = gsap.matchMedia();
 
+  // Pinned sections first: a pin adds scroll space, and every trigger further
+  // down the page must be measured after that space exists. Created later,
+  // they fired far too early or late (scenes below the rail stayed blank).
+  rails(mm);
+
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     root.classList.add('motion-ok');
     lineReveals();
@@ -269,7 +279,8 @@ function init() {
     root.classList.remove('motion-ok');
   });
 
-  rails(mm);
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
 }
 
 // The bundle has loaded, so cancel the head script's failsafe.
