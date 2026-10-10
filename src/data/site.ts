@@ -10,7 +10,8 @@ export const site = {
     'DeepTek helps businesses across the UAE build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
   // Placeholder domain until ownership is verified (deeptek.com is the alternative).
   url: 'https://deeptek.ae',
-  email: 'info@deeptek.ae',
+  // Temporary inbox until info@deeptek.ae is set up with the domain; switch back then.
+  email: 'deeptekuae@gmail.com',
   phone: {
     display: '+971 50 396 1050',
     tel: '+971503961050',
