@@ -6,6 +6,15 @@ import StickyStory from '../components/StickyStory.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
 import { process, projects, values } from '../data/site';
+
+// Three work sections shown on the home page; everything else is on /work/.
+const homeWork = [
+  { label: 'AI automation', more: 'More automation work', slug: 'clinic-automation', href: '/work/#ai-it' },
+  { label: 'HR and operations', more: 'More HR and operations work', slug: 'hr-onboarding', href: '/work/#hr-operations' },
+  { label: 'Websites', more: 'More website work', slug: 'hospitality-website', href: '/work/#websites' },
+]
+  .map((w) => ({ ...w, project: projects.find((p) => p.slug === w.slug) }))
+  .filter((w) => w.project);
 ---
 
 <Base darkTop>
@@ -41,7 +50,24 @@ import { process, projects, values } from '../data/site';
         </div>
       </div>
       <div class="showcases">
-        {projects.filter((p) => p.featured).map((p, i) => <ProjectShowcase project={p} index={i} />)}
+        {
+          homeWork.map((w, i) => (
+            <div class="home-work">
+              <div class="hw-head" data-reveal>
+                <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{w.label}</h3>
+                <a class="link-arrow" href={w.href}>
+                  {w.more} <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+              <ProjectShowcase project={w.project!} index={i} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="more-work" data-reveal>
+        <p>Also see our SaaS products, digital marketing campaigns and IT projects.</p>
+        <a class="btn" href="/work/">See all work <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -100,7 +126,46 @@ import { process, projects, values } from '../data/site';
   }
   .showcases {
     display: grid;
-    gap: clamp(4rem, 10vw, 9rem);
+    gap: clamp(4rem, 10vw, 8rem);
+  }
+  .home-work {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .hw-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .hw-head .mono {
+    color: var(--muted);
+  }
+  .hw-head h3 {
+    font-size: var(--fs-lg);
+    letter-spacing: -0.02em;
+    margin-right: auto;
+  }
+  .hw-head .link-arrow {
+    font-size: var(--fs-sm);
+  }
+  .more-work {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: clamp(4rem, 8vw, 7rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .more-work p {
+    font-size: var(--fs-lg);
+    max-width: 36ch;
   }
 
   .values {

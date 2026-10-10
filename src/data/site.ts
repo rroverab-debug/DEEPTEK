@@ -205,7 +205,6 @@ export const workCategories: WorkCategory[] = [
 export type Project = {
   slug: string;
   category: WorkCategory['id'];
-  featured?: boolean;
   title: string;
   sector: string;
   services: string[];
@@ -220,7 +219,6 @@ export const projects: Project[] = [
   {
     slug: 'hospitality-website',
     category: 'websites',
-    featured: true,
     title: 'A bilingual brand website for a hospitality group',
     sector: 'Hospitality',
     services: ['Web', 'Branding'],
@@ -233,7 +231,6 @@ export const projects: Project[] = [
   {
     slug: 'salon-saas',
     category: 'saas',
-    featured: true,
     title: 'Booking software for salons and spas',
     sector: 'Beauty and wellness',
     services: ['SaaS', 'Product design'],
