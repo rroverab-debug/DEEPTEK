@@ -218,7 +218,10 @@ function scenes() {
                 duration: 1.1,
                 ease: 'power2.out',
                 onUpdate: () => {
-                  c.textContent = obj.v.toFixed(decimals);
+                  c.textContent = obj.v.toLocaleString('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals,
+                  });
                 },
               },
               '<',

@@ -233,7 +233,7 @@ export const projects: Project[] = [
     sector: 'Hospitality',
     services: ['Web', 'Branding'],
     summary:
-      'Three restaurants and a café sharing an outdated site that was slow on phones and only in English.',
+      'Three restaurants and a cafe sharing an outdated site that was slow on phones and only in English.',
     outcome:
       'One responsive Arabic and English site with menus, locations and table booking, loading in under a second on mobile.',
     scene: 'website',
