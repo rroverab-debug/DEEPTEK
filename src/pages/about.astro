@@ -11,8 +11,9 @@ const { values } = content(lang);
 const t = {
   en: {
     title: 'About',
+    seoTitle: 'About DeepTek | Technology Partner for UAE & GCC Businesses',
     description:
-      'DeepTek is a UAE technology company bringing IT solutions, digital marketing and AI automation together under one accountable team.',
+      'DeepTek is a UAE technology company bringing IT solutions, digital marketing and AI automation together under one accountable team, for businesses across the GCC.',
     label: 'About',
     heading: 'A technology partner built for the UAE.',
     lead: 'DeepTek is built on a simple idea: growing businesses deserve technology, marketing and automation that work together and are explained in plain language.',
@@ -28,6 +29,7 @@ const t = {
       ['Based in', 'United Arab Emirates'],
       ['Disciplines', 'IT · Marketing · AI'],
       ['Languages', 'English · Arabic'],
+      ['Serving', 'UAE and the wider GCC'],
       ['Working with', 'Startups to established SMEs'],
     ],
     cta: 'Let’s talk about your goals.',
@@ -56,8 +58,9 @@ const t = {
   },
   ar: {
     title: 'من نحن',
+    seoTitle: 'من نحن | DeepTek شريك تقني للشركات في الإمارات والخليج',
     description:
-      'DeepTek شركة تقنية في الإمارات تجمع حلول تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي مع فريق واحد مسؤول.',
+      'DeepTek شركة تقنية في الإمارات تجمع حلول تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي مع فريق واحد مسؤول، للشركات في أنحاء الخليج.',
     label: 'من نحن',
     heading: 'شريك تقني صُمم للإمارات.',
     lead: 'تقوم DeepTek على فكرة بسيطة: الشركات النامية تستحق تقنية وتسويقاً وأتمتة تعمل معاً وتُشرح بلغة واضحة.',
@@ -73,6 +76,7 @@ const t = {
       ['المقر', 'الإمارات العربية المتحدة'],
       ['التخصصات', 'تقنية المعلومات · التسويق · الذكاء الاصطناعي'],
       ['اللغات', 'العربية · الإنجليزية'],
+      ['نخدم', 'الإمارات ودول الخليج'],
       ['نعمل مع', 'من الشركات الناشئة إلى الشركات الصغيرة والمتوسطة الراسخة'],
     ],
     cta: 'لنتحدث عن أهدافك.',
@@ -103,7 +107,7 @@ const t = {
 const story = t.story;
 ---
 
-<Base title={t.title} description={t.description}>
+<Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
   <PageHero
     label={t.label}
     title={t.heading}

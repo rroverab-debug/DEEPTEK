@@ -11,8 +11,9 @@ const { faqs, pillars, process } = content(lang);
 const t = {
   en: {
     title: 'Solutions',
+    seoTitle: 'IT, Digital Marketing & AI Automation Services in UAE | DeepTek',
     description:
-      'IT solutions, digital marketing and AI automation services for businesses in the UAE. Cloud, security, websites, SEO, ads and workflow automation.',
+      'IT support, cloud, cybersecurity, web design, SEO, Google and Meta ads, and AI automation services for businesses in Dubai, Abu Dhabi, the UAE and GCC.',
     label: 'Solutions',
     heading: 'Three disciplines. One accountable team.',
     lead: 'Pick one area or combine all three. Either way you get a single point of contact, clear pricing and work that fits together.',
@@ -42,8 +43,9 @@ const t = {
   },
   ar: {
     title: 'الحلول',
+    seoTitle: 'خدمات تقنية المعلومات والتسويق الرقمي والأتمتة في الإمارات | DeepTek',
     description:
-      'خدمات تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي للشركات في الإمارات: السحابة والأمان والمواقع وتحسين محركات البحث والإعلانات وأتمتة سير العمل.',
+      'خدمات تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي للشركات في دبي وأبوظبي والإمارات والخليج: السحابة والأمان والمواقع وتحسين محركات البحث والإعلانات وأتمتة سير العمل.',
     label: 'الحلول',
     heading: 'ثلاثة تخصصات. فريق واحد مسؤول.',
     lead: 'اختر مجالاً واحداً أو اجمع الثلاثة. في الحالتين تحصل على جهة تواصل واحدة وأسعار واضحة وأعمال متكاملة.',
@@ -85,7 +87,7 @@ const faqSchema = {
 };
 ---
 
-<Base title={t.title} description={t.description}>
+<Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <PageHero

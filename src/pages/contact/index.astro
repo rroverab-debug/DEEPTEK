@@ -17,6 +17,7 @@ const budgetValues = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to
 const t = {
   en: {
     title: 'Contact',
+    seoTitle: 'Contact DeepTek | Free IT & Digital Marketing Consultation, UAE',
     description:
       'Contact DeepTek about IT solutions, digital marketing or AI automation for your UAE business. Free consultation, reply within one working day.',
     label: 'Contact',
@@ -57,6 +58,7 @@ const t = {
   },
   ar: {
     title: 'تواصل معنا',
+    seoTitle: 'تواصل مع DeepTek | استشارة تقنية وتسويقية مجانية في الإمارات',
     description:
       'تواصل مع DeepTek بخصوص حلول تقنية المعلومات أو التسويق الرقمي أو الأتمتة بالذكاء الاصطناعي لأعمالك في الإمارات. استشارة مجانية ورد خلال يوم عمل واحد.',
     label: 'تواصل معنا',
@@ -95,7 +97,7 @@ const t = {
 const budgets = budgetValues.map((value, i) => ({ value, label: t.budgets[i] }));
 ---
 
-<Base title={t.title} description={t.description}>
+<Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
   <script
     slot="head"
     is:inline

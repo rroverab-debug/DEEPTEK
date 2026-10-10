@@ -11,7 +11,8 @@ const { industries, projects, workCategories } = content(lang);
 const t = {
   en: {
     title: 'Projects',
-    description: 'Examples of the IT, digital marketing and AI automation work DeepTek delivers for businesses in the UAE.',
+    seoTitle: 'Example Projects: Websites, Apps & AI Automation | DeepTek',
+    description: 'Examples of the websites, apps, IT and AI automation DeepTek builds for restaurants, cafes, retail and other businesses in the UAE and GCC.',
     label: 'Projects',
     heading: 'Practical work with measurable outcomes.',
     lead: 'These examples show the kind of problems we solve for businesses like yours. Client case studies are shared only with each client’s permission.',
@@ -26,7 +27,8 @@ const t = {
   },
   ar: {
     title: 'المشاريع',
-    description: 'أمثلة على أعمال تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي التي تقدمها DeepTek للشركات في الإمارات.',
+    seoTitle: 'نماذج مشاريع: مواقع وتطبيقات وأتمتة بالذكاء الاصطناعي | DeepTek',
+    description: 'أمثلة على المواقع والتطبيقات وحلول تقنية المعلومات والأتمتة بالذكاء الاصطناعي التي تقدمها DeepTek للمطاعم والمقاهي ومتاجر التجزئة وغيرها في الإمارات والخليج.',
     label: 'المشاريع',
     heading: 'أعمال عملية بنتائج قابلة للقياس.',
     lead: 'توضح هذه الأمثلة نوع المشكلات التي نحلها لأعمال مثل أعمالك. لا ننشر دراسات حالة عملائنا إلا بإذن كل عميل.',
@@ -48,7 +50,7 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
 
 ---
 
-<Base title={t.title} description={t.description}>
+<Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
   <PageHero
     label={t.label}
     title={t.heading}

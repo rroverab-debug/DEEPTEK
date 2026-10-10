@@ -7,7 +7,7 @@ export const site = {
   legalName: 'DeepTek Innovations FZ LLC',
   tagline: 'IT solutions, digital marketing and AI automation for UAE businesses.',
   description:
-    'DeepTek helps businesses across the UAE build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
+    'DeepTek helps businesses across the UAE and GCC build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
   // Placeholder domain until ownership is verified (deeptek.com is the alternative).
   url: 'https://deeptek.ae',
   // Temporary inbox until info@deeptek.ae is set up with the domain; switch back then.

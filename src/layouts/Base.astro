@@ -7,6 +7,8 @@ import { content, dirOf, langOf, langs, switchPath } from '../i18n';
 
 interface Props {
   title?: string;
+  /** Full search-result title; overrides the "Title | DeepTek" pattern. */
+  seoTitle?: string;
   description?: string;
   image?: string;
   noindex?: boolean;
@@ -15,17 +17,18 @@ interface Props {
 }
 
 const lang = langOf(Astro.url);
-const { site } = content(lang);
+const { site, pillars } = content(lang);
 
 const {
   title,
+  seoTitle,
   description = site.description,
   image = '/og.png',
   noindex = false,
   darkTop = false,
 } = Astro.props;
 
-const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
+const fullTitle = seoTitle ?? (title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`);
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
 const alternates = langs.map((l) => ({
   hreflang: l,
@@ -33,21 +36,76 @@ const alternates = langs.map((l) => ({
 }));
 const ogImage = new URL(image, Astro.site ?? site.url).href;
 
+// Markets we target in search: the UAE first, then the wider GCC.
+const gcc = ['United Arab Emirates', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman'];
+const cities = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain', 'Al Ain'];
+const home = new URL(lang === 'ar' ? '/ar/' : '/', site.url).href;
+const orgId = new URL('/#organization', site.url).href;
+
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
+  '@id': orgId,
   name: site.name,
   legalName: site.legalName,
-  url: new URL(lang === 'ar' ? '/ar/' : '/', site.url).href,
+  url: home,
   inLanguage: ['en', 'ar'],
   email: site.email,
   telephone: site.phone.tel,
   description: site.description,
-  logo: new URL('/favicon.svg', site.url).href,
-  areaServed: { '@type': 'Country', name: 'United Arab Emirates' },
-  address: { '@type': 'PostalAddress', addressCountry: 'AE' },
-  knowsAbout: ['IT solutions', 'Cloud infrastructure', 'Cybersecurity', 'Digital marketing', 'SEO', 'AI automation'],
+  logo: new URL('/logo-mark.svg', site.url).href,
+  image: new URL('/og.png', site.url).href,
+  priceRange: '$$',
+  areaServed: [
+    ...gcc.map((name) => ({ '@type': 'Country', name })),
+    ...cities.map((name) => ({ '@type': 'City', name })),
+  ],
+  address: { '@type': 'PostalAddress', addressCountry: 'AE', ...(site.address ? { streetAddress: site.address } : {}) },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    telephone: site.phone.tel,
+    email: site.email,
+    areaServed: ['AE', 'SA', 'QA', 'KW', 'BH', 'OM'],
+    availableLanguage: ['English', 'Arabic'],
+  },
+  knowsAbout: [
+    'IT solutions', 'Managed IT support', 'Cloud hosting', 'Microsoft 365', 'Google Workspace', 'Cybersecurity',
+    'Website development', 'Digital marketing', 'SEO', 'Google Ads', 'Social media marketing',
+    'AI automation', 'WhatsApp chatbots', 'Business process automation',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: lang === 'ar' ? 'الحلول' : 'Solutions',
+    itemListElement: pillars.map((p) => ({
+      '@type': 'OfferCatalog',
+      name: p.title,
+      itemListElement: p.offerings.map((name) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name, areaServed: gcc.map((c) => ({ '@type': 'Country', name: c })) },
+      })),
+    })),
+  },
   sameAs: Object.values(site.social).filter(Boolean),
+};
+
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  url: home,
+  inLanguage: lang,
+  publisher: { '@id': orgId },
+};
+
+// Home > current page, so search results show a readable path.
+const breadcrumbSchema = title && {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: lang === 'ar' ? 'الرئيسية' : 'Home', item: home },
+    { '@type': 'ListItem', position: 2, name: title, item: canonical },
+  ],
 };
 ---
 
@@ -84,6 +142,8 @@ const orgSchema = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+    {breadcrumbSchema && !noindex && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
     <slot name="head" />
   </head>
   <body>

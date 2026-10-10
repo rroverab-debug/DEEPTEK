@@ -13,6 +13,9 @@ const l = (href: string) => localize(href, lang);
 
 const t = {
   en: {
+    seoTitle: 'DeepTek | IT Solutions, Digital Marketing & AI Automation in UAE',
+    seoDescription:
+      'IT support, websites, SEO, social media and AI automation for businesses in Dubai, Abu Dhabi and across the UAE and GCC. Free consultation with DeepTek.',
     whyLabel: 'Why DeepTek',
     why: 'Most growing businesses juggle an IT contractor, a marketing agency and a stack of tools that do not talk to each other. We bring technology, marketing and automation together, so every part of your business pulls in the same direction.',
     storyLabel: 'How we work',
@@ -31,6 +34,9 @@ const t = {
     ],
   },
   ar: {
+    seoTitle: 'DeepTek | تقنية المعلومات والتسويق الرقمي والأتمتة في الإمارات',
+    seoDescription:
+      'دعم تقنية المعلومات وتصميم المواقع وتحسين محركات البحث والتسويق عبر وسائل التواصل والأتمتة بالذكاء الاصطناعي للشركات في دبي وأبوظبي والإمارات والخليج. استشارة مجانية.',
     whyLabel: 'لماذا DeepTek',
     why: 'تتعامل معظم الشركات النامية مع مزوّد تقنية، ووكالة تسويق، ومجموعة أدوات لا تتواصل مع بعضها. نحن نجمع التقنية والتسويق والأتمتة معاً، ليعمل كل جزء من أعمالك في الاتجاه نفسه.',
     storyLabel: 'طريقة عملنا',
@@ -60,7 +66,7 @@ const homeWork = [
   .filter((w) => w.project);
 ---
 
-<Base darkTop>
+<Base darkTop seoTitle={t.seoTitle} description={t.seoDescription}>
   <Hero />
 
   <section class="statement section" aria-labelledby="statement-label">

@@ -24,6 +24,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      lastmod: new Date(),
       filter: (page) => !page.includes('/contact/thanks') && !page.includes('/404'),
       // English at the root, Arabic under /ar/; adds hreflang links to the sitemap.
       i18n: { defaultLocale: 'en', locales: { en: 'en-AE', ar: 'ar-AE' } },
