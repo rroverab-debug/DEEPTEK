@@ -1,0 +1,328 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import StickyStory from '../components/StickyStory.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { faqs, pillars, process } from '../data/site';
+
+const engagements = [
+  {
+    title: 'Project',
+    body: 'A defined piece of work, such as a new website, an office IT setup or an automation, delivered at a fixed or capped price.',
+  },
+  {
+    title: 'Monthly partnership',
+    body: 'Ongoing IT support, marketing management or automation improvements, billed monthly and cancellable with notice.',
+  },
+  {
+    title: 'Advisory',
+    body: 'Hourly or day-rate guidance for teams that build in-house and want an experienced second opinion.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title="Solutions"
+  description="IT solutions, digital marketing and AI automation services for businesses in the UAE. Cloud, security, websites, SEO, ads and workflow automation."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <PageHero
+    label="Solutions"
+    title="Three disciplines. One accountable team."
+    lead="Pick one area or combine all three. Either way you get a single point of contact, clear pricing and work that fits together."
+  >
+    <nav class="jump" aria-label="Solutions on this page" data-reveal data-delay="0.5">
+      {
+        pillars.map((p) => (
+          <a href={`#${p.id}`}>
+            <span class="mono">{p.index}</span> {p.title}
+          </a>
+        ))
+      }
+    </nav>
+  </PageHero>
+
+  {
+    pillars.map((p, i) => (
+      <section class:list={['pillar section', { 'theme-night': i === 1 }]} id={p.id} aria-labelledby={`${p.id}-title`}>
+        <div class="container layout">
+          <div class="side">
+            <span class="index" aria-hidden="true">
+              {p.index}
+            </span>
+            <h2 id={`${p.id}-title`} data-split>
+              {p.title}
+            </h2>
+          </div>
+          <div class="main">
+            <p class="pillar-lead" data-reveal>
+              {p.lead}
+            </p>
+            <p class="pillar-body" data-reveal>
+              {p.body}
+            </p>
+            <div class="lists">
+              <div>
+                <h3 class="mono">What we do</h3>
+                <ul role="list" class="offerings" data-reveal-stagger>
+                  {p.offerings.map((o) => (
+                    <li>{o}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 class="mono">What you get</h3>
+                <ul role="list" class="outcomes" data-reveal-stagger>
+                  {p.outcomes.map((o) => (
+                    <li>{o}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <StickyStory label="Process" heading="How every engagement runs." steps={process} />
+
+  <section class="section engage" aria-labelledby="engage-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Ways to work together</p>
+        <h2 id="engage-title" data-split>Start small. Scale when it works.</h2>
+      </div>
+      <ol class="engage-grid" role="list" data-reveal-stagger>
+        {
+          engagements.map((e, i) => (
+            <li>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{e.title}</h3>
+              <p>{e.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section faq" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title" data-split>Frequently asked.</h2>
+      </div>
+      <div class="faq-list" data-reveal>
+        {
+          faqs.map((f) => (
+            <details>
+              <summary>
+                <span>{f.q}</span>
+                <span class="plus" aria-hidden="true" />
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .jump a {
+    display: inline-flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.3s var(--ease);
+  }
+  .jump a:hover {
+    border-color: var(--ink);
+  }
+  .jump .mono {
+    color: var(--muted);
+  }
+
+  .pillar + .pillar:not(.theme-night) {
+    border-top: 1px solid var(--line);
+  }
+  .layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 56rem) {
+    .layout {
+      grid-template-columns: 2fr 3fr;
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+    .side {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+  .index {
+    display: block;
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 500;
+    letter-spacing: -0.06em;
+    line-height: 0.85;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .side h2 {
+    font-size: var(--fs-2xl);
+  }
+  .main {
+    display: grid;
+    gap: 1.75rem;
+  }
+  .pillar-lead {
+    font-size: var(--fs-xl);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+  }
+  .pillar-body {
+    color: var(--muted);
+    font-size: var(--fs-lg);
+    line-height: 1.55;
+    max-width: 46ch;
+  }
+  .lists {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .lists {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+  .lists h3 {
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+  .offerings li,
+  .outcomes li {
+    padding-block: 0.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .offerings {
+    border-top: 1px solid var(--line);
+  }
+  .outcomes {
+    border-top: 1px solid currentColor;
+  }
+  .outcomes li {
+    font-weight: 500;
+  }
+
+  .engage,
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+  .engage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+  }
+  .engage-grid li {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 2rem;
+    min-height: 16rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .engage-grid .mono {
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .engage-grid h3 {
+    font-size: var(--fs-lg);
+  }
+  .engage-grid p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+
+  .faq-list {
+    border-top: 1px solid var(--line);
+    max-width: 60rem;
+    margin-left: auto;
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .plus {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    inset: 6px 0 auto;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s var(--ease);
+  }
+  .plus::after {
+    transform: rotate(90deg);
+  }
+  details[open] .plus::after {
+    transform: rotate(0deg);
+  }
+  details p {
+    color: var(--muted);
+    padding-bottom: 1.75rem;
+    max-width: 60ch;
+  }
+</style>

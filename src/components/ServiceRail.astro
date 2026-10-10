@@ -1,0 +1,209 @@
+---
+import { services } from '../data/site';
+
+interface Props {
+  heading?: string;
+  label?: string;
+}
+const { heading = 'Six ways we help you grow.', label = 'Services' } = Astro.props;
+const total = String(services.length).padStart(2, '0');
+---
+
+<section class="rail section" data-rail aria-labelledby="rail-title">
+  <div class="container head">
+    <p class="eyebrow">{label}</p>
+    <h2 id="rail-title" data-split>{heading}</h2>
+    <div class="progress" aria-hidden="true">
+      <span class="mono count"><span data-rail-count>01</span> / {total}</span>
+      <span class="bar"><span class="fill" data-rail-progress></span></span>
+    </div>
+  </div>
+
+  <div
+    class="viewport"
+    data-rail-viewport
+    tabindex="0"
+    role="region"
+    aria-label="Services, scroll horizontally to see all"
+  >
+    <ol class="track" role="list" data-rail-track>
+      {
+        services.map((s, i) => (
+          <li class="card">
+            <div class="card-top">
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="mono pillar">{s.pillar}</span>
+            </div>
+            <h3>{s.title}</h3>
+            <p>{s.summary}</p>
+            <ul role="list" class="points">
+              {s.points.map((pt) => <li>{pt}</li>)}
+            </ul>
+          </li>
+        ))
+      }
+      <li class="card card--end">
+        <p class="mono">Not sure where to start?</p>
+        <h3>Tell us the problem. We will suggest the simplest fix.</h3>
+        <a class="link-arrow" href="/contact/">Talk to us <span class="arrow" aria-hidden="true">→</span></a>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<script>
+  // Native horizontal scrolling (small screens, reduced motion) still updates
+  // the progress indicator. On large screens GSAP drives it instead.
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+    const viewport = rail.querySelector<HTMLElement>('[data-rail-viewport]');
+    const bar = rail.querySelector<HTMLElement>('[data-rail-progress]');
+    const count = rail.querySelector<HTMLElement>('[data-rail-count]');
+    const track = rail.querySelector<HTMLElement>('[data-rail-track]');
+    if (!viewport || !bar || !track) return;
+    const cards = track.children.length;
+    const update = () => {
+      if (rail.classList.contains('is-pinned')) return;
+      const max = viewport.scrollWidth - viewport.clientWidth;
+      const p = max > 0 ? viewport.scrollLeft / max : 0;
+      bar.style.transform = `scaleX(${p})`;
+      if (count) count.textContent = String(Math.min(cards, Math.floor(p * cards) + 1)).padStart(2, '0');
+    };
+    viewport.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>
+
+<style>
+  .rail {
+    overflow: hidden;
+  }
+  .head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .head h2 {
+    font-size: var(--fs-2xl);
+    max-width: 16ch;
+  }
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 28rem;
+  }
+  .count {
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .bar {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .fill {
+    position: absolute;
+    inset: -0.5px 0;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .viewport {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+  .viewport:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .track {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    padding-inline: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    will-change: transform;
+  }
+  .card {
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: min(82vw, 25rem);
+    min-height: 28rem;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition:
+      background-color 0.4s var(--ease),
+      color 0.4s var(--ease);
+  }
+  .card:hover {
+    background: var(--ink);
+    color: var(--paper);
+    --muted: var(--night-muted);
+    --line: var(--night-line);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    margin-bottom: auto;
+    padding-bottom: 3rem;
+  }
+  .card h3 {
+    font-size: var(--fs-xl);
+    max-width: 14ch;
+  }
+  .card p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+  }
+  .points {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-sm);
+  }
+  .points li {
+    padding-block: 0.55rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .card--end {
+    background: var(--ink);
+    color: var(--paper);
+    justify-content: space-between;
+    --muted: var(--night-muted);
+  }
+  .card--end .mono {
+    color: var(--night-muted);
+  }
+  .card--end h3 {
+    max-width: 16ch;
+  }
+  .card--end .link-arrow {
+    align-self: flex-start;
+  }
+
+  /* While GSAP pins the rail the viewport stops scrolling natively. */
+  .rail:global(.is-pinned) {
+    padding-block: calc(var(--header-h) + 2rem) 3rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rail:global(.is-pinned) .viewport {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+</style>

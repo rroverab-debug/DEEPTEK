@@ -1,0 +1,110 @@
+---
+import type { Project } from '../data/site';
+import ProjectScene from './ProjectScene.astro';
+
+interface Props {
+  project: Project;
+  index: number;
+  detailed?: boolean;
+}
+const { project, index, detailed = false } = Astro.props;
+const flip = index % 2 === 1;
+---
+
+<article class:list={['showcase', { flip }]} data-showcase id={project.slug} aria-labelledby={`${project.slug}-title`}>
+  <div class="media" data-showcase-media>
+    <ProjectScene scene={project.scene} label={`Illustration: ${project.outcome}`} />
+  </div>
+  <div class="body">
+    <div class="meta mono">
+      <span>{String(index + 1).padStart(2, '0')}</span>
+      <span>{project.sector}</span>
+    </div>
+    <h3 id={`${project.slug}-title`}>{project.title}</h3>
+    {
+      detailed ? (
+        <dl class="details">
+          <div>
+            <dt class="mono">Challenge</dt>
+            <dd>{project.summary}</dd>
+          </div>
+          <div>
+            <dt class="mono">Approach</dt>
+            <dd>{project.outcome}</dd>
+          </div>
+        </dl>
+      ) : (
+        <p>{project.outcome}</p>
+      )
+    }
+    <ul class="tags" role="list" aria-label="Services">
+      {project.services.map((s) => <li>{s}</li>)}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .showcase {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .showcase {
+      grid-template-columns: 7fr 5fr;
+    }
+    .showcase.flip {
+      grid-template-columns: 5fr 7fr;
+    }
+    .showcase.flip .media {
+      order: 2;
+    }
+  }
+  .media {
+    aspect-ratio: 4 / 3;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #151515;
+  }
+  @media (max-width: 40rem) {
+    .media {
+      aspect-ratio: auto;
+    }
+  }
+  .body {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 34rem;
+  }
+  .meta {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--muted);
+  }
+  h3 {
+    font-size: var(--fs-xl);
+  }
+  p,
+  dd {
+    color: var(--muted);
+  }
+  .details {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .details dt {
+    margin-bottom: 0.35rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tags li {
+    font-size: var(--fs-xs);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+</style>

@@ -1,0 +1,421 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { pillars, site } from '../../data/site';
+
+// Cloudflare's always-pass test key is used until a real key is set at build time.
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+
+const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,000', 'Over AED 75,000', 'Not sure yet'];
+---
+
+<Base
+  title="Contact"
+  description="Contact DeepTek about IT solutions, digital marketing or AI automation for your UAE business. Free consultation, reply within one working day."
+>
+  <script
+    slot="head"
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
+
+  <PageHero
+    label="Contact"
+    title="Tell us what you are working on."
+    lead="Share a few details and we will reply within one working day. The first consultation is free and there is no obligation."
+  />
+
+  <section class="section" aria-labelledby="form-title">
+    <div class="container layout">
+      <aside class="info" data-reveal>
+        <div>
+          <h2 class="mono">Email</h2>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </div>
+        <div>
+          <h2 class="mono">Location</h2>
+          <p>{site.location}</p>
+        </div>
+        <div>
+          <h2 class="mono">What happens next</h2>
+          <ol role="list" class="next">
+            <li><span class="mono">01</span> We read your message and reply within one working day.</li>
+            <li><span class="mono">02</span> A short call to understand your goals.</li>
+            <li><span class="mono">03</span> A written proposal with scope and price.</li>
+          </ol>
+        </div>
+      </aside>
+
+      <div class="form-wrap" data-reveal>
+        <h2 id="form-title" class="sr-only">Project enquiry form</h2>
+        <form
+          class="form"
+          method="post"
+          action="/api/contact"
+          data-contact-form
+          aria-describedby="form-note"
+        >
+          <div class="row">
+            <div class="field">
+              <label for="name">Full name <span aria-hidden="true">*</span></label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="100" />
+            </div>
+            <div class="field">
+              <label for="email">Work email <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="200" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="company">Company</label>
+              <input id="company" name="company" type="text" autocomplete="organization" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="opt">(optional)</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" inputmode="tel" />
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend>What can we help with?</legend>
+            <div class="chips">
+              {
+                pillars.map((p) => (
+                  <label class="chip">
+                    <input type="checkbox" name="interest" value={p.title} />
+                    <span>{p.title}</span>
+                  </label>
+                ))
+              }
+              <label class="chip">
+                <input type="checkbox" name="interest" value="Not sure" />
+                <span>Not sure yet</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="budget">Estimated budget</label>
+            <select id="budget" name="budget">
+              <option value="">Select a range</option>
+              {budgets.map((b) => <option value={b}>{b}</option>)}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Project details <span aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" rows="6" required minlength="20" maxlength="4000"></textarea>
+          </div>
+
+          <!-- Honeypot: hidden from people, often filled by bots. -->
+          <div class="hp" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" name="consent" value="yes" required />
+            <span>
+              I agree that DeepTek may use these details to reply to my enquiry, as described in the{' '}
+              <a href="/privacy/">privacy notice</a>. <span aria-hidden="true">*</span>
+            </span>
+          </label>
+
+          <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible"></div>
+
+          <div class="submit-row">
+            <button class="btn" type="submit" data-submit>
+              <span data-submit-label>Send message</span> <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <p id="form-note" class="note">Fields marked * are required.</p>
+          </div>
+
+          <p class="status" role="status" aria-live="polite" data-status></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const status = form?.querySelector<HTMLElement>('[data-status]');
+  const button = form?.querySelector<HTMLButtonElement>('[data-submit]');
+  const label = form?.querySelector<HTMLElement>('[data-submit-label]');
+
+  type Turnstile = { reset: (el?: string | HTMLElement) => void };
+  const turnstile = () => (window as unknown as { turnstile?: Turnstile }).turnstile;
+
+  // JS handles validation messages; without JS the browser's built-in checks apply.
+  if (form) form.noValidate = true;
+
+  const setStatus = (msg: string, kind: 'error' | 'ok' | '' = '') => {
+    if (!status) return;
+    status.textContent = msg;
+    status.dataset.kind = kind;
+  };
+
+  const validate = (f: HTMLFormElement): HTMLElement | null => {
+    let firstInvalid: HTMLElement | null = null;
+    f.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) => {
+      const ok = el.checkValidity();
+      el.setAttribute('aria-invalid', String(!ok));
+      if (!ok && !firstInvalid) firstInvalid = el;
+    });
+    return firstInvalid;
+  };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const invalid = validate(form);
+    if (invalid) {
+      setStatus('Please complete the required fields and check your email address.', 'error');
+      invalid.focus();
+      return;
+    }
+
+    const data = new FormData(form);
+    if (!data.get('cf-turnstile-response')) {
+      setStatus('Please wait a moment for the spam check to finish, then try again.', 'error');
+      return;
+    }
+
+    button?.setAttribute('disabled', '');
+    if (label) label.textContent = 'Sending…';
+    setStatus('');
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && body.ok) {
+        window.location.assign('/contact/thanks/');
+        return;
+      }
+      setStatus(body.error ?? 'Something went wrong. Please try again or email us directly.', 'error');
+    } catch {
+      setStatus('We could not reach the server. Check your connection or email us directly.', 'error');
+    }
+    turnstile()?.reset();
+    button?.removeAttribute('disabled');
+    if (label) label.textContent = 'Send message';
+  });
+
+  form?.addEventListener('input', (e) => {
+    const el = e.target as HTMLElement;
+    if (el.getAttribute('aria-invalid') === 'true' && (el as HTMLInputElement).checkValidity()) {
+      el.setAttribute('aria-invalid', 'false');
+    }
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    gap: 3.5rem;
+  }
+  @media (min-width: 56rem) {
+    .layout {
+      grid-template-columns: 1fr 2fr;
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+  }
+  .info {
+    display: grid;
+    align-content: start;
+    gap: 2.25rem;
+  }
+  .info h2 {
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+  .info p {
+    font-size: var(--fs-lg);
+  }
+  .next {
+    display: grid;
+    gap: 0.9rem;
+    color: var(--muted);
+  }
+  .next li {
+    display: flex;
+    gap: 1rem;
+  }
+  .next .mono {
+    color: var(--ink);
+    padding-top: 0.3rem;
+  }
+
+  .form {
+    display: grid;
+    gap: 1.75rem;
+  }
+  .row {
+    display: grid;
+    gap: 1.75rem;
+  }
+  @media (min-width: 40rem) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  label,
+  legend {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+  }
+  legend {
+    padding: 0;
+    margin-bottom: 0.75rem;
+  }
+  .opt {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.75rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    font-size: var(--fs-base);
+    transition: border-color 0.3s var(--ease);
+  }
+  select {
+    appearance: none;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 10px) 50%,
+      calc(100% - 5px) 50%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-bottom-color: var(--muted);
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-bottom: 2px solid var(--ink);
+  }
+  [aria-invalid='true'] {
+    border-bottom: 2px solid var(--ink) !important;
+    background-image: repeating-linear-gradient(-45deg, transparent 0 6px, rgb(0 0 0 / 0.04) 6px 7px);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-weight: 400;
+    transition:
+      background-color 0.25s var(--ease),
+      color 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+  .chip input:checked + span {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .consent {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .consent input {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.15rem;
+    accent-color: var(--ink);
+  }
+
+  .submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .note {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .status:empty {
+    display: none;
+  }
+  .status {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+  }
+  .status[data-kind='error'] {
+    border-left-width: 4px;
+  }
+</style>

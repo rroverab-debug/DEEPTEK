@@ -1,0 +1,35 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  lead?: string;
+}
+const { label, title, lead } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container inner">
+    <p class="eyebrow" data-reveal>{label}</p>
+    <h1 data-split="now">{title}</h1>
+    {lead && <p class="lead" data-reveal data-delay="0.35">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-top: calc(var(--header-h) + clamp(4rem, 10vw, 9rem));
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  h1 {
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    max-width: 16ch;
+  }
+</style>

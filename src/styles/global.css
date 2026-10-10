@@ -1,0 +1,338 @@
+/* DeepTek design system: monochrome, editorial, quiet. */
+@import '@fontsource-variable/inter-tight/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+:root {
+  /* Colour */
+  --paper: #f3f3f1;
+  --paper-2: #e9e9e6;
+  --ink: #0c0c0c;
+  --ink-2: #2a2a2a;
+  --muted: #595959; /* 6.4:1 on --paper */
+  --line: #d3d3cf;
+  --night: #0c0c0c;
+  --night-2: #171717;
+  --night-line: #2d2d2d;
+  --night-muted: #a3a3a3; /* 7.9:1 on --night */
+  --focus: #0c0c0c;
+
+  /* Type */
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1.0625rem;
+  --fs-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  --fs-2xl: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+  --fs-3xl: clamp(2.75rem, 1.6rem + 5vw, 6.5rem);
+  --fs-display: clamp(3rem, 1.4rem + 6.4vw, 8.25rem);
+
+  /* Space and layout */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --section: clamp(5rem, 3rem + 8vw, 11rem);
+  --max: 90rem;
+  --radius: 0.25rem;
+  --header-h: 4.25rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.theme-night :focus-visible,
+.theme-night:focus-visible {
+  --focus: #f3f3f1;
+}
+
+/* ---------- Utilities ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section);
+}
+
+.theme-night {
+  background: var(--night);
+  color: var(--paper);
+  --line: var(--night-line);
+  --muted: var(--night-muted);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.75rem 1rem;
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 450;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eyebrow::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lead {
+  font-size: var(--fs-lg);
+  line-height: 1.45;
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+/* Section header: label on the left, heading on the right */
+.section-head {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+}
+@media (min-width: 56rem) {
+  .section-head {
+    grid-template-columns: 1fr 3fr;
+    align-items: start;
+  }
+}
+.section-head h2 {
+  font-size: var(--fs-2xl);
+  max-width: 18ch;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid var(--btn-bg);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+.btn:hover {
+  background: transparent;
+  color: var(--btn-bg);
+}
+.btn .arrow {
+  transition: transform 0.3s var(--ease);
+}
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--btn-bg);
+}
+.btn--ghost:hover {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+.theme-night .btn {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.15rem;
+}
+.link-arrow:hover .arrow {
+  transform: translateX(3px);
+}
+.link-arrow .arrow {
+  transition: transform 0.3s var(--ease);
+}
+
+/* SplitText line masks: leave room for descenders (g, y, p). */
+.split-line-mask {
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* ---------- Motion states ----------
+   Content is visible by default. Elements are only hidden when the
+   head script confirms JS is on and the visitor has not asked for
+   reduced motion. If the animation script fails to start, the
+   failsafe class shows everything again. */
+
+.motion-ok:not(.motion-failed) [data-reveal],
+.motion-ok:not(.motion-failed) [data-reveal-stagger] > * {
+  opacity: 0;
+}
+.motion-ok:not(.motion-failed) [data-split] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

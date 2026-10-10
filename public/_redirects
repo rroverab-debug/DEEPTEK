@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects. https://developers.cloudflare.com/pages/configuration/redirects/
+/home        /              301
+/services    /solutions/    301
+/services/   /solutions/    301
+/portfolio   /work/         301
+/portfolio/  /work/         301

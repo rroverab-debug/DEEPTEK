@@ -1,0 +1,8 @@
+{
+  "name": "DeepTek",
+  "short_name": "DeepTek",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }],
+  "theme_color": "#0c0c0c",
+  "background_color": "#f3f3f1",
+  "display": "standalone"
+}

@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import StickyStory from '../components/StickyStory.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { values } from '../data/site';
+
+const story = [
+  {
+    step: '01',
+    title: 'Built for how UAE businesses grow',
+    body: 'Companies here move fast. New licences, new branches and new markets arrive quickly, and technology often lags behind. DeepTek exists to close that gap.',
+  },
+  {
+    step: '02',
+    title: 'One team instead of three',
+    body: 'IT, marketing and automation are usually bought from different suppliers who never speak. We combine them, so your website, data and campaigns work as one system.',
+  },
+  {
+    step: '03',
+    title: 'Practical about AI',
+    body: 'We use AI where it saves real time or improves service, and we say so when a simpler tool will do. Every automation is tested and kept under human control.',
+  },
+  {
+    step: '04',
+    title: 'In it for the long term',
+    body: 'We want to be the partner you call for years, so we price fairly, document everything and earn the next project with the last one.',
+  },
+];
+---
+
+<Base
+  title="About"
+  description="DeepTek is a new UAE technology company bringing IT solutions, digital marketing and AI automation together under one accountable team."
+>
+  <PageHero
+    label="About"
+    title="A technology partner built for the UAE."
+    lead="DeepTek is a new company with a simple idea: growing businesses deserve technology, marketing and automation that work together and are explained in plain language."
+  />
+
+  <section class="section intro" aria-labelledby="mission-title">
+    <div class="container grid">
+      <h2 id="mission-title" class="eyebrow">Our mission</h2>
+      <p class="big" data-scrub-text>
+        To give every ambitious business in the UAE access to the kind of technology, marketing and automation that used
+        to be reserved for large enterprises, delivered honestly, securely and at a fair price.
+      </p>
+    </div>
+  </section>
+
+  <StickyStory night label="Our story" heading="Why we started DeepTek." steps={story} />
+
+  <section class="section" aria-labelledby="values-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Values</p>
+        <h2 id="values-title" data-split>How we work with every client.</h2>
+      </div>
+      <dl class="values" data-reveal-stagger>
+        {
+          values.map((v) => (
+            <div>
+              <dt>{v.title}</dt>
+              <dd>{v.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section facts theme-night" aria-labelledby="facts-title">
+    <div class="container">
+      <h2 id="facts-title" class="sr-only">At a glance</h2>
+      <dl class="fact-grid" data-reveal-stagger>
+        <div><dt class="mono">Based in</dt><dd>United Arab Emirates</dd></div>
+        <div><dt class="mono">Disciplines</dt><dd>IT · Marketing · AI</dd></div>
+        <div><dt class="mono">Languages</dt><dd>English · Arabic</dd></div>
+        <div><dt class="mono">Working with</dt><dd>Startups to established SMEs</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <CallToAction heading="Let’s talk about your goals." />
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 56rem) {
+    .grid {
+      grid-template-columns: 1fr 3fr;
+    }
+  }
+  .grid h2.eyebrow {
+    font-weight: 450;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+  }
+  .big {
+    font-size: var(--fs-xl);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    font-weight: 450;
+    max-width: 32ch;
+  }
+  .values {
+    border-top: 1px solid var(--line);
+  }
+  .values div {
+    display: grid;
+    gap: 0.75rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 56rem) {
+    .values div {
+      grid-template-columns: 1fr 3fr;
+      gap: 2rem;
+    }
+  }
+  .values dt {
+    font-size: var(--fs-xl);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+  .values dd {
+    color: var(--muted);
+    font-size: var(--fs-lg);
+    max-width: 44ch;
+  }
+  .fact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 2.5rem 2rem;
+  }
+  .fact-grid div {
+    display: grid;
+    gap: 0.75rem;
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+  .fact-grid dt {
+    color: var(--muted);
+  }
+  .fact-grid dd {
+    font-size: var(--fs-xl);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+</style>

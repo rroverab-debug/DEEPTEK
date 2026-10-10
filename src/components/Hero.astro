@@ -1,0 +1,205 @@
+---
+import { pillars } from '../data/site';
+---
+
+<section class="hero theme-night" aria-labelledby="hero-title">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <div class="feed" data-scene role="img" aria-label="Example of automated work DeepTek sets up: enquiries routed, backups verified, reports sent">
+    <div class="feed-win" data-stage aria-hidden="true">
+      <div class="feed-bar">
+        <span>Today’s automations</span>
+        <span class="mono">Example</span>
+      </div>
+      <ul role="list">
+        <li data-step="1"><span class="k mono">AI</span><span>New website enquiry routed to Sales</span><span class="t mono">09:02</span></li>
+        <li data-step="2"><span class="k mono">IT</span><span>Nightly backup verified, 42 devices</span><span class="t mono">09:15</span></li>
+        <li data-step="3"><span class="k mono">MKT</span><span>Weekly Google Ads report sent</span><span class="t mono">09:30</span></li>
+        <li data-step="4"><span class="k mono">AI</span><span>Invoice #2041 read and filed</span><span class="t mono">09:41</span></li>
+      </ul>
+      <div class="feed-foot" data-step="5">
+        <span class="mono">Hours saved this week</span>
+        <b data-fx="count" data-to="18">18</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="container inner">
+    <p class="eyebrow" data-reveal>IT · Digital marketing · AI automation · UAE</p>
+
+    <h1 id="hero-title" class="title" data-split="now">
+      Technology that moves your business forward.
+    </h1>
+
+    <div class="sub">
+      <p class="lead" data-reveal data-delay="0.4">
+        DeepTek is a UAE technology partner. We set up reliable IT, grow your brand online and automate the work
+        that slows your team down, all under one accountable team.
+      </p>
+      <div class="actions" data-reveal data-delay="0.55">
+        <a class="btn" href="/contact/">Book a free consultation <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="/solutions/">Explore solutions</a>
+      </div>
+    </div>
+
+    <ul class="pillars" role="list" data-reveal-stagger>
+      {
+        pillars.map((p) => (
+          <li>
+            <a href={`/solutions/#${p.id}`}>
+              <span class="mono">{p.index}</span>
+              <span>{p.title}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    padding-top: calc(var(--header-h) + 2rem);
+  }
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 6rem 6rem;
+    mask-image: radial-gradient(ellipse 70% 60% at 75% 35%, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 75% 35%, #000 10%, transparent 75%);
+  }
+
+  .feed {
+    display: none;
+  }
+  @media (min-width: 80rem), (min-width: 48rem) and (orientation: portrait) {
+    .feed {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      top: calc(var(--header-h) + 5rem);
+      right: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+      width: 23rem;
+    }
+  }
+  .feed-win {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.1rem 1.2rem;
+    background: rgb(27 27 27 / 0.85);
+    border: 1px solid var(--night-line);
+    border-radius: 0.6rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: var(--fs-sm);
+  }
+  .feed-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--night-line);
+    font-weight: 500;
+  }
+  .feed-bar .mono,
+  .feed .t,
+  .feed-foot .mono {
+    color: var(--night-muted);
+  }
+  .feed li {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr auto;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--night-line);
+  }
+  .feed .k {
+    justify-self: start;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--night-line);
+    border-radius: 0.25rem;
+    font-size: 0.65rem;
+  }
+  .feed-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 0.75rem;
+  }
+  .feed-foot b {
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .inner {
+    position: relative;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .title {
+    font-size: var(--fs-display);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+    max-width: 13ch;
+  }
+  .sub {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+  @media (min-width: 56rem) {
+    .sub {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--night-line);
+    margin-top: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .pillars a {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 1.25rem 1rem 0.25rem 0;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--paper);
+  }
+  .pillars a:hover span:last-child {
+    text-decoration: underline;
+  }
+  .pillars .mono {
+    color: var(--night-muted);
+  }
+  @media (max-width: 40rem) {
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+    .pillars a {
+      padding-block: 0.85rem;
+      border-bottom: 1px solid var(--night-line);
+    }
+  }
+</style>

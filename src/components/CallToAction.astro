@@ -1,0 +1,47 @@
+---
+interface Props {
+  heading?: string;
+  body?: string;
+}
+const {
+  heading = 'Have a project in mind?',
+  body = 'Tell us what you need. We reply within one working day with honest advice and next steps.',
+} = Astro.props;
+---
+
+<section class="cta section" aria-labelledby="cta-title">
+  <div class="container inner">
+    <h2 id="cta-title" data-split>{heading}</h2>
+    <div class="side" data-reveal>
+      <p class="lead">{body}</p>
+      <a class="btn" href="/contact/">Start the conversation <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    gap: 2.5rem;
+    align-items: end;
+  }
+  @media (min-width: 56rem) {
+    .inner {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+  h2 {
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    max-width: 12ch;
+  }
+  .side {
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+  }
+</style>

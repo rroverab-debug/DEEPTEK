@@ -1,0 +1,11 @@
+# Cloudflare Pages project configuration.
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+name = "deeptek-site"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-09-01"
+
+[vars]
+ENVIRONMENT = "production"
+# CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL can live here or in the dashboard.
+# Secrets (TURNSTILE_SECRET_KEY, EMAIL_API_KEY) must be set as encrypted
+# variables in the dashboard or with: npx wrangler pages secret put NAME

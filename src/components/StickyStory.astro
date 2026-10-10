@@ -1,0 +1,187 @@
+---
+interface Step {
+  step: string;
+  title: string;
+  body: string;
+}
+interface Props {
+  label: string;
+  heading: string;
+  steps: readonly Step[];
+  night?: boolean;
+}
+const { label, heading, steps, night = false } = Astro.props;
+const id = `story-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<section class:list={['story section', { 'theme-night': night }]} data-story aria-labelledby={id}>
+  <div class="container grid">
+    <div class="sticky">
+      <p class="eyebrow">{label}</p>
+      <h2 id={id} data-split>{heading}</h2>
+      <div class="visual" aria-hidden="true">
+        <div class="numbers">
+          {
+            steps.map((s, i) => (
+              <span class:list={['num', { active: i === 0 }]} data-story-num>
+                {s.step}
+              </span>
+            ))
+          }
+        </div>
+        <ol class="ticks" role="list">
+          {steps.map((_, i) => <li class:list={{ active: i === 0 }} data-story-tick />)}
+        </ol>
+      </div>
+    </div>
+
+    <ol class="steps" role="list">
+      {
+        steps.map((s, i) => (
+          <li class:list={['step', { active: i === 0 }]} data-story-step>
+            <span class="mono">Step {s.step}</span>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  // Highlights the step nearest the middle of the screen. Uses
+  // IntersectionObserver so it works with or without animations.
+  document.querySelectorAll<HTMLElement>('[data-story]').forEach((story) => {
+    const steps = [...story.querySelectorAll<HTMLElement>('[data-story-step]')];
+    const nums = [...story.querySelectorAll<HTMLElement>('[data-story-num]')];
+    const ticks = [...story.querySelectorAll<HTMLElement>('[data-story-tick]')];
+    const setActive = (index: number) => {
+      [steps, nums, ticks].forEach((group) => group.forEach((el, i) => el.classList.toggle('active', i === index)));
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(steps.indexOf(entry.target as HTMLElement));
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    steps.forEach((s) => io.observe(s));
+  });
+</script>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 56rem) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 8vw, 9rem);
+    }
+    .sticky {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+      min-height: calc(100vh - var(--header-h) - 4rem);
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .sticky h2 {
+    font-size: var(--fs-2xl);
+    max-width: 14ch;
+    margin-top: 1.25rem;
+  }
+
+  .visual {
+    display: none;
+  }
+  @media (min-width: 56rem) {
+    .visual {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-top: auto;
+      padding-top: 3rem;
+    }
+  }
+  .numbers {
+    position: relative;
+    height: clamp(7rem, 14vw, 13rem);
+    flex: 1;
+    overflow: hidden;
+  }
+  .num {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: clamp(7rem, 16vw, 15rem);
+    font-weight: 500;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    opacity: 0;
+    transform: translateY(40%);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .num.active {
+    opacity: 1;
+    transform: none;
+  }
+  .ticks {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .ticks li {
+    width: 2.5rem;
+    height: 2px;
+    background: var(--line);
+    transition:
+      background-color 0.4s var(--ease),
+      width 0.4s var(--ease);
+  }
+  .ticks li.active {
+    width: 4rem;
+    background: currentColor;
+  }
+
+  .steps {
+    display: grid;
+  }
+  .step {
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+    padding-block: 2.5rem;
+    border-top: 1px solid var(--line);
+  }
+  @media (min-width: 56rem) {
+    .step {
+      min-height: 70vh;
+      transition: opacity 0.5s var(--ease);
+    }
+    :global(.js) .step:not(.active) {
+      opacity: 0.35;
+    }
+    .step.active {
+      opacity: 1;
+    }
+  }
+  .step .mono {
+    color: var(--muted);
+  }
+  .step h3 {
+    font-size: var(--fs-xl);
+  }
+  .step p {
+    color: var(--muted);
+    max-width: 40ch;
+    font-size: var(--fs-lg);
+    line-height: 1.5;
+  }
+</style>

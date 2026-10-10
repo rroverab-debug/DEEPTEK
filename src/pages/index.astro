@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ServiceRail from '../components/ServiceRail.astro';
+import StickyStory from '../components/StickyStory.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { process, projects, values } from '../data/site';
+---
+
+<Base darkTop>
+  <Hero />
+
+  <section class="statement section" aria-labelledby="statement-label">
+    <div class="container grid">
+      <p class="eyebrow" id="statement-label">Why DeepTek</p>
+      <p class="big" data-scrub-text>
+        Most growing businesses juggle an IT contractor, a marketing agency and a stack of tools that do not talk to
+        each other. We bring technology, marketing and automation together, so every part of your business pulls in the
+        same direction.
+      </p>
+    </div>
+  </section>
+
+  <ServiceRail />
+
+  <StickyStory
+    night
+    label="How we work"
+    heading="A clear process from first call to lasting results."
+    steps={process}
+  />
+
+  <section class="section" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Selected work</p>
+        <div class="work-head">
+          <h2 id="work-title" data-split>The kind of problems we solve.</h2>
+          <a class="link-arrow" href="/work/" data-reveal>All work <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <div class="showcases">
+        {projects.slice(0, 2).map((p, i) => <ProjectShowcase project={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section values" aria-labelledby="values-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Principles</p>
+        <h2 id="values-title" data-split>What you can expect from us.</h2>
+      </div>
+      <ol class="value-grid" role="list" data-reveal-stagger>
+        {
+          values.map((v, i) => (
+            <li>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{v.title}</h3>
+              <p>{v.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 56rem) {
+    .grid {
+      grid-template-columns: 1fr 3fr;
+    }
+  }
+  .big {
+    font-size: var(--fs-xl);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    font-weight: 450;
+    max-width: 32ch;
+  }
+
+  .work-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .work-head h2 {
+    font-size: var(--fs-2xl);
+    max-width: 14ch;
+  }
+  .showcases {
+    display: grid;
+    gap: clamp(4rem, 10vw, 9rem);
+  }
+
+  .values {
+    border-top: 1px solid var(--line);
+  }
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .value-grid li {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 2rem 1.5rem 2.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .value-grid .mono {
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .value-grid h3 {
+    font-size: var(--fs-lg);
+    letter-spacing: -0.02em;
+  }
+  .value-grid p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    max-width: 32ch;
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { projects } from '../data/site';
+
+const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitality', 'Retail and e-commerce', 'Professional services'];
+---
+
+<Base
+  title="Work"
+  description="Examples of the IT, digital marketing and AI automation work DeepTek delivers for businesses in the UAE."
+>
+  <PageHero
+    label="Work"
+    title="Practical work with measurable outcomes."
+    lead="These sample engagements show the problems we are set up to solve. Full client case studies will be published here as projects launch, with each client’s permission."
+  />
+
+  <section class="section" aria-label="Sample projects">
+    <div class="container showcases">
+      {projects.map((p, i) => <ProjectShowcase project={p} index={i} detailed />)}
+    </div>
+  </section>
+
+  <section class="section theme-night sectors" aria-labelledby="sectors-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Sectors</p>
+        <h2 id="sectors-title" data-split>Built for the industries that drive the UAE.</h2>
+      </div>
+      <ul class="sector-list" role="list" data-reveal-stagger>
+        {
+          sectors.map((s, i) => (
+            <li>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              <span>{s}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CallToAction heading="Could your project be next?" />
+</Base>
+
+<style>
+  .showcases {
+    display: grid;
+    gap: clamp(4.5rem, 11vw, 10rem);
+  }
+  .sector-list {
+    border-top: 1px solid var(--line);
+  }
+  .sector-list li {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(1rem, 4vw, 4rem);
+    padding-block: clamp(1rem, 2vw, 1.5rem);
+    border-bottom: 1px solid var(--line);
+    font-size: var(--fs-xl);
+    letter-spacing: -0.03em;
+    font-weight: 500;
+  }
+  .sector-list .mono {
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+</style>

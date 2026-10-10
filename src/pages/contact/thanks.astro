@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Message sent" description="Thank you for contacting DeepTek." noindex>
+  <section class="thanks">
+    <div class="container inner">
+      <p class="eyebrow" data-reveal>Message sent</p>
+      <h1 data-split="now">Thank you. We will be in touch soon.</h1>
+      <p class="lead" data-reveal data-delay="0.3">
+        Your message has reached our team. Expect a reply within one working day. If it is urgent, mention that in a
+        follow-up email.
+      </p>
+      <div data-reveal data-delay="0.45">
+        <a class="btn" href="/">Back to home <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--header-h) + 4rem) 6rem;
+  }
+  .inner {
+    display: grid;
+    gap: 2rem;
+  }
+  h1 {
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.045em;
+    max-width: 14ch;
+  }
+</style>
