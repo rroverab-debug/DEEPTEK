@@ -160,6 +160,15 @@ npm run deploy        # wrangler pages deploy ./dist --project-name deeptek-site
 
 Cost: Cloudflare Pages, Pages Functions (100,000 requests/day), Turnstile and the WAF rate limit rule are all on the free plan. The only expected cost is the domain itself.
 
+## Temporary hosting on Vercel
+
+While the site is still being finished it can be previewed on Vercel's free Hobby plan. `vercel.json` sets the build and the same security headers as Cloudflare, and adds `noindex` so the temporary address stays out of search results.
+
+1. vercel.com → Add New → Project → import the `deeptek` GitHub repository.
+2. Leave the detected settings (Astro, `npm run build`, output `dist`) and deploy. Every push to `main` redeploys.
+
+Limits on Vercel: the contact form endpoint (`functions/api/contact.ts`) is a Cloudflare Pages Function and does not run there, so the form shows an error; email, phone and WhatsApp links work. Remove `vercel.json` (or ignore it) when moving to Cloudflare Pages.
+
 ## Visitor analytics
 
 Use Cloudflare Web Analytics. It is free, sets no cookies and stores no personal data, so no cookie banner is needed.
