@@ -6,8 +6,8 @@ const lang = langOf(Astro.url);
 const { nav, site, pillars } = content(lang);
 const l = (href: string) => localize(href, lang);
 const t = {
-  en: { home: 'Home', homeLabel: `${site.name} home`, pages: 'Pages', solutions: 'Solutions', contact: 'Contact', footer: 'Footer', rights: 'All rights reserved.', licence: 'Trade licence', privacy: 'Privacy', whatsapp: 'WhatsApp' },
-  ar: { home: 'الرئيسية', homeLabel: `${site.name}، الصفحة الرئيسية`, pages: 'الصفحات', solutions: 'الحلول', contact: 'تواصل', footer: 'تذييل الموقع', rights: 'جميع الحقوق محفوظة.', licence: 'الرخصة التجارية', privacy: 'الخصوصية', whatsapp: 'واتساب' },
+  en: { home: 'Home', homeLabel: `${site.name} home`, pages: 'Pages', solutions: 'Solutions', contact: 'Contact', footer: 'Footer', rights: 'All rights reserved.', licence: 'Trade licence', privacy: 'Privacy' },
+  ar: { home: 'الرئيسية', homeLabel: `${site.name}، الصفحة الرئيسية`, pages: 'الصفحات', solutions: 'الحلول', contact: 'تواصل', footer: 'تذييل الموقع', rights: 'جميع الحقوق محفوظة.', licence: 'الرخصة التجارية', privacy: 'الخصوصية' },
 }[lang];
 
 const year = new Date().getFullYear();
@@ -39,9 +39,6 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
         <ul role="list">
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={`tel:${site.phone.tel}`} dir="ltr">{site.phone.display}</a></li>
-          <li>
-            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">{t.whatsapp}</a>
-          </li>
           <li>{site.address || site.location}</li>
           {
             social.map(([name, url]) => (
