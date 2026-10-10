@@ -1,6 +1,7 @@
 ---
 import type { Project } from '../data/site';
 import ProjectScene from './ProjectScene.astro';
+import { langOf } from '../i18n';
 
 interface Props {
   project: Project;
@@ -9,11 +10,15 @@ interface Props {
 }
 const { project, index, detailed = false } = Astro.props;
 const flip = index % 2 === 1;
+const t = {
+  en: { illustration: 'Illustration', challenge: 'Challenge', approach: 'Approach', services: 'Services' },
+  ar: { illustration: 'رسم توضيحي', challenge: 'التحدي', approach: 'الحل', services: 'الخدمات' },
+}[langOf(Astro.url)];
 ---
 
 <article class:list={['showcase', { flip }]} data-showcase id={project.slug} aria-labelledby={`${project.slug}-title`}>
   <div class="media" data-showcase-media>
-    <ProjectScene scene={project.scene} label={`Illustration: ${project.outcome}`} />
+    <ProjectScene scene={project.scene} label={`${t.illustration}: ${project.outcome}`} />
   </div>
   <div class="body">
     <div class="meta mono">
@@ -25,11 +30,11 @@ const flip = index % 2 === 1;
       detailed ? (
         <dl class="details">
           <div>
-            <dt class="mono">Challenge</dt>
+            <dt class="mono">{t.challenge}</dt>
             <dd>{project.summary}</dd>
           </div>
           <div>
-            <dt class="mono">Approach</dt>
+            <dt class="mono">{t.approach}</dt>
             <dd>{project.outcome}</dd>
           </div>
         </dl>
@@ -37,7 +42,7 @@ const flip = index % 2 === 1;
         <p>{project.outcome}</p>
       )
     }
-    <ul class="tags" role="list" aria-label="Services">
+    <ul class="tags" role="list" aria-label={t.services}>
       {project.services.map((s) => <li>{s}</li>)}
     </ul>
   </div>

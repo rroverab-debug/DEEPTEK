@@ -1,60 +1,63 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import { site } from '../data/site';
+import { content, langOf } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { site } = content(lang);
+const mail = `<a href="mailto:${site.email}">${site.email}</a>`;
+const tel = `<a href="tel:${site.phone.tel}" dir="ltr">${site.phone.display}</a>`;
+
+// Each section is a heading and one paragraph. Paragraphs are trusted copy from this file.
+const t = {
+  en: {
+    title: 'Privacy notice',
+    description: 'How DeepTek handles personal data submitted through this website.',
+    label: 'Legal',
+    heading: 'Privacy notice.',
+    lead: 'Last updated: October 2026. This is a starting draft and should be reviewed by a legal adviser before launch.',
+    sections: [
+      ['Who we are', `This website is operated by ${site.legalName} ("DeepTek", "we"), based in the United Arab Emirates. We are responsible for the personal data described in this notice.`],
+      ['What we collect', 'When you use the contact form we receive the details you enter: your name, email address, and optionally your company, phone number, budget range and message. If you message us on WhatsApp, we receive your phone number, profile name and the messages you send.'],
+      ['Cookies and analytics', 'We do not use advertising cookies or cross-site tracking. We may use Cloudflare Web Analytics to count visits. It does not set cookies, does not use your IP address to identify you and only produces anonymous totals such as page views and country.'],
+      ['How we use it', 'We use your details only to reply to your enquiry and, if you become a client, to deliver our services and meet our legal obligations. We do not sell your details or share them for marketing.'],
+      ['Services we rely on', 'The website is hosted on Cloudflare. Cloudflare Turnstile protects the form from spam and may process technical data such as your IP address. Form submissions reach us by email through a transactional email provider. WhatsApp is provided by Meta, and conversations there are also covered by WhatsApp’s own privacy policy. Some of these providers may process data outside the UAE, with appropriate safeguards.'],
+      ['How long we keep it', 'Enquiries are kept for up to 24 months unless we start working together. Client records are kept for as long as UAE law requires.'],
+      ['Your rights', `Under the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) you can ask to access, correct or delete your personal data, or object to how we use it. Email ${mail} or call ${tel} and we will respond promptly.`],
+    ],
+  },
+  ar: {
+    title: 'إشعار الخصوصية',
+    description: 'كيف تتعامل DeepTek مع البيانات الشخصية المرسلة عبر هذا الموقع.',
+    label: 'قانوني',
+    heading: 'إشعار الخصوصية.',
+    lead: 'آخر تحديث: أكتوبر 2026. هذه مسودة أولية ويجب أن يراجعها مستشار قانوني قبل الإطلاق.',
+    sections: [
+      ['من نحن', `يدير هذا الموقع <span lang="en" dir="ltr">${site.legalName}</span> ("DeepTek" أو "نحن")، ومقرها الإمارات العربية المتحدة. نحن مسؤولون عن البيانات الشخصية الموضحة في هذا الإشعار.`],
+      ['ما نجمعه', 'عند استخدامك نموذج التواصل نتلقى البيانات التي تُدخلها: اسمك وبريدك الإلكتروني، واختيارياً شركتك ورقم هاتفك ونطاق الميزانية ورسالتك. وإذا راسلتنا على واتساب، نتلقى رقم هاتفك واسم ملفك الشخصي والرسائل التي ترسلها.'],
+      ['ملفات تعريف الارتباط والتحليلات', 'لا نستخدم ملفات تعريف ارتباط إعلانية أو تتبعاً عبر المواقع. قد نستخدم Cloudflare Web Analytics لعدّ الزيارات، وهي لا تضع ملفات تعريف ارتباط ولا تستخدم عنوان IP الخاص بك للتعرف عليك، وتقدم فقط أرقاماً إجمالية مجهولة مثل عدد مشاهدات الصفحات والدولة.'],
+      ['كيف نستخدمها', 'نستخدم بياناتك فقط للرد على استفسارك، وإذا أصبحت عميلاً، لتقديم خدماتنا والوفاء بالتزاماتنا القانونية. لا نبيع بياناتك ولا نشاركها لأغراض تسويقية.'],
+      ['الخدمات التي نعتمد عليها', 'الموقع مستضاف على Cloudflare. تحمي خدمة Cloudflare Turnstile النموذج من البريد المزعج وقد تعالج بيانات تقنية مثل عنوان IP. تصلنا رسائل النموذج عبر البريد الإلكتروني من خلال مزود بريد للمعاملات. تقدم Meta خدمة واتساب، وتخضع المحادثات هناك أيضاً لسياسة الخصوصية الخاصة بواتساب. قد يعالج بعض هؤلاء المزودين البيانات خارج الإمارات مع ضمانات مناسبة.'],
+      ['مدة الاحتفاظ', 'نحتفظ بالاستفسارات لمدة تصل إلى 24 شهراً ما لم نبدأ العمل معاً. ونحتفظ بسجلات العملاء للمدة التي يتطلبها قانون دولة الإمارات.'],
+      ['حقوقك', `بموجب قانون حماية البيانات الشخصية في الإمارات (المرسوم بقانون اتحادي رقم 45 لسنة 2021) يمكنك طلب الاطلاع على بياناتك الشخصية أو تصحيحها أو حذفها، أو الاعتراض على طريقة استخدامنا لها. راسلنا على ${mail} أو اتصل على ${tel} وسنرد عليك سريعاً.`],
+    ],
+  },
+}[lang];
 ---
 
-<Base title="Privacy notice" description="How DeepTek handles personal data submitted through this website.">
-  <PageHero label="Legal" title="Privacy notice." lead="Last updated: October 2026. This is a starting draft and should be reviewed by a legal adviser before launch." />
+<Base title={t.title} description={t.description}>
+  <PageHero label={t.label} title={t.heading} lead={t.lead} />
 
   <section class="section">
     <div class="container prose">
-      <h2>Who we are</h2>
-      <p>
-        This website is operated by {site.legalName} ("DeepTek", "we"), based in the United Arab Emirates. We are
-        responsible for the personal data described in this notice.
-      </p>
-
-      <h2>What we collect</h2>
-      <p>
-        When you use the contact form we receive the details you enter: your name, email address, and optionally your
-        company, phone number, budget range and message. If you message us on WhatsApp, we receive your phone number,
-        profile name and the messages you send.
-      </p>
-
-      <h2>Cookies and analytics</h2>
-      <p>
-        We do not use advertising cookies or cross-site tracking. We may use Cloudflare Web Analytics to count visits.
-        It does not set cookies, does not use your IP address to identify you and only produces anonymous totals such as
-        page views and country.
-      </p>
-
-      <h2>How we use it</h2>
-      <p>
-        We use your details only to reply to your enquiry and, if you become a client, to deliver our services and meet
-        our legal obligations. We do not sell your details or share them for marketing.
-      </p>
-
-      <h2>Services we rely on</h2>
-      <p>
-        The website is hosted on Cloudflare. Cloudflare Turnstile protects the form from spam and may process technical
-        data such as your IP address. Form submissions reach us by email through a transactional email provider.
-        WhatsApp is provided by Meta, and conversations there are also covered by WhatsApp's own privacy policy. Some of
-        these providers may process data outside the UAE, with appropriate safeguards.
-      </p>
-
-      <h2>How long we keep it</h2>
-      <p>
-        Enquiries are kept for up to 24 months unless we start working together. Client records are kept for as long as
-        UAE law requires.
-      </p>
-
-      <h2>Your rights</h2>
-      <p>
-        Under the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) you can ask to access, correct or
-        delete your personal data, or object to how we use it. Email <a href={`mailto:${site.email}`}>{site.email}</a>
-        or call <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a> and we will respond promptly.
-      </p>
+      {
+        t.sections.map(([h, body]) => (
+          <>
+            <h2>{h}</h2>
+            <p set:html={body} />
+          </>
+        ))
+      }
     </div>
   </section>
 </Base>

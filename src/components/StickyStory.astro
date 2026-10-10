@@ -1,4 +1,6 @@
 ---
+import { langOf } from '../i18n';
+
 interface Step {
   step: string;
   title: string;
@@ -11,7 +13,10 @@ interface Props {
   night?: boolean;
 }
 const { label, heading, steps, night = false } = Astro.props;
-const id = `story-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const lang = langOf(Astro.url);
+const stepWord = lang === 'ar' ? 'الخطوة' : 'Step';
+// One story per page, so a fixed id is enough (labels may be Arabic and do not slug well).
+const id = 'story-title';
 ---
 
 <section class:list={['story section', { 'theme-night': night }]} data-story aria-labelledby={id}>
@@ -39,7 +44,7 @@ const id = `story-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
       {
         steps.map((s, i) => (
           <li class:list={['step', { active: i === 0 }]} data-story-step>
-            <span class="mono">Step {s.step}</span>
+            <span class="mono">{stepWord} {s.step}</span>
             <h3>{s.title}</h3>
             <p>{s.body}</p>
           </li>
@@ -117,7 +122,7 @@ const id = `story-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
   }
   .num {
     position: absolute;
-    left: 0;
+    inset-inline-start: 0;
     bottom: 0;
     font-size: clamp(7rem, 16vw, 15rem);
     font-weight: 500;

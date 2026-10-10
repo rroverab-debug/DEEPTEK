@@ -1,11 +1,17 @@
 ---
 import { site } from '../data/site';
+import { langOf } from '../i18n';
 
 interface Props {
   label?: string;
   message?: string;
 }
-const { label = 'Chat on WhatsApp', message = 'Hello DeepTek, I would like to discuss a project.' } = Astro.props;
+const lang = langOf(Astro.url);
+const t = {
+  en: { label: 'Chat on WhatsApp', message: 'Hello DeepTek, I would like to discuss a project.' },
+  ar: { label: 'تواصل عبر واتساب', message: 'مرحباً DeepTek، أود مناقشة مشروع.' },
+}[lang];
+const { label = t.label, message = t.message } = Astro.props;
 const href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 ---
 

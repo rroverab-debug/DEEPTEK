@@ -1,18 +1,36 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { langOf, localize } from '../../i18n';
+
+const lang = langOf(Astro.url);
+const t = {
+  en: {
+    title: 'Message sent',
+    description: 'Thank you for contacting DeepTek.',
+    label: 'Message sent',
+    heading: 'Thank you. We will be in touch soon.',
+    lead: 'Your message has reached our team. Expect a reply within one working day. If it is urgent, mention that in a follow-up email.',
+    back: 'Back to home',
+  },
+  ar: {
+    title: 'تم إرسال الرسالة',
+    description: 'شكراً لتواصلك مع DeepTek.',
+    label: 'تم إرسال الرسالة',
+    heading: 'شكراً لك. سنتواصل معك قريباً.',
+    lead: 'وصلت رسالتك إلى فريقنا. توقع رداً خلال يوم عمل واحد. إذا كان الأمر عاجلاً، اذكر ذلك في رسالة متابعة.',
+    back: 'العودة إلى الرئيسية',
+  },
+}[lang];
 ---
 
-<Base title="Message sent" description="Thank you for contacting DeepTek." noindex>
+<Base title={t.title} description={t.description} noindex>
   <section class="thanks">
     <div class="container inner">
-      <p class="eyebrow" data-reveal>Message sent</p>
-      <h1 data-split="now">Thank you. We will be in touch soon.</h1>
-      <p class="lead" data-reveal data-delay="0.3">
-        Your message has reached our team. Expect a reply within one working day. If it is urgent, mention that in a
-        follow-up email.
-      </p>
+      <p class="eyebrow" data-reveal>{t.label}</p>
+      <h1 data-split="now">{t.heading}</h1>
+      <p class="lead" data-reveal data-delay="0.3">{t.lead}</p>
       <div data-reveal data-delay="0.45">
-        <a class="btn" href="/">Back to home <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href={localize('/', lang)}>{t.back} <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>

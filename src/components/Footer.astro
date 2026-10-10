@@ -1,6 +1,14 @@
 ---
-import { nav, site, pillars } from '../data/site';
 import Logo from './Logo.astro';
+import { content, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { nav, site, pillars } = content(lang);
+const l = (href: string) => localize(href, lang);
+const t = {
+  en: { home: 'Home', homeLabel: `${site.name} home`, pages: 'Pages', solutions: 'Solutions', contact: 'Contact', footer: 'Footer', rights: 'All rights reserved.', licence: 'Trade licence', privacy: 'Privacy', whatsapp: 'WhatsApp' },
+  ar: { home: 'الرئيسية', homeLabel: `${site.name}، الصفحة الرئيسية`, pages: 'الصفحات', solutions: 'الحلول', contact: 'تواصل', footer: 'تذييل الموقع', rights: 'جميع الحقوق محفوظة.', licence: 'الرخصة التجارية', privacy: 'الخصوصية', whatsapp: 'واتساب' },
+}[lang];
 
 const year = new Date().getFullYear();
 const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
@@ -10,29 +18,29 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
   <div class="container">
     <div class="cols">
       <div class="col brand-col">
-        <a href="/" aria-label={`${site.name} home`} class="brand"><Logo /></a>
+        <a href={l('/')} aria-label={t.homeLabel} class="brand"><Logo /></a>
         <p>{site.tagline}</p>
       </div>
-      <nav class="col" aria-label="Footer">
-        <h2 class="mono">Pages</h2>
+      <nav class="col" aria-label={t.footer}>
+        <h2 class="mono">{t.pages}</h2>
         <ul role="list">
-          <li><a href="/">Home</a></li>
-          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href={l('/')}>{t.home}</a></li>
+          {nav.map((item) => <li><a href={l(item.href)}>{item.label}</a></li>)}
         </ul>
       </nav>
       <div class="col">
-        <h2 class="mono">Solutions</h2>
+        <h2 class="mono">{t.solutions}</h2>
         <ul role="list">
-          {pillars.map((p) => <li><a href={`/solutions/#${p.id}`}>{p.title}</a></li>)}
+          {pillars.map((p) => <li><a href={l(`/solutions/#${p.id}`)}>{p.title}</a></li>)}
         </ul>
       </div>
       <div class="col">
-        <h2 class="mono">Contact</h2>
+        <h2 class="mono">{t.contact}</h2>
         <ul role="list">
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a></li>
+          <li><a href={`tel:${site.phone.tel}`} dir="ltr">{site.phone.display}</a></li>
           <li>
-            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">WhatsApp</a>
+            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">{t.whatsapp}</a>
           </li>
           <li>{site.address || site.location}</li>
           {
@@ -50,15 +58,15 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
 
     <div class="base">
       <p>
-        © {year} {site.legalName}. All rights reserved.
+        © {year} <span lang="en" dir="ltr">{site.legalName}</span>. {t.rights}
         {site.licence.number && (
           <span class="licence">
-            {' '}Trade licence {site.licence.number}
+            {' '}{t.licence} {site.licence.number}
             {site.licence.authority && `, ${site.licence.authority}`}.
           </span>
         )}
       </p>
-      <p><a href="/privacy/">Privacy</a></p>
+      <p><a href={l('/privacy/')}>{t.privacy}</a></p>
     </div>
   </div>
 </footer>

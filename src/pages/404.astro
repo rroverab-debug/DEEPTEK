@@ -12,11 +12,23 @@ import Base from '../layouts/Base.astro';
         <a class="btn" href="/">Go to home <span class="arrow" aria-hidden="true">→</span></a>
         <a class="btn btn--ghost" href="/contact/">Contact us</a>
       </div>
+      <div class="ar" lang="ar" dir="rtl">
+        <p class="lead">هذه الصفحة غير موجودة. ربما نُقلت أو أن الرابط غير صحيح.</p>
+        <a class="link-arrow" href="/ar/">الانتقال إلى الصفحة الرئيسية <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
+  .ar {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
   .nf {
     min-height: 80vh;
     display: flex;

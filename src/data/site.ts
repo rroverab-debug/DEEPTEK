@@ -42,7 +42,7 @@ export const nav = [
 
 export type Service = {
   id: string;
-  pillar: 'IT Solutions' | 'Digital Marketing' | 'AI Automation';
+  pillar: string;
   title: string;
   summary: string;
   points: string[];

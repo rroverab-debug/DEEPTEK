@@ -69,7 +69,18 @@ With the email settings left empty in `.dev.vars`, submissions are printed to th
 
 Most text lives in `src/data/site.ts`: company details, navigation, services, solution pillars, process steps, projects, values and FAQs. Contact email (`info@deeptek.ae`), phone number and the registered company name (`legalName`) are set there too. Add social links once they exist.
 
-Project artwork is generated, original SVG (`ProjectArt.astro`). Replace it with real screenshots or photography when case studies are ready (place images in `src/assets/` and use Astro's `<Image />` for automatic optimisation).
+## Arabic version
+
+English lives at `/`, Arabic at `/ar/` (right-to-left, Noto Kufi Arabic font, language switch in the header, `hreflang` links and an i18n sitemap).
+
+- Arabic copy for shared content is in `src/data/site.ar.ts`, which mirrors `site.ts` (same ids and slugs).
+- Page-specific text sits at the top of each page or component in a `t = { en: {...}, ar: {...} }` block. When you change English text, change the Arabic next to it.
+- Files in `src/pages/ar/` only re-use the English templates; the language comes from the URL (`src/i18n.ts`).
+- The contact form posts to `/api/contact?lang=ar` so error messages and the thank-you page are in Arabic.
+- Project illustrations are English product sketches and stay left-to-right.
+- Have a native Arabic speaker review the copy before launch.
+
+Project artwork is generated, original SVG (`ProjectScene.astro`). Replace it with real screenshots or photography when case studies are ready (place images in `src/assets/` and use Astro's `<Image />` for automatic optimisation).
 
 ## Design system
 
@@ -172,7 +183,8 @@ Use Cloudflare Web Analytics. It is free, sets no cookies and stores no personal
 - [ ] Trade licence number, issuing authority, office address and social links in `src/data/site.ts` (empty values stay hidden)
 - [ ] Enable Cloudflare Web Analytics
 - [ ] Replace sample projects on `/work/` with real case studies
-- [ ] Have the privacy notice reviewed
+- [ ] Have the privacy notice reviewed (English and Arabic)
+- [ ] Native speaker review of the Arabic copy
 - [ ] Turnstile keys, email provider and variables set
 - [ ] WAF rate limit rule on `/api/contact`
 - [ ] Submit `sitemap-index.xml` in Google Search Console and Bing Webmaster Tools

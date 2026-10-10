@@ -1,12 +1,24 @@
 ---
+import { langOf, localize } from '../i18n';
+
 interface Props {
   heading?: string;
   body?: string;
 }
-const {
-  heading = 'Have a project in mind?',
-  body = 'Tell us what you need. We reply within one working day with honest advice and next steps.',
-} = Astro.props;
+const lang = langOf(Astro.url);
+const t = {
+  en: {
+    heading: 'Have a project in mind?',
+    body: 'Tell us what you need. We reply within one working day with honest advice and next steps.',
+    button: 'Start the conversation',
+  },
+  ar: {
+    heading: 'لديك مشروع في بالك؟',
+    body: 'أخبرنا بما تحتاجه. نرد خلال يوم عمل واحد بنصيحة صادقة وخطوات واضحة.',
+    button: 'ابدأ المحادثة',
+  },
+}[lang];
+const { heading = t.heading, body = t.body } = Astro.props;
 ---
 
 <section class="cta section" aria-labelledby="cta-title">
@@ -14,7 +26,7 @@ const {
     <h2 id="cta-title" data-split>{heading}</h2>
     <div class="side" data-reveal>
       <p class="lead">{body}</p>
-      <a class="btn" href="/contact/">Start the conversation <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn" href={localize('/contact/', lang)}>{t.button} <span class="arrow" aria-hidden="true">→</span></a>
     </div>
   </div>
 </section>

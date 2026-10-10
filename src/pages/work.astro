@@ -3,7 +3,43 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { industries, projects, workCategories } from '../data/site';
+import { content, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { industries, projects, workCategories } = content(lang);
+
+const t = {
+  en: {
+    title: 'Work',
+    description: 'Examples of the IT, digital marketing and AI automation work DeepTek delivers for businesses in the UAE.',
+    label: 'Work',
+    heading: 'Practical work with measurable outcomes.',
+    lead: 'These sample engagements show the problems we are set up to solve. Full client case studies will be published here as projects launch, with each client’s permission.',
+    catNav: 'Work categories',
+    count: (n: number) => `${n} ${n === 1 ? 'project' : 'projects'}`,
+    sectorsLabel: 'Who we work with',
+    sectorsHeading: 'For every kind of business, big or small.',
+    sectorsLead: 'Most of our clients are small and growing businesses. Here is what we typically do for each.',
+    sectorsCta: 'Do not see your business here? We probably still help businesses like yours.',
+    sectorsButton: 'Tell us about it',
+    cta: 'Could your project be next?',
+  },
+  ar: {
+    title: 'أعمالنا',
+    description: 'أمثلة على أعمال تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي التي تقدمها DeepTek للشركات في الإمارات.',
+    label: 'أعمالنا',
+    heading: 'أعمال عملية بنتائج قابلة للقياس.',
+    lead: 'توضح هذه الأمثلة نوع المشكلات التي نحلها. سننشر هنا دراسات حالة كاملة لعملائنا مع إطلاق المشاريع، وبإذن كل عميل.',
+    catNav: 'فئات الأعمال',
+    count: (n: number) => (n === 1 ? 'مشروع واحد' : n === 2 ? 'مشروعان' : `${n} مشاريع`),
+    sectorsLabel: 'من نخدم',
+    sectorsHeading: 'لكل أنواع الأعمال، كبيرة كانت أو صغيرة.',
+    sectorsLead: 'معظم عملائنا شركات صغيرة ونامية. هذا ما نقدمه عادةً لكل منها.',
+    sectorsCta: 'لا ترى نشاطك هنا؟ على الأرجح نساعد أعمالاً مثل أعمالك أيضاً.',
+    sectorsButton: 'أخبرنا عنه',
+    cta: 'هل يكون مشروعك التالي؟',
+  },
+}[lang];
 
 const groups = workCategories
   .map((c) => ({ ...c, items: projects.filter((p) => p.category === c.id) }))
@@ -12,17 +48,14 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
 
 ---
 
-<Base
-  title="Work"
-  description="Examples of the IT, digital marketing and AI automation work DeepTek delivers for businesses in the UAE."
->
+<Base title={t.title} description={t.description}>
   <PageHero
-    label="Work"
-    title="Practical work with measurable outcomes."
-    lead="These sample engagements show the problems we are set up to solve. Full client case studies will be published here as projects launch, with each client’s permission."
+    label={t.label}
+    title={t.heading}
+    lead={t.lead}
   />
 
-  <nav class="cat-nav" aria-label="Work categories">
+  <nav class="cat-nav" aria-label={t.catNav}>
     <div class="container">
       <ul role="list">
         {
@@ -56,7 +89,7 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
               </p>
             </div>
             <span class="mono cat-count" data-reveal>
-              {g.items.length} {g.items.length === 1 ? 'project' : 'projects'}
+              {t.count(g.items.length)}
             </span>
           </header>
           <div class="showcases">
@@ -72,11 +105,9 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
   <section class="section theme-night sectors" aria-labelledby="sectors-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Who we work with</p>
-        <h2 id="sectors-title" data-split>For every kind of business, big or small.</h2>
-        <p class="lead" data-reveal>
-          Most of our clients are small and growing businesses. Here is what we typically do for each.
-        </p>
+        <p class="eyebrow">{t.sectorsLabel}</p>
+        <h2 id="sectors-title" data-split>{t.sectorsHeading}</h2>
+        <p class="lead" data-reveal>{t.sectorsLead}</p>
       </div>
       <ul class="sector-grid" role="list" data-reveal-stagger>
         {
@@ -91,13 +122,13 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
         }
       </ul>
       <div class="sector-cta" data-reveal>
-        <p>Do not see your business here? We probably still help businesses like yours.</p>
-        <a class="btn" href="/contact/">Tell us about it <span class="arrow" aria-hidden="true">→</span></a>
+        <p>{t.sectorsCta}</p>
+        <a class="btn" href={localize('/contact/', lang)}>{t.sectorsButton} <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
 
-  <CallToAction heading="Could your project be next?" />
+  <CallToAction heading={t.cta} />
 </Base>
 
 <script>

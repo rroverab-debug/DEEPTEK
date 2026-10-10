@@ -1,6 +1,7 @@
 /* DeepTek design system: monochrome, editorial, quiet. */
 @import '@fontsource-variable/inter-tight/wght.css';
 @import '@fontsource-variable/jetbrains-mono/wght.css';
+@import '@fontsource-variable/noto-kufi-arabic/wght.css';
 
 :root {
   /* Colour */
@@ -170,7 +171,7 @@ ol[role='list'] {
 
 .skip-link {
   position: absolute;
-  left: var(--gutter);
+  inset-inline-start: var(--gutter);
   top: -100px;
   z-index: 100;
   background: var(--ink);
@@ -335,4 +336,42 @@ ol[role='list'] {
   html {
     scroll-behavior: smooth;
   }
+}
+
+/* ---------- Arabic and right-to-left ---------- */
+
+/* Arabic text uses Noto Kufi Arabic; Latin words inside it (brand names) keep Inter Tight. */
+:lang(ar) {
+  --font-sans: 'Inter Tight Variable', 'Noto Kufi Arabic Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'Noto Kufi Arabic Variable', ui-monospace, monospace;
+}
+/* Arabic script is joined, so Latin-style tracking and uppercase labels do not apply. */
+:lang(ar),
+:lang(ar) * {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+:lang(ar) body,
+body:lang(ar) {
+  line-height: 1.7;
+}
+/* Arabic letters have tall ascenders and dots below, so headings need more room. */
+:lang(ar) :is(h2, h3, .big) {
+  line-height: 1.4 !important;
+}
+:lang(ar) h1 {
+  line-height: 1.25 !important;
+}
+:lang(ar) .split-line-mask {
+  padding-block: 0.2em 0.25em;
+  margin-block: -0.2em -0.25em;
+}
+/* Arrows point the way you read. */
+[dir='rtl'] .arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+[dir='rtl'] .btn:hover .arrow,
+[dir='rtl'] .link-arrow:hover .arrow {
+  transform: scaleX(-1) translateX(3px);
 }

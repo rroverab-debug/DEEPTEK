@@ -1,18 +1,101 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
-import { pillars, site } from '../../data/site';
+import { pillars as enPillars } from '../../data/site';
+import { content, langOf, localize } from '../../i18n';
+
+const lang = langOf(Astro.url);
+const { pillars, site } = content(lang);
+const l = (href: string) => localize(href, lang);
 
 // Cloudflare's always-pass test key is used until a real key is set at build time.
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
-const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,000', 'Over AED 75,000', 'Not sure yet'];
+// Values stay in English so every enquiry email reads the same; labels follow the page language.
+const budgetValues = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,000', 'Over AED 75,000', 'Not sure yet'];
+
+const t = {
+  en: {
+    title: 'Contact',
+    description:
+      'Contact DeepTek about IT solutions, digital marketing or AI automation for your UAE business. Free consultation, reply within one working day.',
+    label: 'Contact',
+    heading: 'Tell us what you are working on.',
+    lead: 'Share a few details and we will reply within one working day. The first consultation is free and there is no obligation.',
+    email: 'Email',
+    phone: 'Phone and WhatsApp',
+    whatsapp: 'Message us on WhatsApp',
+    location: 'Location',
+    next: 'What happens next',
+    steps: [
+      'We read your message and reply within one working day.',
+      'A short call to understand your goals.',
+      'A written proposal with scope and price.',
+    ],
+    formTitle: 'Project enquiry form',
+    name: 'Full name',
+    workEmail: 'Work email',
+    company: 'Company',
+    phoneField: 'Phone',
+    optional: '(optional)',
+    help: 'What can we help with?',
+    notSure: 'Not sure yet',
+    budget: 'Estimated budget',
+    budgetSelect: 'Select a range',
+    budgets: budgetValues,
+    details: 'Project details',
+    honeypot: 'Leave this field empty',
+    consentBefore: 'I agree that DeepTek may use these details to reply to my enquiry, as described in the',
+    consentLink: 'privacy notice',
+    send: 'Send message',
+    sending: 'Sending…',
+    required: 'Fields marked * are required.',
+    errRequired: 'Please complete the required fields and check your email address.',
+    errSpam: 'Please wait a moment for the spam check to finish, then try again.',
+    errGeneric: 'Something went wrong. Please try again or email us directly.',
+    errNetwork: 'We could not reach the server. Check your connection or email us directly.',
+  },
+  ar: {
+    title: 'تواصل معنا',
+    description:
+      'تواصل مع DeepTek بخصوص حلول تقنية المعلومات أو التسويق الرقمي أو الأتمتة بالذكاء الاصطناعي لأعمالك في الإمارات. استشارة مجانية ورد خلال يوم عمل واحد.',
+    label: 'تواصل معنا',
+    heading: 'أخبرنا على ماذا تعمل.',
+    lead: 'شاركنا بعض التفاصيل وسنرد خلال يوم عمل واحد. الاستشارة الأولى مجانية ودون أي التزام.',
+    email: 'البريد الإلكتروني',
+    phone: 'الهاتف وواتساب',
+    whatsapp: 'راسلنا على واتساب',
+    location: 'الموقع',
+    next: 'ماذا يحدث بعد ذلك',
+    steps: ['نقرأ رسالتك ونرد خلال يوم عمل واحد.', 'مكالمة قصيرة لفهم أهدافك.', 'عرض مكتوب يوضح النطاق والسعر.'],
+    formTitle: 'نموذج الاستفسار عن مشروع',
+    name: 'الاسم الكامل',
+    workEmail: 'البريد الإلكتروني للعمل',
+    company: 'الشركة',
+    phoneField: 'الهاتف',
+    optional: '(اختياري)',
+    help: 'بماذا يمكننا مساعدتك؟',
+    notSure: 'لست متأكداً بعد',
+    budget: 'الميزانية التقديرية',
+    budgetSelect: 'اختر نطاقاً',
+    budgets: ['أقل من 10,000 درهم', 'من 10,000 إلى 25,000 درهم', 'من 25,000 إلى 75,000 درهم', 'أكثر من 75,000 درهم', 'لست متأكداً بعد'],
+    details: 'تفاصيل المشروع',
+    honeypot: 'اترك هذا الحقل فارغاً',
+    consentBefore: 'أوافق على أن تستخدم DeepTek هذه البيانات للرد على استفساري، كما هو موضح في',
+    consentLink: 'إشعار الخصوصية',
+    send: 'أرسل الرسالة',
+    sending: 'جارٍ الإرسال…',
+    required: 'الحقول المميزة بـ * مطلوبة.',
+    errRequired: 'يُرجى إكمال الحقول المطلوبة والتحقق من بريدك الإلكتروني.',
+    errSpam: 'يُرجى الانتظار لحظة حتى يكتمل التحقق من البريد المزعج، ثم المحاولة مرة أخرى.',
+    errGeneric: 'حدث خطأ ما. يُرجى المحاولة مرة أخرى أو مراسلتنا عبر البريد الإلكتروني مباشرة.',
+    errNetwork: 'تعذر الوصول إلى الخادم. تحقق من اتصالك أو راسلنا عبر البريد الإلكتروني مباشرة.',
+  },
+}[lang];
+const budgets = budgetValues.map((value, i) => ({ value, label: t.budgets[i] }));
 ---
 
-<Base
-  title="Contact"
-  description="Contact DeepTek about IT solutions, digital marketing or AI automation for your UAE business. Free consultation, reply within one working day."
->
+<Base title={t.title} description={t.description}>
   <script
     slot="head"
     is:inline
@@ -21,121 +104,126 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
     defer></script>
 
   <PageHero
-    label="Contact"
-    title="Tell us what you are working on."
-    lead="Share a few details and we will reply within one working day. The first consultation is free and there is no obligation."
+    label={t.label}
+    title={t.heading}
+    lead={t.lead}
   />
 
   <section class="section" aria-labelledby="form-title">
     <div class="container layout">
       <aside class="info" data-reveal>
         <div>
-          <h2 class="mono">Email</h2>
+          <h2 class="mono">{t.email}</h2>
           <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
         </div>
         <div>
-          <h2 class="mono">Phone and WhatsApp</h2>
-          <p><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a></p>
+          <h2 class="mono">{t.phone}</h2>
+          <p><a href={`tel:${site.phone.tel}`} dir="ltr">{site.phone.display}</a></p>
           <p class="wa-line">
-            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">Message us on WhatsApp</a>
+            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">{t.whatsapp}</a>
           </p>
         </div>
         <div>
-          <h2 class="mono">Location</h2>
+          <h2 class="mono">{t.location}</h2>
           <p>{site.location}</p>
         </div>
         <div>
-          <h2 class="mono">What happens next</h2>
+          <h2 class="mono">{t.next}</h2>
           <ol role="list" class="next">
-            <li><span class="mono">01</span> We read your message and reply within one working day.</li>
-            <li><span class="mono">02</span> A short call to understand your goals.</li>
-            <li><span class="mono">03</span> A written proposal with scope and price.</li>
+            {t.steps.map((step, i) => <li><span class="mono">{String(i + 1).padStart(2, '0')}</span> {step}</li>)}
           </ol>
         </div>
       </aside>
 
       <div class="form-wrap" data-reveal>
-        <h2 id="form-title" class="sr-only">Project enquiry form</h2>
+        <h2 id="form-title" class="sr-only">{t.formTitle}</h2>
         <form
           class="form"
           method="post"
-          action="/api/contact"
+          action={lang === 'ar' ? '/api/contact?lang=ar' : '/api/contact'}
           data-contact-form
+          data-thanks={l('/contact/thanks/')}
+          data-sending={t.sending}
+          data-send={t.send}
+          data-err-required={t.errRequired}
+          data-err-spam={t.errSpam}
+          data-err-generic={t.errGeneric}
+          data-err-network={t.errNetwork}
           aria-describedby="form-note"
         >
           <div class="row">
             <div class="field">
-              <label for="name">Full name <span aria-hidden="true">*</span></label>
+              <label for="name">{t.name} <span aria-hidden="true">*</span></label>
               <input id="name" name="name" type="text" autocomplete="name" required maxlength="100" />
             </div>
             <div class="field">
-              <label for="email">Work email <span aria-hidden="true">*</span></label>
+              <label for="email">{t.workEmail} <span aria-hidden="true">*</span></label>
               <input id="email" name="email" type="email" autocomplete="email" required maxlength="200" />
             </div>
           </div>
           <div class="row">
             <div class="field">
-              <label for="company">Company</label>
+              <label for="company">{t.company}</label>
               <input id="company" name="company" type="text" autocomplete="organization" maxlength="120" />
             </div>
             <div class="field">
-              <label for="phone">Phone <span class="opt">(optional)</span></label>
+              <label for="phone">{t.phoneField} <span class="opt">{t.optional}</span></label>
               <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" inputmode="tel" />
             </div>
           </div>
 
           <fieldset class="field">
-            <legend>What can we help with?</legend>
+            <legend>{t.help}</legend>
             <div class="chips">
               {
-                pillars.map((p) => (
+                pillars.map((p, i) => (
                   <label class="chip">
-                    <input type="checkbox" name="interest" value={p.title} />
+                    <input type="checkbox" name="interest" value={enPillars[i].title} />
                     <span>{p.title}</span>
                   </label>
                 ))
               }
               <label class="chip">
                 <input type="checkbox" name="interest" value="Not sure" />
-                <span>Not sure yet</span>
+                <span>{t.notSure}</span>
               </label>
             </div>
           </fieldset>
 
           <div class="field">
-            <label for="budget">Estimated budget</label>
+            <label for="budget">{t.budget}</label>
             <select id="budget" name="budget">
-              <option value="">Select a range</option>
-              {budgets.map((b) => <option value={b}>{b}</option>)}
+              <option value="">{t.budgetSelect}</option>
+              {budgets.map((b) => <option value={b.value}>{b.label}</option>)}
             </select>
           </div>
 
           <div class="field">
-            <label for="message">Project details <span aria-hidden="true">*</span></label>
+            <label for="message">{t.details} <span aria-hidden="true">*</span></label>
             <textarea id="message" name="message" rows="6" required minlength="20" maxlength="4000"></textarea>
           </div>
 
           <!-- Honeypot: hidden from people, often filled by bots. -->
           <div class="hp" aria-hidden="true">
-            <label for="website">Leave this field empty</label>
+            <label for="website">{t.honeypot}</label>
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
 
           <label class="consent">
             <input type="checkbox" name="consent" value="yes" required />
             <span>
-              I agree that DeepTek may use these details to reply to my enquiry, as described in the{' '}
-              <a href="/privacy/">privacy notice</a>. <span aria-hidden="true">*</span>
+              {t.consentBefore}{' '}
+              <a href={l('/privacy/')}>{t.consentLink}</a>. <span aria-hidden="true">*</span>
             </span>
           </label>
 
-          <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible"></div>
+          <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible" data-language={lang}></div>
 
           <div class="submit-row">
             <button class="btn" type="submit" data-submit>
-              <span data-submit-label>Send message</span> <span class="arrow" aria-hidden="true">→</span>
+              <span data-submit-label>{t.send}</span> <span class="arrow" aria-hidden="true">→</span>
             </button>
-            <p id="form-note" class="note">Fields marked * are required.</p>
+            <p id="form-note" class="note">{t.required}</p>
           </div>
 
           <p class="status" role="status" aria-live="polite" data-status></p>
@@ -150,6 +238,8 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
   const status = form?.querySelector<HTMLElement>('[data-status]');
   const button = form?.querySelector<HTMLButtonElement>('[data-submit]');
   const label = form?.querySelector<HTMLElement>('[data-submit-label]');
+  // Messages come from data attributes so the same script serves both languages.
+  const text = (key: string) => form?.dataset[key] ?? '';
 
   type Turnstile = { reset: (el?: string | HTMLElement) => void };
   const turnstile = () => (window as unknown as { turnstile?: Turnstile }).turnstile;
@@ -177,19 +267,19 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
     e.preventDefault();
     const invalid = validate(form);
     if (invalid) {
-      setStatus('Please complete the required fields and check your email address.', 'error');
+      setStatus(text('errRequired'), 'error');
       invalid.focus();
       return;
     }
 
     const data = new FormData(form);
     if (!data.get('cf-turnstile-response')) {
-      setStatus('Please wait a moment for the spam check to finish, then try again.', 'error');
+      setStatus(text('errSpam'), 'error');
       return;
     }
 
     button?.setAttribute('disabled', '');
-    if (label) label.textContent = 'Sending…';
+    if (label) label.textContent = text('sending');
     setStatus('');
 
     try {
@@ -200,16 +290,16 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
       });
       const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (res.ok && body.ok) {
-        window.location.assign('/contact/thanks/');
+        window.location.assign(text('thanks') || '/contact/thanks/');
         return;
       }
-      setStatus(body.error ?? 'Something went wrong. Please try again or email us directly.', 'error');
+      setStatus(body.error ?? text('errGeneric'), 'error');
     } catch {
-      setStatus('We could not reach the server. Check your connection or email us directly.', 'error');
+      setStatus(text('errNetwork'), 'error');
     }
     turnstile()?.reset();
     button?.removeAttribute('disabled');
-    if (label) label.textContent = 'Send message';
+    if (label) label.textContent = text('send');
   });
 
   form?.addEventListener('input', (e) => {
@@ -319,6 +409,12 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
       5px 5px,
       5px 5px;
     background-repeat: no-repeat;
+    padding-inline-end: 1.5rem;
+  }
+  :global([dir='rtl']) select {
+    background-position:
+      5px 50%,
+      10px 50%;
   }
   textarea {
     resize: vertical;
@@ -378,7 +474,7 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
 
   .hp {
     position: absolute;
-    left: -10000px;
+    inset-inline-start: -10000px;
     width: 1px;
     height: 1px;
     overflow: hidden;
@@ -423,6 +519,6 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
     font-size: var(--fs-sm);
   }
   .status[data-kind='error'] {
-    border-left-width: 4px;
+    border-inline-start-width: 4px;
   }
 </style>

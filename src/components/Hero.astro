@@ -1,44 +1,63 @@
 ---
-import { pillars } from '../data/site';
+import { content, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { pillars } = content(lang);
+const l = (href: string) => localize(href, lang);
+const t = {
+  en: {
+    feedLabel: 'Example of automated work DeepTek sets up: enquiries routed, backups verified, reports sent',
+    eyebrow: 'IT · Digital marketing · AI automation · UAE',
+    title: 'Technology that moves your business forward.',
+    lead: 'DeepTek is a UAE technology partner. We set up reliable IT, grow your brand online and automate the work that slows your team down, all under one accountable team.',
+    primary: 'Book a free consultation',
+    secondary: 'Explore solutions',
+    feed: ['Today’s automations', 'Example', 'New website enquiry routed to Sales', 'Nightly backup verified, 42 devices', 'Weekly Google Ads report sent', 'Invoice #2041 read and filed', 'Hours saved this week'],
+  },
+  ar: {
+    feedLabel: 'مثال على أعمال مؤتمتة تجهزها DeepTek: توجيه الاستفسارات، والتحقق من النسخ الاحتياطي، وإرسال التقارير',
+    eyebrow: 'تقنية المعلومات · التسويق الرقمي · الأتمتة بالذكاء الاصطناعي · الإمارات',
+    title: 'تقنية تدفع أعمالك إلى الأمام.',
+    lead: 'DeepTek شريك تقني في الإمارات. نجهّز لك تقنية معلومات موثوقة، وننمّي علامتك التجارية على الإنترنت، ونؤتمت الأعمال التي تبطئ فريقك، كل ذلك مع فريق واحد مسؤول.',
+    primary: 'احجز استشارة مجانية',
+    secondary: 'استكشف الحلول',
+    feed: ['أتمتة اليوم', 'مثال', 'استفسار جديد من الموقع وُجّه إلى المبيعات', 'تم التحقق من النسخ الاحتياطي الليلي، 42 جهازاً', 'أُرسل تقرير إعلانات Google الأسبوعي', 'قُرئت الفاتورة رقم 2041 وحُفظت', 'ساعات وُفّرت هذا الأسبوع'],
+  },
+}[lang];
 ---
 
 <section class="hero theme-night" aria-labelledby="hero-title">
   <div class="backdrop" aria-hidden="true"></div>
 
-  <div class="feed" data-scene role="img" aria-label="Example of automated work DeepTek sets up: enquiries routed, backups verified, reports sent">
+  <div class="feed" data-scene role="img" aria-label={t.feedLabel}>
     <div class="feed-win" data-stage aria-hidden="true">
       <div class="feed-bar">
-        <span>Today’s automations</span>
-        <span class="mono">Example</span>
+        <span>{t.feed[0]}</span>
+        <span class="mono">{t.feed[1]}</span>
       </div>
       <ul role="list">
-        <li data-step="1"><span class="k mono">AI</span><span>New website enquiry routed to Sales</span><span class="t mono">09:02</span></li>
-        <li data-step="2"><span class="k mono">IT</span><span>Nightly backup verified, 42 devices</span><span class="t mono">09:15</span></li>
-        <li data-step="3"><span class="k mono">MKT</span><span>Weekly Google Ads report sent</span><span class="t mono">09:30</span></li>
-        <li data-step="4"><span class="k mono">AI</span><span>Invoice #2041 read and filed</span><span class="t mono">09:41</span></li>
+        <li data-step="1"><span class="k mono">AI</span><span>{t.feed[2]}</span><span class="t mono">09:02</span></li>
+        <li data-step="2"><span class="k mono">IT</span><span>{t.feed[3]}</span><span class="t mono">09:15</span></li>
+        <li data-step="3"><span class="k mono">MKT</span><span>{t.feed[4]}</span><span class="t mono">09:30</span></li>
+        <li data-step="4"><span class="k mono">AI</span><span>{t.feed[5]}</span><span class="t mono">09:41</span></li>
       </ul>
       <div class="feed-foot" data-step="5">
-        <span class="mono">Hours saved this week</span>
+        <span class="mono">{t.feed[6]}</span>
         <b data-fx="count" data-to="18">18</b>
       </div>
     </div>
   </div>
 
   <div class="container inner">
-    <p class="eyebrow" data-reveal>IT · Digital marketing · AI automation · UAE</p>
+    <p class="eyebrow" data-reveal>{t.eyebrow}</p>
 
-    <h1 id="hero-title" class="title" data-split="now">
-      Technology that moves your business forward.
-    </h1>
+    <h1 id="hero-title" class="title" data-split="now">{t.title}</h1>
 
     <div class="sub">
-      <p class="lead" data-reveal data-delay="0.4">
-        DeepTek is a UAE technology partner. We set up reliable IT, grow your brand online and automate the work
-        that slows your team down, all under one accountable team.
-      </p>
+      <p class="lead" data-reveal data-delay="0.4">{t.lead}</p>
       <div class="actions" data-reveal data-delay="0.55">
-        <a class="btn" href="/contact/">Book a free consultation <span class="arrow" aria-hidden="true">→</span></a>
-        <a class="btn btn--ghost" href="/solutions/">Explore solutions</a>
+        <a class="btn" href={l('/contact/')}>{t.primary} <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href={l('/solutions/')}>{t.secondary}</a>
       </div>
     </div>
 
@@ -46,7 +65,7 @@ import { pillars } from '../data/site';
       {
         pillars.map((p) => (
           <li>
-            <a href={`/solutions/#${p.id}`}>
+            <a href={l(`/solutions/#${p.id}`)}>
               <span class="mono">{p.index}</span>
               <span>{p.title}</span>
             </a>
@@ -87,7 +106,7 @@ import { pillars } from '../data/site';
       position: absolute;
       z-index: 1;
       top: calc(var(--header-h) + 5rem);
-      right: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+      inset-inline-end: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
       width: 23rem;
     }
   }

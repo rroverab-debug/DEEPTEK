@@ -3,7 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { site } from '../data/site';
+import { content, dirOf, langOf, langs, switchPath } from '../i18n';
 
 interface Props {
   title?: string;
@@ -13,6 +13,9 @@ interface Props {
   /** Start the page with a dark hero; the header adapts its colours. */
   darkTop?: boolean;
 }
+
+const lang = langOf(Astro.url);
+const { site } = content(lang);
 
 const {
   title,
@@ -24,6 +27,10 @@ const {
 
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const alternates = langs.map((l) => ({
+  hreflang: l,
+  href: new URL(switchPath(Astro.url.pathname, l), Astro.site ?? site.url).href,
+}));
 const ogImage = new URL(image, Astro.site ?? site.url).href;
 
 const orgSchema = {
@@ -31,7 +38,8 @@ const orgSchema = {
   '@type': 'ProfessionalService',
   name: site.name,
   legalName: site.legalName,
-  url: site.url,
+  url: new URL(lang === 'ar' ? '/ar/' : '/', site.url).href,
+  inLanguage: ['en', 'ar'],
   email: site.email,
   telephone: site.phone.tel,
   description: site.description,
@@ -44,7 +52,7 @@ const orgSchema = {
 ---
 
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang={lang} dir={dirOf(lang)}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,6 +60,8 @@ const orgSchema = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#0c0c0c" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -61,6 +71,7 @@ const orgSchema = {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content={site.locale} />
+    <meta property="og:locale:alternate" content={lang === 'ar' ? 'en_AE' : 'ar_AE'} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -76,7 +87,7 @@ const orgSchema = {
     <slot name="head" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">{lang === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}</a>
     <Header darkTop={darkTop} />
     <main id="main" tabindex="-1">
       <slot />

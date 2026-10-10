@@ -1,27 +1,37 @@
 ---
-import { nav, site } from '../data/site';
 import Logo from './Logo.astro';
+import { content, langOf, localize, switchPath } from '../i18n';
 
 interface Props {
   darkTop?: boolean;
 }
 const { darkTop = false } = Astro.props;
+const lang = langOf(Astro.url);
+const { nav, site } = content(lang);
+const l = (href: string) => localize(href, lang);
 const path = Astro.url.pathname.replace(/\/?$/, '/');
-const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+const isCurrent = (href: string) => path === l(href) || (href !== '/' && path.startsWith(l(href)));
+const other = lang === 'ar' ? 'en' : 'ar';
+const switchHref = switchPath(Astro.url.pathname, other);
+const switchLabel = other === 'ar' ? 'العربية' : 'English';
+const t = {
+  en: { home: 'Home', homeLabel: `${site.name} home`, cta: 'Start a project', menu: 'Menu', close: 'Close', main: 'Main', mobile: 'Mobile', switchTo: 'View this page in Arabic' },
+  ar: { home: 'الرئيسية', homeLabel: `${site.name}، الصفحة الرئيسية`, cta: 'ابدأ مشروعك', menu: 'القائمة', close: 'إغلاق', main: 'الرئيسية', mobile: 'قائمة الجوال', switchTo: 'View this page in English' },
+}[lang];
 ---
 
 <header class="site-header" data-header data-dark-top={darkTop ? 'true' : undefined}>
   <div class="container bar">
-    <a class="brand" href="/" aria-label={`${site.name} home`}>
+    <a class="brand" href={l('/')} aria-label={t.homeLabel}>
       <Logo />
     </a>
 
-    <nav class="desktop-nav" aria-label="Main">
+    <nav class="desktop-nav" aria-label={t.main}>
       <ul role="list">
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              <a href={l(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
                 {item.label}
               </a>
             </li>
@@ -30,7 +40,10 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       </ul>
     </nav>
 
-    <a class="header-cta" href="/contact/">Start a project</a>
+    <div class="end">
+    <a class="lang-switch" href={switchHref} hreflang={other} lang={other} aria-label={t.switchTo}>{switchLabel}</a>
+
+    <a class="header-cta" href={l('/contact/')}>{t.cta}</a>
 
     <button
       class="menu-toggle"
@@ -38,20 +51,23 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       aria-expanded="false"
       aria-controls="mobile-menu"
       data-menu-toggle
+      data-label-open={t.menu}
+      data-label-close={t.close}
     >
-      <span class="menu-label">Menu</span>
+      <span class="menu-label">{t.menu}</span>
       <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
     </button>
+    </div>
   </div>
 
   <div class="mobile-menu theme-night" id="mobile-menu" data-menu hidden>
-    <nav class="container" aria-label="Mobile">
+    <nav class="container" aria-label={t.mobile}>
       <ul role="list">
-        <li><a href="/" aria-current={path === '/' ? 'page' : undefined}><span class="mono">00</span>Home</a></li>
+        <li><a href={l('/')} aria-current={path === l('/') ? 'page' : undefined}><span class="mono">00</span>{t.home}</a></li>
         {
           nav.map((item, i) => (
             <li>
-              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              <a href={l(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
                 <span class="mono">{String(i + 1).padStart(2, '0')}</span>
                 {item.label}
               </a>
@@ -61,8 +77,9 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       </ul>
       <p class="mobile-meta">
         <a href={`mailto:${site.email}`}>{site.email}</a>
-        <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
+        <a href={`tel:${site.phone.tel}`}><bdi dir="ltr">{site.phone.display}</bdi></a>
         <span>{site.location}</span>
+        <a href={switchHref} hreflang={other} lang={other}>{switchLabel}</a>
       </p>
     </nav>
   </div>
@@ -83,7 +100,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     const label = toggle.querySelector('.menu-label');
     const setOpen = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
-      if (label) label.textContent = open ? 'Close' : 'Menu';
+      if (label) label.textContent = (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '';
       menu.hidden = !open;
       header.classList.toggle('menu-open', open);
       document.body.style.overflow = open ? 'hidden' : '';
@@ -197,6 +214,32 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   .desktop-nav a[aria-current='page']::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+
+  .end {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+  .lang-switch {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    padding-block: 0.5rem;
+    opacity: 0.8;
+    transition: opacity 0.3s var(--ease);
+  }
+  .lang-switch:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+  :global([dir='rtl']) .desktop-nav a::after {
+    transform-origin: left;
+  }
+  :global([dir='rtl']) .desktop-nav a:hover::after,
+  :global([dir='rtl']) .desktop-nav a[aria-current='page']::after {
+    transform-origin: right;
   }
 
   .header-cta {

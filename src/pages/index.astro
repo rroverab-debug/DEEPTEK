@@ -5,13 +5,56 @@ import ServiceRail from '../components/ServiceRail.astro';
 import StickyStory from '../components/StickyStory.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { process, projects, values } from '../data/site';
+import { content, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { process, projects, values } = content(lang);
+const l = (href: string) => localize(href, lang);
+
+const t = {
+  en: {
+    whyLabel: 'Why DeepTek',
+    why: 'Most growing businesses juggle an IT contractor, a marketing agency and a stack of tools that do not talk to each other. We bring technology, marketing and automation together, so every part of your business pulls in the same direction.',
+    storyLabel: 'How we work',
+    storyHeading: 'A clear process from first call to lasting results.',
+    workLabel: 'Selected work',
+    workHeading: 'The kind of problems we solve.',
+    allWork: 'All work',
+    moreText: 'Also see our SaaS products, digital marketing campaigns and IT projects.',
+    moreButton: 'See all work',
+    valuesLabel: 'Principles',
+    valuesHeading: 'What you can expect from us.',
+    homeWork: [
+      { label: 'AI automation', more: 'More automation work' },
+      { label: 'HR and operations', more: 'More HR and operations work' },
+      { label: 'Websites', more: 'More website work' },
+    ],
+  },
+  ar: {
+    whyLabel: 'لماذا DeepTek',
+    why: 'تتعامل معظم الشركات النامية مع مزوّد تقنية، ووكالة تسويق، ومجموعة أدوات لا تتواصل مع بعضها. نحن نجمع التقنية والتسويق والأتمتة معاً، ليعمل كل جزء من أعمالك في الاتجاه نفسه.',
+    storyLabel: 'طريقة عملنا',
+    storyHeading: 'خطوات واضحة من أول مكالمة حتى نتائج تدوم.',
+    workLabel: 'أعمال مختارة',
+    workHeading: 'نوع المشكلات التي نحلها.',
+    allWork: 'كل الأعمال',
+    moreText: 'اطلع أيضاً على منتجات SaaS وحملات التسويق الرقمي ومشاريع تقنية المعلومات.',
+    moreButton: 'شاهد كل الأعمال',
+    valuesLabel: 'مبادئنا',
+    valuesHeading: 'ما يمكنك أن تتوقعه منا.',
+    homeWork: [
+      { label: 'الأتمتة بالذكاء الاصطناعي', more: 'المزيد من أعمال الأتمتة' },
+      { label: 'الموارد البشرية والعمليات', more: 'المزيد من أعمال الموارد البشرية والعمليات' },
+      { label: 'المواقع الإلكترونية', more: 'المزيد من أعمال المواقع' },
+    ],
+  },
+}[lang];
 
 // Three work sections shown on the home page; everything else is on /work/.
 const homeWork = [
-  { label: 'AI automation', more: 'More automation work', slug: 'clinic-automation', href: '/work/#ai-it' },
-  { label: 'HR and operations', more: 'More HR and operations work', slug: 'hr-onboarding', href: '/work/#hr-operations' },
-  { label: 'Websites', more: 'More website work', slug: 'hospitality-website', href: '/work/#websites' },
+  { ...t.homeWork[0], slug: 'clinic-automation', href: l('/work/#ai-it') },
+  { ...t.homeWork[1], slug: 'hr-onboarding', href: l('/work/#hr-operations') },
+  { ...t.homeWork[2], slug: 'hospitality-website', href: l('/work/#websites') },
 ]
   .map((w) => ({ ...w, project: projects.find((p) => p.slug === w.slug) }))
   .filter((w) => w.project);
@@ -22,12 +65,8 @@ const homeWork = [
 
   <section class="statement section" aria-labelledby="statement-label">
     <div class="container grid">
-      <p class="eyebrow" id="statement-label">Why DeepTek</p>
-      <p class="big" data-scrub-text>
-        Most growing businesses juggle an IT contractor, a marketing agency and a stack of tools that do not talk to
-        each other. We bring technology, marketing and automation together, so every part of your business pulls in the
-        same direction.
-      </p>
+      <p class="eyebrow" id="statement-label">{t.whyLabel}</p>
+      <p class="big" data-scrub-text>{t.why}</p>
     </div>
   </section>
 
@@ -35,18 +74,18 @@ const homeWork = [
 
   <StickyStory
     night
-    label="How we work"
-    heading="A clear process from first call to lasting results."
+    label={t.storyLabel}
+    heading={t.storyHeading}
     steps={process}
   />
 
   <section class="section" aria-labelledby="work-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Selected work</p>
+        <p class="eyebrow">{t.workLabel}</p>
         <div class="work-head">
-          <h2 id="work-title" data-split>The kind of problems we solve.</h2>
-          <a class="link-arrow" href="/work/" data-reveal>All work <span class="arrow" aria-hidden="true">→</span></a>
+          <h2 id="work-title" data-split>{t.workHeading}</h2>
+          <a class="link-arrow" href={l('/work/')} data-reveal>{t.allWork} <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
       <div class="showcases">
@@ -66,8 +105,8 @@ const homeWork = [
         }
       </div>
       <div class="more-work" data-reveal>
-        <p>Also see our SaaS products, digital marketing campaigns and IT projects.</p>
-        <a class="btn" href="/work/">See all work <span class="arrow" aria-hidden="true">→</span></a>
+        <p>{t.moreText}</p>
+        <a class="btn" href={l('/work/')}>{t.moreButton} <span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -75,8 +114,8 @@ const homeWork = [
   <section class="section values" aria-labelledby="values-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Principles</p>
-        <h2 id="values-title" data-split>What you can expect from us.</h2>
+        <p class="eyebrow">{t.valuesLabel}</p>
+        <h2 id="values-title" data-split>{t.valuesHeading}</h2>
       </div>
       <ol class="value-grid" role="list" data-reveal-stagger>
         {
@@ -146,7 +185,7 @@ const homeWork = [
   .hw-head h3 {
     font-size: var(--fs-lg);
     letter-spacing: -0.02em;
-    margin-right: auto;
+    margin-inline-end: auto;
   }
   .hw-head .link-arrow {
     font-size: var(--fs-sm);
@@ -180,7 +219,8 @@ const homeWork = [
     display: grid;
     align-content: start;
     gap: 1rem;
-    padding: 2rem 1.5rem 2.5rem 0;
+    padding-block: 2rem 2.5rem;
+    padding-inline-end: 1.5rem;
     border-bottom: 1px solid var(--line);
   }
   .value-grid .mono {

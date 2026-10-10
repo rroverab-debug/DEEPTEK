@@ -3,22 +3,76 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import StickyStory from '../components/StickyStory.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { faqs, pillars, process } from '../data/site';
+import { content, langOf } from '../i18n';
 
-const engagements = [
-  {
-    title: 'Project',
-    body: 'A defined piece of work, such as a new website, an office IT setup or an automation, delivered at a fixed or capped price.',
+const lang = langOf(Astro.url);
+const { faqs, pillars, process } = content(lang);
+
+const t = {
+  en: {
+    title: 'Solutions',
+    description:
+      'IT solutions, digital marketing and AI automation services for businesses in the UAE. Cloud, security, websites, SEO, ads and workflow automation.',
+    label: 'Solutions',
+    heading: 'Three disciplines. One accountable team.',
+    lead: 'Pick one area or combine all three. Either way you get a single point of contact, clear pricing and work that fits together.',
+    jump: 'Solutions on this page',
+    whatWeDo: 'What we do',
+    whatYouGet: 'What you get',
+    processLabel: 'Process',
+    processHeading: 'How every engagement runs.',
+    engageLabel: 'Ways to work together',
+    engageHeading: 'Start small. Scale when it works.',
+    faqLabel: 'Questions',
+    faqHeading: 'Frequently asked.',
+    engagements: [
+      {
+        title: 'Project',
+        body: 'A defined piece of work, such as a new website, an office IT setup or an automation, delivered at a fixed or capped price.',
+      },
+      {
+        title: 'Monthly partnership',
+        body: 'Ongoing IT support, marketing management or automation improvements, billed monthly and cancellable with notice.',
+      },
+      {
+        title: 'Advisory',
+        body: 'Hourly or day-rate guidance for teams that build in-house and want an experienced second opinion.',
+      },
+    ],
   },
-  {
-    title: 'Monthly partnership',
-    body: 'Ongoing IT support, marketing management or automation improvements, billed monthly and cancellable with notice.',
+  ar: {
+    title: 'الحلول',
+    description:
+      'خدمات تقنية المعلومات والتسويق الرقمي والأتمتة بالذكاء الاصطناعي للشركات في الإمارات: السحابة والأمان والمواقع وتحسين محركات البحث والإعلانات وأتمتة سير العمل.',
+    label: 'الحلول',
+    heading: 'ثلاثة تخصصات. فريق واحد مسؤول.',
+    lead: 'اختر مجالاً واحداً أو اجمع الثلاثة. في الحالتين تحصل على جهة تواصل واحدة وأسعار واضحة وأعمال متكاملة.',
+    jump: 'الحلول في هذه الصفحة',
+    whatWeDo: 'ما نقدمه',
+    whatYouGet: 'ما تحصل عليه',
+    processLabel: 'المنهجية',
+    processHeading: 'كيف يسير كل تعاون.',
+    engageLabel: 'طرق العمل معنا',
+    engageHeading: 'ابدأ صغيراً، وتوسع عندما تنجح.',
+    faqLabel: 'أسئلة',
+    faqHeading: 'الأسئلة الشائعة.',
+    engagements: [
+      {
+        title: 'مشروع',
+        body: 'عمل محدد، مثل موقع جديد أو تجهيز تقنية مكتب أو أتمتة، يُسلَّم بسعر ثابت أو بسقف محدد.',
+      },
+      {
+        title: 'شراكة شهرية',
+        body: 'دعم تقني مستمر أو إدارة تسويق أو تحسينات أتمتة، بفوترة شهرية ويمكن إلغاؤها بإشعار مسبق.',
+      },
+      {
+        title: 'استشارات',
+        body: 'إرشاد بالساعة أو باليوم للفرق التي تبني داخلياً وتريد رأياً ثانياً من أصحاب خبرة.',
+      },
+    ],
   },
-  {
-    title: 'Advisory',
-    body: 'Hourly or day-rate guidance for teams that build in-house and want an experienced second opinion.',
-  },
-];
+}[lang];
+const engagements = t.engagements;
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -31,18 +85,15 @@ const faqSchema = {
 };
 ---
 
-<Base
-  title="Solutions"
-  description="IT solutions, digital marketing and AI automation services for businesses in the UAE. Cloud, security, websites, SEO, ads and workflow automation."
->
+<Base title={t.title} description={t.description}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <PageHero
-    label="Solutions"
-    title="Three disciplines. One accountable team."
-    lead="Pick one area or combine all three. Either way you get a single point of contact, clear pricing and work that fits together."
+    label={t.label}
+    title={t.heading}
+    lead={t.lead}
   >
-    <nav class="jump" aria-label="Solutions on this page" data-reveal data-delay="0.5">
+    <nav class="jump" aria-label={t.jump} data-reveal data-delay="0.5">
       {
         pillars.map((p) => (
           <a href={`#${p.id}`}>
@@ -74,7 +125,7 @@ const faqSchema = {
             </p>
             <div class="lists">
               <div>
-                <h3 class="mono">What we do</h3>
+                <h3 class="mono">{t.whatWeDo}</h3>
                 <ul role="list" class="offerings" data-reveal-stagger>
                   {p.offerings.map((o) => (
                     <li>{o}</li>
@@ -82,7 +133,7 @@ const faqSchema = {
                 </ul>
               </div>
               <div>
-                <h3 class="mono">What you get</h3>
+                <h3 class="mono">{t.whatYouGet}</h3>
                 <ul role="list" class="outcomes" data-reveal-stagger>
                   {p.outcomes.map((o) => (
                     <li>{o}</li>
@@ -96,13 +147,13 @@ const faqSchema = {
     ))
   }
 
-  <StickyStory label="Process" heading="How every engagement runs." steps={process} />
+  <StickyStory label={t.processLabel} heading={t.processHeading} steps={process} />
 
   <section class="section engage" aria-labelledby="engage-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Ways to work together</p>
-        <h2 id="engage-title" data-split>Start small. Scale when it works.</h2>
+        <p class="eyebrow">{t.engageLabel}</p>
+        <h2 id="engage-title" data-split>{t.engageHeading}</h2>
       </div>
       <ol class="engage-grid" role="list" data-reveal-stagger>
         {
@@ -121,8 +172,8 @@ const faqSchema = {
   <section class="section faq" aria-labelledby="faq-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Questions</p>
-        <h2 id="faq-title" data-split>Frequently asked.</h2>
+        <p class="eyebrow">{t.faqLabel}</p>
+        <h2 id="faq-title" data-split>{t.faqHeading}</h2>
       </div>
       <div class="faq-list" data-reveal>
         {
@@ -279,7 +330,7 @@ const faqSchema = {
   .faq-list {
     border-top: 1px solid var(--line);
     max-width: 60rem;
-    margin-left: auto;
+    margin-inline-start: auto;
   }
   details {
     border-bottom: 1px solid var(--line);

@@ -101,10 +101,12 @@ function rails(mm: gsap.MatchMedia) {
       if (!viewport || !track) return;
       const cards = track.children.length;
       const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      // Right-to-left pages lay the cards out leftwards, so the track moves the other way.
+      const dir = getComputedStyle(rail).direction === 'rtl' ? 1 : -1;
 
       rail.classList.add('is-pinned');
       const tween = gsap.to(track, {
-        x: () => -distance(),
+        x: () => dir * distance(),
         ease: 'none',
         scrollTrigger: {
           trigger: rail,

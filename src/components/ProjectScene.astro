@@ -4,6 +4,7 @@
 // Without JS or with reduced motion the scene shows its finished state;
 // with motion on, motion.ts plays each [data-step] in order on a loop
 // while the scene is in view. Swap for real screenshots once available.
+// The sketches are English product UIs, so they stay left-to-right on Arabic pages.
 import type { Project } from '../data/site';
 
 interface Props {
@@ -18,7 +19,7 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
 ---
 
 <div class="scene" data-scene role="img" aria-label={label}>
-  <div class="stage" data-stage aria-hidden="true">
+  <div class="stage" data-stage aria-hidden="true" dir="ltr" lang="en">
     {
       scene === 'website' && (
         <div class="site-wrap">
