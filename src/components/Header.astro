@@ -28,6 +28,9 @@ const t = {
 
     <nav class="desktop-nav" aria-label={t.main}>
       <ul role="list">
+        <li>
+          <a href={l('/')} aria-current={path === l('/') ? 'page' : undefined}>{t.home}</a>
+        </li>
         {
           nav.map((item) => (
             <li>
