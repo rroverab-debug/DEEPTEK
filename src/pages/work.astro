@@ -3,14 +3,13 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { projects, workCategories } from '../data/site';
+import { industries, projects, workCategories } from '../data/site';
 
 const groups = workCategories
   .map((c) => ({ ...c, items: projects.filter((p) => p.category === c.id) }))
   .filter((g) => g.items.length > 0);
 const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
 
-const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitality', 'Retail and e-commerce', 'Professional services'];
 ---
 
 <Base
@@ -73,19 +72,28 @@ const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitalit
   <section class="section theme-night sectors" aria-labelledby="sectors-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Sectors</p>
-        <h2 id="sectors-title" data-split>Built for the industries that drive the UAE.</h2>
+        <p class="eyebrow">Who we work with</p>
+        <h2 id="sectors-title" data-split>For every kind of business, big or small.</h2>
+        <p class="lead" data-reveal>
+          Most of our clients are small and growing businesses. Here is what we typically do for each.
+        </p>
       </div>
-      <ul class="sector-list" role="list" data-reveal-stagger>
+      <ul class="sector-grid" role="list" data-reveal-stagger>
         {
-          sectors.map((s, i) => (
+          industries.map((s, i) => (
             <li>
               <span class="mono">{String(i + 1).padStart(2, '0')}</span>
-              <span>{s}</span>
+              <h3>{s.name}</h3>
+              <p class="ex">{s.examples}</p>
+              <p>{s.does}</p>
             </li>
           ))
         }
       </ul>
+      <div class="sector-cta" data-reveal>
+        <p>Do not see your business here? We probably still help businesses like yours.</p>
+        <a class="btn" href="/contact/">Tell us about it <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -201,22 +209,52 @@ const sectors = ['Healthcare', 'Real estate', 'Trade and logistics', 'Hospitalit
     display: grid;
     gap: clamp(4.5rem, 11vw, 9rem);
   }
-  .sector-list {
-    border-top: 1px solid var(--line);
-  }
-  .sector-list li {
-    display: flex;
-    align-items: baseline;
-    gap: clamp(1rem, 4vw, 4rem);
-    padding-block: clamp(1rem, 2vw, 1.5rem);
-    border-bottom: 1px solid var(--line);
-    font-size: var(--fs-xl);
-    letter-spacing: -0.03em;
-    font-weight: 500;
-  }
-  .sector-list .mono {
+  .sectors .lead {
     color: var(--muted);
-    font-weight: 400;
-    letter-spacing: 0.06em;
+    font-size: var(--fs-lg);
+    max-width: 40ch;
+  }
+  .sector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    border-top: 1px solid var(--line);
+    border-inline-start: 1px solid var(--line);
+  }
+  .sector-grid li {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    border-bottom: 1px solid var(--line);
+    border-inline-end: 1px solid var(--line);
+  }
+  .sector-grid .mono {
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+  .sector-grid h3 {
+    font-size: var(--fs-lg);
+    letter-spacing: -0.02em;
+  }
+  .sector-grid .ex {
+    font-size: var(--fs-sm);
+    color: inherit;
+  }
+  .sector-grid p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+  }
+  .sector-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .sector-cta p {
+    font-size: var(--fs-lg);
+    max-width: 36ch;
   }
 </style>

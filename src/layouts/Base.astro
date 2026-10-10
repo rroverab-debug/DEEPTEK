@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -81,6 +82,7 @@ const orgSchema = {
       <slot />
     </main>
     <Footer />
+    <WhatsAppButton />
     <script>
       import '../scripts/motion';
     </script>

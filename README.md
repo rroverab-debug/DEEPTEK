@@ -149,6 +149,14 @@ npm run deploy        # wrangler pages deploy ./dist --project-name deeptek-site
 
 Cost: Cloudflare Pages, Pages Functions (100,000 requests/day), Turnstile and the WAF rate limit rule are all on the free plan. The only expected cost is the domain itself.
 
+## Visitor analytics
+
+Use Cloudflare Web Analytics. It is free, sets no cookies and stores no personal data, so no cookie banner is needed.
+
+1. Cloudflare dashboard → Workers & Pages → your Pages project → Metrics → Web Analytics → Enable.
+2. Cloudflare injects its small beacon script automatically on the next deploy. No code or token is needed in this repository.
+3. The CSP in `public/_headers` already allows `static.cloudflareinsights.com` (script) and `cloudflareinsights.com` (beacon). If you turn analytics off, you can remove both.
+
 ## Domains
 
 `deeptek.ae` is used as a placeholder in `astro.config.mjs`, `src/data/site.ts`, `public/robots.txt` and the email addresses.
@@ -161,7 +169,8 @@ Cost: Cloudflare Pages, Pages Functions (100,000 requests/day), Turnstile and th
 ## Before launch checklist
 
 - [ ] Confirm domain and update placeholders
-- [ ] Real contact email, social links and (optionally) phone or WhatsApp in `src/data/site.ts`
+- [ ] Trade licence number, issuing authority, office address and social links in `src/data/site.ts` (empty values stay hidden)
+- [ ] Enable Cloudflare Web Analytics
 - [ ] Replace sample projects on `/work/` with real case studies
 - [ ] Have the privacy notice reviewed
 - [ ] Turnstile keys, email provider and variables set

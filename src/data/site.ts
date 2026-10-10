@@ -15,12 +15,21 @@ export const site = {
     display: '+971 50 396 1050',
     tel: '+971503961050',
   },
+  // WhatsApp number in international format without + or spaces.
+  whatsapp: '971503961050',
   location: 'United Arab Emirates',
+  // Fill in once the trade licence is issued; empty values are hidden.
+  licence: {
+    number: '',
+    authority: '', // e.g. the free zone authority that issued the licence
+  },
+  address: '', // e.g. office or desk address shown in the footer
   locale: 'en_AE',
   social: {
-    linkedin: '', // e.g. https://www.linkedin.com/company/deeptek
-    instagram: '',
-    x: '',
+    // Add full profile URLs once the accounts exist; empty ones are hidden.
+    LinkedIn: '', // e.g. https://www.linkedin.com/company/deeptek
+    Instagram: '',
+    X: '',
   },
 } as const;
 
@@ -308,6 +317,22 @@ export const projects: Project[] = [
     scene: 'fleet',
   },
 ];
+
+/** Business types we serve, shown on /work/. Small businesses first: they are most of our clients. */
+export const industries = [
+  { name: 'Restaurants and cafes', examples: 'Cafes, restaurants, cloud kitchens, bakeries', does: 'Menu websites, online ordering, Google Maps and delivery app listings, Instagram ads, WhatsApp reservations.' },
+  { name: 'Retail shops', examples: 'Boutiques, electronics, perfumes, supermarkets', does: 'Online stores, POS and stock setup, WhatsApp catalogues, local search and seasonal sale campaigns.' },
+  { name: 'Salons, spas and beauty', examples: 'Salons, barbers, spas, beauty clinics', does: 'Online booking, automatic reminders, loyalty offers and social media content.' },
+  { name: 'Clinics and healthcare', examples: 'Clinics, dental, physio, pharmacies', does: 'Appointment booking, patient reminders, secure IT and reviews on Google.' },
+  { name: 'Real estate', examples: 'Brokers, developers, property managers', does: 'Listing websites, lead capture, CRM follow-ups and property ad campaigns.' },
+  { name: 'Trading and logistics', examples: 'General trading, freight, warehouses', does: 'Order and invoice automation, fleet tracking dashboards and office IT.' },
+  { name: 'Hotels and holiday homes', examples: 'Hotels, holiday homes, tour operators', does: 'Direct booking websites, guest messaging and multilingual marketing.' },
+  { name: 'Construction and contracting', examples: 'Contractors, fit-out, maintenance', does: 'Project portfolios, quote request forms, site reporting apps and office networks.' },
+  { name: 'Education and training', examples: 'Training centres, nurseries, tutors', does: 'Course websites, enrolment forms, online payments and parent updates.' },
+  { name: 'Gyms and fitness', examples: 'Gyms, studios, personal trainers', does: 'Membership sign-up, class booking, renewal reminders and social campaigns.' },
+  { name: 'Professional services', examples: 'Law firms, accountants, consultants', does: 'Professional websites, secure email and file sharing, client intake automation.' },
+  { name: 'Car services and rentals', examples: 'Garages, car rentals, detailing', does: 'Booking and quote forms, service reminders, Google Ads and fleet records.' },
+] as const;
 
 export const values = [
   {

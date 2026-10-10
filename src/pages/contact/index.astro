@@ -34,8 +34,11 @@ const budgets = ['Under AED 10,000', 'AED 10,000 to 25,000', 'AED 25,000 to 75,0
           <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
         </div>
         <div>
-          <h2 class="mono">Phone</h2>
+          <h2 class="mono">Phone and WhatsApp</h2>
           <p><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a></p>
+          <p class="wa-line">
+            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">Message us on WhatsApp</a>
+          </p>
         </div>
         <div>
           <h2 class="mono">Location</h2>

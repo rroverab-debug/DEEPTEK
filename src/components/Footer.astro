@@ -31,7 +31,10 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
         <ul role="list">
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a></li>
-          <li>{site.location}</li>
+          <li>
+            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener noreferrer" target="_blank">WhatsApp</a>
+          </li>
+          <li>{site.address || site.location}</li>
           {
             social.map(([name, url]) => (
               <li>
@@ -46,7 +49,15 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
     </div>
 
     <div class="base">
-      <p>© {year} {site.legalName}. All rights reserved.</p>
+      <p>
+        © {year} {site.legalName}. All rights reserved.
+        {site.licence.number && (
+          <span class="licence">
+            {' '}Trade licence {site.licence.number}
+            {site.licence.authority && `, ${site.licence.authority}`}.
+          </span>
+        )}
+      </p>
       <p><a href="/privacy/">Privacy</a></p>
     </div>
   </div>
