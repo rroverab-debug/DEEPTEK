@@ -14,7 +14,7 @@ export const site = {
 
 export const nav = [
   { href: '/solutions/', label: 'الحلول' },
-  { href: '/work/', label: 'أعمالنا' },
+  { href: '/work/', label: 'المشاريع' },
   { href: '/about/', label: 'من نحن' },
   { href: '/contact/', label: 'تواصل معنا' },
 ] as const;
