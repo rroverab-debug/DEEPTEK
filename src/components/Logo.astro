@@ -1,11 +1,16 @@
 ---
-// DeepTek wordmark. The mark is a simple "D" built from a square and arc.
+// DeepTek logo: the orange "D" with circuit traces, plus the wordmark.
+// Traces use currentColor so they stay visible on dark and light headers.
 ---
 
-<span class="logo">
-  <svg class="mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-    <rect x="1" y="1" width="30" height="30" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
-    <path d="M10 9h6.5c4.2 0 7.5 3 7.5 7s-3.3 7-7.5 7H10V9Z" fill="currentColor"></path>
+<span class="logo" dir="ltr">
+  <svg class="mark" viewBox="64 44 260 216" aria-hidden="true" focusable="false">
+    <path fill="#D85F2A" d="M113 49H215.5A102.5 102.5 0 0 1 215.5 254H113L124 229H215.5A77.5 77.5 0 0 0 215.5 74H124Z"/>
+    <g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M111.3 117H140L154.5 102.5H209.7M85.5 133.5H142.5L157 118H225.2M74 158H145.5L169.5 135H199M99.6 179.5H158L167.5 188H200.7M79.5 195H150.5L160 204H222"/>
+    <circle cx="107.5" cy="117" r="6.2"/><circle cx="213.5" cy="102.5" r="6.2"/><circle cx="229" cy="118" r="6.2"/><circle cx="95.8" cy="179.5" r="6.2"/><circle cx="204.5" cy="188" r="6.2"/>
+    </g>
+    <g fill="currentColor"><circle cx="85.5" cy="133.5" r="7"/><circle cx="74" cy="158" r="7"/><circle cx="199" cy="135" r="7"/><circle cx="79.5" cy="195" r="7"/><circle cx="222" cy="204" r="7"/></g>
   </svg>
   <span class="word">DeepTek</span>
 </span>
@@ -14,11 +19,12 @@
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
   .mark {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 3.15rem;
+    height: 2.6rem;
+    flex: none;
   }
   .word {
     font-size: 1.15rem;
