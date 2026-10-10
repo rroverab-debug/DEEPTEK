@@ -67,7 +67,7 @@ With the email settings left empty in `.dev.vars`, submissions are printed to th
 
 ## Editing content
 
-Most text lives in `src/data/site.ts`: company details, navigation, services, solution pillars, process steps, projects, values and FAQs. Update the placeholder email `hello@deeptek.ae` and add social links there once they exist.
+Most text lives in `src/data/site.ts`: company details, navigation, services, solution pillars, process steps, projects, values and FAQs. Contact email (`info@deeptek.ae`), phone number and the registered company name (`legalName`) are set there too. Add social links once they exist.
 
 Project artwork is generated, original SVG (`ProjectArt.astro`). Replace it with real screenshots or photography when case studies are ready (place images in `src/assets/` and use Astro's `<Image />` for automatic optimisation).
 
@@ -121,7 +121,7 @@ Project artwork is generated, original SVG (`ProjectArt.astro`). Replace it with
 | `PUBLIC_TURNSTILE_SITE_KEY` | Build variable | `0x4AAAA…` |
 | `TURNSTILE_SECRET_KEY` | **Secret** | `0x4AAAA…` |
 | `EMAIL_API_KEY` | **Secret** | `re_…` |
-| `CONTACT_TO_EMAIL` | Variable | `hello@deeptek.ae` |
+| `CONTACT_TO_EMAIL` | Variable | `info@deeptek.ae` |
 | `CONTACT_FROM_EMAIL` | Variable | `DeepTek Website <web@deeptek.ae>` |
 | `ENVIRONMENT` | Variable | `production` (already set in `wrangler.toml`) |
 | `SITE_URL` | Build variable | `https://deeptek.ae` |

@@ -31,6 +31,7 @@ const orgSchema = {
   name: site.name,
   url: site.url,
   email: site.email,
+  telephone: site.phone.tel,
   description: site.description,
   logo: new URL('/favicon.svg', site.url).href,
   areaServed: { '@type': 'Country', name: 'United Arab Emirates' },

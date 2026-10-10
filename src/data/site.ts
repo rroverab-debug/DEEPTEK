@@ -3,13 +3,19 @@
 
 export const site = {
   name: 'DeepTek',
-  legalName: 'DeepTek', // Replace with the registered trade name once licensed.
+  // Registered company name, shown in the footer. Not confirmed yet: switch to
+  // 'DeepTek IT Solutions FZ LLC' or 'DeepTek Innovations FZ LLC' once licensed.
+  legalName: 'DeepTek',
   tagline: 'IT solutions, digital marketing and AI automation for UAE businesses.',
   description:
     'DeepTek helps businesses across the UAE build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
   // Placeholder domain until ownership is verified (deeptek.com is the alternative).
   url: 'https://deeptek.ae',
-  email: 'hello@deeptek.ae', // Placeholder inbox. Update once the domain is live.
+  email: 'info@deeptek.ae',
+  phone: {
+    display: '+971 50 396 1050',
+    tel: '+971503961050',
+  },
   location: 'United Arab Emirates',
   locale: 'en_AE',
   social: {
