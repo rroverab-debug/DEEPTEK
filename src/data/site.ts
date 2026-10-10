@@ -3,9 +3,8 @@
 
 export const site = {
   name: 'DeepTek',
-  // Registered company name, shown in the footer. Not confirmed yet: switch to
-  // 'DeepTek IT Solutions FZ LLC' or 'DeepTek Innovations FZ LLC' once licensed.
-  legalName: 'DeepTek',
+  // Registered company name, shown in the footer and structured data.
+  legalName: 'DeepTek Innovations FZ LLC',
   tagline: 'IT solutions, digital marketing and AI automation for UAE businesses.',
   description:
     'DeepTek helps businesses across the UAE build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
