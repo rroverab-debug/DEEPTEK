@@ -198,3 +198,15 @@ Use Cloudflare Web Analytics. It is free, sets no cookies and stores no personal
 - [ ] WAF rate limit rule on `/api/contact`
 - [ ] Submit `sitemap-index.xml` in Google Search Console and Bing Webmaster Tools
 - [ ] Run Lighthouse on the preview URL
+
+## Blog
+
+Articles are Markdown files in `src/content/blog/en/` and `src/content/blog/ar/`.
+An article and its Arabic translation use the same file name, which becomes the
+URL (`/blog/<name>/` and `/ar/blog/<name>/`). Front matter fields are defined in
+`src/content.config.ts`: `title`, `description` (140 to 160 characters, shown in
+Google), `date`, `category` (`websites`, `marketing`, `ai` or `it`), `tags` and
+optional `faqs`. Set `draft: true` to hide an article. Each article gets its own
+search markup, a contents list, share links, related articles, and appears in the
+sitemap and the RSS feeds (`/blog/rss.xml`, `/ar/blog/rss.xml`). Write facts you
+can stand behind: no invented statistics, prices or client stories.

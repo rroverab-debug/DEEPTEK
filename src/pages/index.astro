@@ -5,11 +5,14 @@ import ServiceRail from '../components/ServiceRail.astro';
 import StickyStory from '../components/StickyStory.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import CallToAction from '../components/CallToAction.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getPosts } from '../lib/blog';
 import { content, langOf, localize } from '../i18n';
 
 const lang = langOf(Astro.url);
 const { process, projects, values } = content(lang);
 const l = (href: string) => localize(href, lang);
+const latestPosts = (await getPosts(lang)).slice(0, 3);
 
 const t = {
   en: {
@@ -25,6 +28,9 @@ const t = {
     allWork: 'Explore our projects',
     moreText: 'Also see our SaaS products, digital marketing campaigns and IT projects.',
     moreButton: 'Explore all projects',
+    blogLabel: 'From the blog',
+    blogHeading: 'Practical guides for growing businesses.',
+    blogAll: 'Read the blog',
     valuesLabel: 'Principles',
     valuesHeading: 'What you can expect from us.',
     homeWork: [
@@ -46,6 +52,9 @@ const t = {
     allWork: 'استكشف مشاريعنا',
     moreText: 'اطلع أيضاً على منتجات SaaS وحملات التسويق الرقمي ومشاريع تقنية المعلومات.',
     moreButton: 'استكشف كل المشاريع',
+    blogLabel: 'من المدونة',
+    blogHeading: 'أدلة عملية للشركات النامية.',
+    blogAll: 'اقرأ المدونة',
     valuesLabel: 'مبادئنا',
     valuesHeading: 'ما يمكنك أن تتوقعه منا.',
     homeWork: [
@@ -137,6 +146,29 @@ const homeWork = [
     </div>
   </section>
 
+  {
+    latestPosts.length > 0 && (
+      <section class="section home-blog" aria-labelledby="blog-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">{t.blogLabel}</p>
+            <div class="work-head">
+              <h2 id="blog-title" data-split>{t.blogHeading}</h2>
+              <a class="link-arrow" href={l('/blog/')} data-reveal>
+                {t.blogAll} <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+          <div class="blog-grid" data-reveal-stagger>
+            {latestPosts.map((p) => (
+              <BlogCard post={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <CallToAction />
 </Base>
 
@@ -213,8 +245,18 @@ const homeWork = [
     max-width: 36ch;
   }
 
-  .values {
+  .values,
+  .home-blog {
     border-top: 1px solid var(--line);
+  }
+  .blog-grid {
+    display: grid;
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  @media (min-width: 48rem) {
+    .blog-grid {
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
   }
   .value-grid {
     display: grid;

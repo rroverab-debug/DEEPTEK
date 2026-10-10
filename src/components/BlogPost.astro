@@ -1,0 +1,580 @@
+---
+// A single article: header, contents list, body, questions, sharing and
+// related reading. Used by /blog/[slug]/ and /ar/blog/[slug]/.
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BlogCard from './BlogCard.astro';
+import CallToAction from './CallToAction.astro';
+import { content, langOf, localize } from '../i18n';
+import { categories, formatDate, getPosts, readingMinutes, type Post } from '../lib/blog';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const lang = langOf(Astro.url);
+const { site } = content(lang);
+const l = (href: string) => localize(href, lang);
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+const minutes = readingMinutes(post);
+const { title, description, date, updated, category, tags, faqs } = post.data;
+
+// Same topic first, then the newest of the rest.
+const others = (await getPosts(lang)).filter((p) => p.id !== post.id);
+const related = [...others.filter((p) => p.data.category === category), ...others.filter((p) => p.data.category !== category)].slice(0, 3);
+
+const t = {
+  en: {
+    home: 'Home',
+    blog: 'Blog',
+    crumbs: 'Breadcrumb',
+    read: `${minutes} min read`,
+    by: `By the ${site.name} team`,
+    updated: 'Updated',
+    contents: 'On this page',
+    share: 'Share',
+    copy: 'Copy link',
+    copied: 'Link copied',
+    faq: 'Questions',
+    faqHeading: 'Frequently asked.',
+    related: 'Keep reading',
+    all: 'All articles',
+    topics: 'Topics',
+  },
+  ar: {
+    home: 'الرئيسية',
+    blog: 'المدونة',
+    crumbs: 'مسار التنقل',
+    read: `${minutes} دقائق قراءة`,
+    by: `بقلم فريق ${site.name}`,
+    updated: 'آخر تحديث',
+    contents: 'في هذه الصفحة',
+    share: 'شارك',
+    copy: 'نسخ الرابط',
+    copied: 'تم نسخ الرابط',
+    faq: 'أسئلة',
+    faqHeading: 'الأسئلة الشائعة.',
+    related: 'تابع القراءة',
+    all: 'كل المقالات',
+    topics: 'المواضيع',
+  },
+}[lang];
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const shareText = encodeURIComponent(`${title} ${url}`);
+const shares = [
+  { name: 'WhatsApp', href: `https://wa.me/?text=${shareText}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}` },
+  { name: 'X', href: `https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}` },
+  { name: 'Email', href: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}` },
+];
+
+const orgId = new URL('/#organization', site.url).href;
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  inLanguage: lang,
+  datePublished: date.toISOString(),
+  dateModified: (updated ?? date).toISOString(),
+  mainEntityOfPage: url,
+  url,
+  image: new URL('/og.png', site.url).href,
+  articleSection: categories[category][lang],
+  keywords: tags.join(', '),
+  wordCount: (post.body ?? '').trim().split(/\s+/).length,
+  author: { '@type': 'Organization', '@id': orgId, name: site.name, url: new URL(l('/'), site.url).href },
+  publisher: { '@id': orgId },
+};
+const faqSchema = faqs.length > 0 && {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base title={title} seoTitle={`${title} | ${site.name}`} description={description} ogType="article" crumbs={[{ name: t.blog, href: l('/blog/') }]}>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={date.toISOString()} />
+    <meta property="article:modified_time" content={(updated ?? date).toISOString()} />
+    <meta property="article:section" content={categories[category][lang]} />
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  </Fragment>
+
+  <header class="post-hero">
+    <div class="container inner">
+      <nav aria-label={t.crumbs} class="crumbs mono" data-reveal>
+        <ol role="list">
+          <li><a href={l('/')}>{t.home}</a></li>
+          <li><a href={l('/blog/')}>{t.blog}</a></li>
+          <li><span aria-current="page">{categories[category][lang]}</span></li>
+        </ol>
+      </nav>
+      <h1 data-split="now">{title}</h1>
+      <p class="lead" data-reveal data-delay="0.35">{description}</p>
+      <p class="meta mono" data-reveal data-delay="0.45">
+        <span>{t.by}</span>
+        <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date, lang)}</time>
+        {updated && <span>{t.updated} <time datetime={updated.toISOString().slice(0, 10)}>{formatDate(updated, lang)}</time></span>}
+        <span>{t.read}</span>
+      </p>
+    </div>
+  </header>
+
+  <div class="container layout">
+    <aside class="side">
+      {
+        toc.length > 1 && (
+          <nav class="toc" aria-labelledby="toc-title">
+            <p class="mono label" id="toc-title">{t.contents}</p>
+            <ol role="list">
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+      <div class="share share--side">
+        <p class="mono label">{t.share}</p>
+        <ul role="list">
+          {
+            shares.map((s) => (
+              <li>
+                <a href={s.href} target={s.name === 'Email' ? undefined : '_blank'} rel="noopener noreferrer">
+                  {s.name}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <button type="button" data-copy={url} data-copied={t.copied} hidden>{t.copy}</button>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <article class="prose">
+      <Content />
+      {
+        tags.length > 0 && (
+          <ul class="tags" role="list" aria-label={t.topics}>
+            {tags.map((tag) => (
+              <li class="mono">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+      <div class="share share--end">
+        <p class="mono label">{t.share}</p>
+        <ul role="list">
+          {
+            shares.map((s) => (
+              <li>
+                <a href={s.href} target={s.name === 'Email' ? undefined : '_blank'} rel="noopener noreferrer">
+                  {s.name}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <button type="button" data-copy={url} data-copied={t.copied} hidden>{t.copy}</button>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </div>
+
+  {
+    faqs.length > 0 && (
+      <section class="section faq" aria-labelledby="faq-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">{t.faq}</p>
+            <h2 id="faq-title" data-split>{t.faqHeading}</h2>
+          </div>
+          <div class="faq-list" data-reveal>
+            {faqs.map((f) => (
+              <details>
+                <summary>
+                  <span>{f.q}</span>
+                  <span class="plus" aria-hidden="true" />
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    related.length > 0 && (
+      <section class="section related" aria-labelledby="related-title">
+        <div class="container">
+          <div class="related-head">
+            <h2 id="related-title" data-split>{t.related}</h2>
+            <a class="link-arrow" href={l('/blog/')}>
+              {t.all} <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="grid" data-reveal-stagger>
+            {related.map((p) => (
+              <BlogCard post={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <CallToAction />
+</Base>
+
+<script>
+  // "Copy link" only appears when the browser can copy.
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    if (!navigator.clipboard) return;
+    btn.hidden = false;
+    const label = btn.textContent;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        btn.textContent = btn.dataset.copied!;
+        setTimeout(() => (btn.textContent = label), 2000);
+      } catch {
+        /* Copy refused; nothing to do. */
+      }
+    });
+  });
+
+  // Highlight the section being read in the contents list.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+  if (links.length && 'IntersectionObserver' in window) {
+    const byId = new Map(links.map((a) => [decodeURIComponent(a.hash.slice(1)), a]));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          links.forEach((a) => a.removeAttribute('aria-current'));
+          byId.get(e.target.id)?.setAttribute('aria-current', 'true');
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const h = document.getElementById(id);
+      if (h) io.observe(h);
+    });
+  }
+</script>
+
+<style>
+  .post-hero {
+    padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 7rem));
+    padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .inner {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  h1 {
+    font-size: var(--fs-2xl);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  :global(:lang(ar)) h1 {
+    line-height: 1.3;
+  }
+  .lead {
+    max-width: 52ch;
+  }
+  .mono {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-inline-end: 0.5rem;
+  }
+  .crumbs a {
+    color: inherit;
+  }
+  .crumbs a:hover {
+    color: var(--ink);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .layout {
+    display: grid;
+    gap: 3rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: 15rem minmax(0, 46rem);
+      justify-content: space-between;
+      gap: 4rem;
+    }
+    .side {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+  .side {
+    display: grid;
+    gap: 2.5rem;
+    align-content: start;
+  }
+  .label {
+    margin-bottom: 0.85rem;
+  }
+  .toc ol,
+  .share ul {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .toc a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+    padding-inline-start: 0.85rem;
+    border-inline-start: 1px solid var(--line);
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .toc a:hover,
+  .toc a[aria-current] {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  @media (max-width: 63.99rem) {
+    .side {
+      grid-template-columns: 1fr;
+      padding: 1.5rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+  }
+  .share ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .share a,
+  .share button {
+    display: inline-block;
+    font: inherit;
+    font-size: var(--fs-sm);
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .share a:hover,
+  .share button:hover {
+    border-color: var(--ink);
+  }
+  .share button[hidden] {
+    display: none;
+  }
+  /* Sharing sits in the sidebar on wide screens and after the article on phones. */
+  .share--end {
+    margin-top: 2.5rem !important;
+    font-size: var(--fs-base);
+  }
+  @media (min-width: 64rem) {
+    .share--end {
+      display: none;
+    }
+  }
+  @media (max-width: 63.99rem) {
+    .share--side {
+      display: none;
+    }
+  }
+
+  /* Article body (rendered from Markdown). */
+  .prose {
+    font-size: var(--fs-lg);
+    line-height: 1.7;
+    min-width: 0;
+  }
+  .prose > :global(* + *) {
+    margin-top: 1.25em;
+  }
+  .prose :global(h2) {
+    font-size: var(--fs-xl);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-top: 2.4em;
+    padding-top: 1.2em;
+    border-top: 1px solid var(--line);
+  }
+  .prose :global(h3) {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    margin-top: 1.8em;
+  }
+  .prose :global(h2 + *),
+  .prose :global(h3 + *) {
+    margin-top: 0.75em;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--ink-2);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-inline-start: 1.25em;
+    display: grid;
+    gap: 0.5em;
+  }
+  .prose :global(li::marker) {
+    color: var(--muted);
+  }
+  .prose :global(strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .prose :global(a) {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  .prose :global(a:hover) {
+    text-decoration-thickness: 2px;
+  }
+  :global(:lang(ar)) .prose :global(h2),
+  :global(:lang(ar)) .prose :global(h3) {
+    line-height: 1.5;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 2rem 0 0 !important;
+    margin-top: 3rem !important;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+  .tags li {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+
+  .faq,
+  .related {
+    border-top: 1px solid var(--line);
+  }
+  .faq-list {
+    border-top: 1px solid var(--line);
+    max-width: 60rem;
+    margin-inline-start: auto;
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .plus {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    inset: 6px 0 auto;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s var(--ease);
+  }
+  .plus::after {
+    transform: rotate(90deg);
+  }
+  details[open] .plus::after {
+    transform: rotate(0deg);
+  }
+  details p {
+    color: var(--muted);
+    padding-bottom: 1.75rem;
+    max-width: 60ch;
+  }
+
+  .related-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .related-head h2 {
+    font-size: var(--fs-2xl);
+    letter-spacing: -0.035em;
+  }
+  .grid {
+    display: grid;
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  @media (min-width: 48rem) {
+    .grid {
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
+  }
+</style>

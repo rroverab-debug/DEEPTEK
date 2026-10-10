@@ -9,6 +9,9 @@ interface Props {
   title?: string;
   /** Full search-result title; overrides the "Title | DeepTek" pattern. */
   seoTitle?: string;
+  /** Extra breadcrumb levels between Home and this page, e.g. the blog index. */
+  crumbs?: { name: string; href: string }[];
+  ogType?: 'website' | 'article';
   description?: string;
   image?: string;
   noindex?: boolean;
@@ -22,6 +25,8 @@ const { site, pillars } = content(lang);
 const {
   title,
   seoTitle,
+  crumbs = [],
+  ogType = 'website',
   description = site.description,
   image = '/og.png',
   noindex = false,
@@ -106,9 +111,10 @@ const breadcrumbSchema = title && {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: lang === 'ar' ? 'الرئيسية' : 'Home', item: home },
-    { '@type': 'ListItem', position: 2, name: title, item: canonical },
-  ],
+    { name: lang === 'ar' ? 'الرئيسية' : 'Home', item: home },
+    ...crumbs.map((c) => ({ name: c.name, item: new URL(c.href, site.url).href })),
+    { name: title, item: canonical },
+  ].map((c, i) => ({ '@type': 'ListItem', position: i + 1, ...c })),
 };
 ---
 
@@ -128,8 +134,14 @@ const breadcrumbSchema = title && {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={lang === 'ar' ? `مدونة ${site.name}` : `${site.name} Blog`}
+      href={new URL(lang === 'ar' ? '/ar/blog/rss.xml' : '/blog/rss.xml', site.url).href}
+    />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content={site.locale} />
     <meta property="og:locale:alternate" content={lang === 'ar' ? 'en_AE' : 'ar_AE'} />

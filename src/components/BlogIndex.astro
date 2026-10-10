@@ -1,0 +1,193 @@
+---
+// Blog home: newest article first, then the rest, with category filters.
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import BlogCard from './BlogCard.astro';
+import CallToAction from './CallToAction.astro';
+import { langOf } from '../i18n';
+import { categories, getPosts, type Category } from '../lib/blog';
+
+const lang = langOf(Astro.url);
+const posts = await getPosts(lang);
+const [latest, ...rest] = posts;
+const used = Object.keys(categories).filter((c) => posts.some((p) => p.data.category === c)) as Category[];
+
+const t = {
+  en: {
+    title: 'Blog',
+    seoTitle: 'Blog | Websites, SEO, IT & AI Automation Tips for UAE Businesses',
+    description:
+      'Practical guides on websites, SEO, digital marketing, IT and AI automation for small and growing businesses in Dubai, Abu Dhabi, the UAE and GCC.',
+    label: 'Blog',
+    heading: 'Practical guides for growing businesses.',
+    lead: 'Plain-language advice on websites, marketing, IT and AI automation for businesses in the UAE and GCC.',
+    filter: 'Filter articles by topic',
+    all: 'All',
+    latest: 'Latest article',
+    more: 'More articles',
+    empty: 'No articles in this topic yet.',
+  },
+  ar: {
+    title: 'المدونة',
+    seoTitle: 'المدونة | نصائح المواقع وتحسين البحث والأتمتة للشركات في الإمارات',
+    description:
+      'أدلة عملية حول المواقع وتحسين محركات البحث والتسويق الرقمي وتقنية المعلومات والأتمتة بالذكاء الاصطناعي للشركات في دبي وأبوظبي والإمارات والخليج.',
+    label: 'المدونة',
+    heading: 'أدلة عملية للشركات النامية.',
+    lead: 'نصائح واضحة حول المواقع والتسويق وتقنية المعلومات والأتمتة بالذكاء الاصطناعي للشركات في الإمارات والخليج.',
+    filter: 'تصفية المقالات حسب الموضوع',
+    all: 'الكل',
+    latest: 'أحدث مقال',
+    more: 'مقالات أخرى',
+    empty: 'لا توجد مقالات في هذا الموضوع بعد.',
+  },
+}[lang];
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: t.seoTitle,
+  description: t.description,
+  inLanguage: lang,
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    datePublished: p.data.date.toISOString(),
+    url: new URL(`${lang === 'ar' ? '/ar' : ''}/blog/${p.id.split('/').pop()}/`, Astro.site).href,
+  })),
+};
+---
+
+<Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+  <PageHero label={t.label} title={t.heading} lead={t.lead}>
+    {
+      used.length > 1 && (
+        <div class="filters" role="group" aria-label={t.filter} data-reveal data-delay="0.5" data-blog-filters hidden>
+          <button type="button" aria-pressed="true" data-filter="all">{t.all}</button>
+          {used.map((c) => (
+            <button type="button" aria-pressed="false" data-filter={c}>
+              {categories[c][lang]}
+            </button>
+          ))}
+        </div>
+      )
+    }
+  </PageHero>
+
+  <section class="section blog" aria-label={t.label}>
+    <div class="container">
+      {
+        latest && (
+          <div class="latest" data-reveal>
+            <h2 class="eyebrow">{t.latest}</h2>
+            <BlogCard post={latest} featured index={0} />
+          </div>
+        )
+      }
+      {
+        rest.length > 0 && (
+          <div class="rest">
+            <h2 class="eyebrow">{t.more}</h2>
+            <div class="grid" data-reveal-stagger>
+              {rest.map((p, i) => (
+                <BlogCard post={p} index={i + 1} />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      <p class="empty" data-blog-empty hidden>{t.empty}</p>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<script>
+  // Topic filter. Without JavaScript the buttons stay hidden and every
+  // article is listed.
+  const bar = document.querySelector<HTMLElement>('[data-blog-filters]');
+  if (bar) {
+    bar.hidden = false;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const cards = [...document.querySelectorAll<HTMLElement>('.blog [data-category]')];
+    const empty = document.querySelector<HTMLElement>('[data-blog-empty]');
+    const sections = [...document.querySelectorAll<HTMLElement>('.blog .latest, .blog .rest')];
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const f = btn.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      cards.forEach((c) => (c.hidden = f !== 'all' && c.dataset.category !== f));
+      sections.forEach((s) => (s.hidden = !s.querySelector('[data-category]:not([hidden])')));
+      if (empty) empty.hidden = cards.some((c) => !c.hidden);
+    });
+  }
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .filters[hidden] {
+    display: none;
+  }
+  .filters button {
+    font: inherit;
+    font-size: var(--fs-sm);
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .filters button:hover {
+    border-color: var(--ink);
+  }
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .blog .container {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+  .blog h2.eyebrow {
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+  .grid {
+    display: grid;
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  @media (min-width: 48rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 75rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .grid > :global(*) {
+    display: grid;
+  }
+  .grid :global(.card[hidden]),
+  .latest[hidden],
+  .rest[hidden] {
+    display: none;
+  }
+  .empty {
+    color: var(--muted);
+  }
+</style>
