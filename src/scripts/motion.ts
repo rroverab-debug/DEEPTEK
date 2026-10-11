@@ -8,6 +8,14 @@ import { SplitText } from 'gsap/SplitText';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
+// On phones the address bar shows and hides while scrolling, which resizes the
+// window. Recalculating every trigger each time made scrolling stutter.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+// Touch screens and small windows get lighter, time-based versions of the
+// scroll-linked effects, so the browser does less work on every scroll frame.
+const lite = window.matchMedia('(hover: none), (max-width: 63.99rem)').matches;
+
 const root = document.documentElement;
 const EASE = 'power3.out';
 
@@ -83,7 +91,10 @@ function progressiveText() {
             opacity: 1,
             ease: 'none',
             stagger: 0.1,
-            scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 40%', scrub: 0.2 },
+            scrollTrigger: lite
+              ? { trigger: el, start: 'top 85%', once: true }
+              : { trigger: el, start: 'top 90%', end: 'top 40%', scrub: 0.2 },
+            ...(lite ? { duration: 0.8, stagger: 0.02 } : {}),
           },
         );
       },
@@ -245,6 +256,7 @@ function scenes() {
 }
 
 function parallax() {
+  if (lite) return;
   gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
     const amount = Number(el.dataset.parallax || 12);
     gsap.fromTo(

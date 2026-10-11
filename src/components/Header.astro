@@ -169,6 +169,16 @@ const t = {
     -webkit-backdrop-filter: saturate(140%) blur(12px);
     border-bottom-color: var(--line);
   }
+  @media (max-width: 63.99rem), (hover: none) {
+    /* Phones and tablets: a background blur behind a fixed or sticky bar is
+       repainted on every scroll frame and makes scrolling stutter. Use a
+       solid background there instead. */
+    .site-header.is-scrolled {
+      background: var(--paper);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
   .site-header.menu-open {
     background: var(--night);
     color: var(--paper);

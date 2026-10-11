@@ -5,7 +5,7 @@ export const site = {
   name: 'DeepTek',
   // Registered company name, shown in the footer and structured data.
   legalName: 'DeepTek Innovations FZ LLC',
-  tagline: 'IT solutions, digital marketing and AI automation for UAE businesses.',
+  tagline: 'IT solutions, digital marketing and AI automation for businesses across the GCC.',
   description:
     'DeepTek helps businesses across the UAE and GCC build reliable technology, grow with measurable digital marketing and save time with practical AI automation.',
   // Placeholder domain until ownership is verified (deeptek.com is the alternative).
@@ -72,7 +72,7 @@ export const services: Service[] = [
     pillar: 'IT Solutions',
     title: 'Cybersecurity and compliance',
     summary:
-      'Practical security baselines, backups and access control aligned with UAE data protection requirements.',
+      'Practical security baselines, backups and access control aligned with local data protection laws.',
     points: ['Security reviews', 'Backup and recovery', 'Policy and training'],
   },
   {
@@ -358,7 +358,7 @@ export const values = [
 export const faqs = [
   {
     q: 'Do you work with small businesses and startups?',
-    a: 'Yes. Many of our services are designed for companies setting up or scaling in the UAE. We scope work in small stages so you can start with what matters most.',
+    a: 'Yes. Many of our services are designed for companies setting up or scaling in the UAE and across the GCC. We scope work in small stages so you can start with what matters most.',
   },
   {
     q: 'Can you work in Arabic as well as English?',

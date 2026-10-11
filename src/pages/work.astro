@@ -164,6 +164,14 @@ const position = (slug: string) => projects.findIndex((p) => p.slug === slug);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--line);
   }
+  /* No blur on phones and tablets: it is repainted on every scroll frame. */
+  @media (max-width: 63.99rem), (hover: none) {
+    .cat-nav {
+      background: var(--paper);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
   .cat-nav ul {
     display: flex;
     gap: 0.5rem;
