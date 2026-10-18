@@ -2,7 +2,6 @@
 title: 'Digital marketing for small businesses in Qatar: a simple starting plan'
 description: 'A step-by-step digital marketing plan for small businesses in Doha and across Qatar: Google, social media, bilingual ads, WhatsApp and measuring what works.'
 date: 2026-10-18
-draft: true
 category: marketing
 tags: ['Qatar', 'digital marketing Doha', 'social media marketing', 'Google Ads', 'small business']
 faqs:

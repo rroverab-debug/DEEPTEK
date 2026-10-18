@@ -1,6 +1,6 @@
 ---
 // One article in a list: category, title, summary and reading details.
-import { categories, formatDate, postPath, readingMinutes, type Post } from '../lib/blog';
+import { categories, formatDate, postPath, readingMinutes, readLabel, type Post } from '../lib/blog';
 import { langOf } from '../i18n';
 
 interface Props {
@@ -15,7 +15,7 @@ const { post, index, featured = false, level = 'h3' } = Astro.props;
 const lang = langOf(Astro.url);
 const Heading = level;
 const minutes = readingMinutes(post);
-const read = lang === 'ar' ? `${minutes} دقائق قراءة` : `${minutes} min read`;
+const read = readLabel(minutes, lang);
 const more = lang === 'ar' ? 'اقرأ المقال' : 'Read article';
 ---
 

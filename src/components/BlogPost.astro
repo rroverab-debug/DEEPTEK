@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
 import BlogCard from './BlogCard.astro';
 import CallToAction from './CallToAction.astro';
 import { content, langOf, localize } from '../i18n';
-import { categories, formatDate, getPosts, readingMinutes, type Post } from '../lib/blog';
+import { categories, formatDate, getPosts, readingMinutes, readLabel, type Post } from '../lib/blog';
 
 interface Props {
   post: Post;
@@ -29,7 +29,7 @@ const t = {
     home: 'Home',
     blog: 'Blog',
     crumbs: 'Breadcrumb',
-    read: `${minutes} min read`,
+    read: readLabel(minutes, 'en'),
     by: `By the ${site.name} team`,
     updated: 'Updated',
     contents: 'On this page',
@@ -46,7 +46,7 @@ const t = {
     home: 'الرئيسية',
     blog: 'المدونة',
     crumbs: 'مسار التنقل',
-    read: `${minutes} دقائق قراءة`,
+    read: readLabel(minutes, 'ar'),
     by: `بقلم فريق ${site.name}`,
     updated: 'آخر تحديث',
     contents: 'في هذه الصفحة',

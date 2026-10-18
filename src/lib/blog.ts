@@ -31,3 +31,12 @@ export const formatDate = (date: Date, lang: Lang) =>
   date.toLocaleDateString(lang === 'ar' ? 'ar-AE-u-nu-latn' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 export const postPath = (post: Post) => `${langOfPost(post) === 'ar' ? '/ar' : ''}/blog/${slugOf(post)}/`;
+
+/** "3 min read", with correct Arabic number agreement. */
+export function readLabel(minutes: number, lang: Lang) {
+  if (lang !== 'ar') return `${minutes} min read`;
+  if (minutes === 1) return 'دقيقة قراءة واحدة';
+  if (minutes === 2) return 'دقيقتا قراءة';
+  if (minutes <= 10) return `${minutes} دقائق قراءة`;
+  return `${minutes} دقيقة قراءة`;
+}

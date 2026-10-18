@@ -2,7 +2,6 @@
 title: 'Going digital in Saudi Arabia: a checklist for small businesses'
 description: 'A practical checklist for small businesses in Riyadh, Jeddah and across Saudi Arabia: an Arabic-first website, local payments, e-invoicing and data protection basics.'
 date: 2026-10-18
-draft: true
 category: websites
 tags: ['Saudi Arabia', 'website design Riyadh', 'small business KSA', 'e-invoicing', 'digital transformation']
 faqs:

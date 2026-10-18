@@ -2,7 +2,6 @@
 title: 'IT checklist for small businesses in Oman'
 description: 'A simple IT checklist for small businesses in Muscat and across Oman: email, devices, backups, cyber security, data protection and support, explained in plain language.'
 date: 2026-10-18
-draft: true
 category: it
 tags: ['Oman', 'IT support Muscat', 'cyber security', 'Microsoft 365', 'small business IT']
 faqs:
