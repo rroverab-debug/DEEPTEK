@@ -31,7 +31,7 @@ export const site = {
     // page and search markup), so fill in only the accounts that exist.
     Instagram: 'https://www.instagram.com/deeptek.digital/',
     LinkedIn: '', // e.g. https://www.linkedin.com/company/deeptek
-    Facebook: '',
+    Facebook: 'https://www.facebook.com/Deeptek.digital',
     TikTok: '',
     X: '',
     YouTube: '',
