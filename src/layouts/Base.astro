@@ -94,7 +94,7 @@ const orgSchema = {
       })),
     })),
   },
-  sameAs: Object.values(site.social).filter(Boolean),
+  sameAs: [...Object.values(site.social), ...Object.values(site.socialDev)].filter(Boolean),
 };
 
 const siteSchema = {

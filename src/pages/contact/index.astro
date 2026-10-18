@@ -98,7 +98,7 @@ const t = {
   },
 }[lang];
 const budgets = budgetValues.map((value, i) => ({ value, label: t.budgets[i] }));
-const hasSocial = Object.values(site.social).some(Boolean);
+const hasSocial = [...Object.values(site.social), ...Object.values(site.socialDev)].some(Boolean);
 ---
 
 <Base title={t.title} seoTitle={t.seoTitle} description={t.description}>

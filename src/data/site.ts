@@ -36,6 +36,16 @@ export const site = {
     X: '',
     YouTube: '',
   },
+  // Second set of profiles for the DeepTek Dev brand. When any is filled in,
+  // both sets are shown with a small caption each.
+  socialDev: {
+    Instagram: 'https://www.instagram.com/deeptek_dev/',
+    LinkedIn: '',
+    Facebook: 'https://www.facebook.com/Deeptek.dev',
+    TikTok: '',
+    X: '',
+    YouTube: '',
+  },
 } as const;
 
 export const nav = [

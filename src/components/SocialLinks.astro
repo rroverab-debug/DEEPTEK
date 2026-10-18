@@ -1,6 +1,6 @@
 ---
-// Social profile icons. Only accounts with a URL in site.social are shown,
-// so nothing appears until the links are filled in.
+// Social profile icons. Only accounts with a URL in site.social (and
+// site.socialDev) are shown, so nothing appears until links are filled in.
 import { content, langOf } from '../i18n';
 
 interface Props {
@@ -8,7 +8,13 @@ interface Props {
 }
 const lang = langOf(Astro.url);
 const { site } = content(lang);
-const links = Object.entries(site.social).filter(([, url]) => Boolean(url));
+const pick = (set: Record<string, string>) => Object.entries(set).filter(([, url]) => Boolean(url));
+// One group per brand; captions only appear when there is more than one.
+const groups = [
+  { name: `${site.name} Digital`, links: pick(site.social) },
+  { name: `${site.name} Dev`, links: pick(site.socialDev) },
+].filter((g) => g.links.length > 0);
+const captioned = groups.length > 1;
 
 // Simple monochrome marks drawn on a 24 by 24 grid.
 const icons: Record<string, string> = {
@@ -24,21 +30,32 @@ const icons: Record<string, string> = {
   YouTube:
     '<rect x="2.5" y="5.5" width="19" height="13" rx="3.5" fill="currentColor"/><path fill="var(--icon-cut)" d="M10 9v6l5.2-3z"/>',
 };
-const label = (name: string) => (lang === 'ar' ? `${site.name} على ${name}` : `${site.name} on ${name}`);
+const label = (brand: string, name: string) => (lang === 'ar' ? `${brand} على ${name}` : `${brand} on ${name}`);
 const { class: className } = Astro.props;
 ---
 
 {
-  links.length > 0 && (
-    <ul class:list={['social', className]} role="list">
-      {links.map(([name, url]) => (
-        <li>
-          <a href={url} rel="noopener noreferrer me" target="_blank" aria-label={label(name)} title={name}>
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" set:html={icons[name] ?? ''} />
-          </a>
-        </li>
+  groups.length > 0 && (
+    <div class:list={['social', className]}>
+      {groups.map((g) => (
+        <div class="group">
+          {captioned && (
+            <p class="cap" lang="en" dir="ltr">
+              {g.name}
+            </p>
+          )}
+          <ul role="list">
+            {g.links.map(([name, url]) => (
+              <li>
+                <a href={url} rel="noopener noreferrer me" target="_blank" aria-label={label(captioned ? g.name : site.name, name)} title={`${captioned ? g.name : site.name} · ${name}`}>
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" set:html={icons[name] ?? ''} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </ul>
+    </div>
   )
 }
 
@@ -46,14 +63,28 @@ const { class: className } = Astro.props;
   .social {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0;
+    gap: 1rem 2rem;
     /* Colour of the cut-outs inside filled marks: the surface behind them. */
     --icon-cut: var(--paper);
   }
   :global(.theme-night) .social {
     --icon-cut: var(--night);
+  }
+  .group {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .cap {
+    justify-self: start;
+    font-size: var(--fs-xs);
+    opacity: 0.7;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
   }
   a {
     display: grid;
