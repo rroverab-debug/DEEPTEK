@@ -43,7 +43,7 @@ export const site = {
     LinkedIn: '',
     Facebook: 'https://www.facebook.com/Deeptek.dev',
     TikTok: '',
-    X: '',
+    X: 'https://x.com/Deeptekdev',
     YouTube: '',
   },
 } as const;
