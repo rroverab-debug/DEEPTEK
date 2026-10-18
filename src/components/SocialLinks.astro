@@ -11,8 +11,8 @@ const { site } = content(lang);
 const pick = (set: Record<string, string>) => Object.entries(set).filter(([, url]) => Boolean(url));
 // One group per brand; captions only appear when there is more than one.
 const groups = [
-  { name: `${site.name} Digital`, links: pick(site.social) },
   { name: `${site.name} Dev`, links: pick(site.socialDev) },
+  { name: `${site.name} Digital`, links: pick(site.social) },
 ].filter((g) => g.links.length > 0);
 const captioned = groups.length > 1;
 
