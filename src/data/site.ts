@@ -29,7 +29,7 @@ export const site = {
   social: {
     // Full profile URLs. Empty ones are hidden everywhere (footer, contact
     // page and search markup), so fill in only the accounts that exist.
-    Instagram: 'https://www.instagram.com/deeptek_dev/',
+    Instagram: 'https://www.instagram.com/deeptek.digital/',
     LinkedIn: '', // e.g. https://www.linkedin.com/company/deeptek
     Facebook: '',
     TikTok: '',
