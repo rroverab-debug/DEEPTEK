@@ -27,10 +27,14 @@ export const site = {
   address: '', // e.g. office or desk address shown in the footer
   locale: 'en_AE',
   social: {
-    // Add full profile URLs once the accounts exist; empty ones are hidden.
+    // Full profile URLs. Empty ones are hidden everywhere (footer, contact
+    // page and search markup), so fill in only the accounts that exist.
+    Instagram: '', // e.g. https://www.instagram.com/deeptek
     LinkedIn: '', // e.g. https://www.linkedin.com/company/deeptek
-    Instagram: '',
+    Facebook: '',
+    TikTok: '',
     X: '',
+    YouTube: '',
   },
 } as const;
 

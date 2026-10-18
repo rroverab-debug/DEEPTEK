@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import SocialLinks from './SocialLinks.astro';
 import { content, langOf, localize } from '../i18n';
 
 const lang = langOf(Astro.url);
@@ -11,7 +12,6 @@ const t = {
 }[lang];
 
 const year = new Date().getFullYear();
-const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
 ---
 
 <footer class="site-footer theme-night">
@@ -40,16 +40,8 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={`tel:${site.phone.tel}`} dir="ltr">{site.phone.display}</a></li>
           <li>{site.address || site.location}</li>
-          {
-            social.map(([name, url]) => (
-              <li>
-                <a href={url} rel="noopener noreferrer" target="_blank">
-                  {name}
-                </a>
-              </li>
-            ))
-          }
         </ul>
+        <SocialLinks class="footer-social" />
       </div>
     </div>
 
@@ -101,6 +93,12 @@ const social = Object.entries(site.social).filter(([, url]) => Boolean(url));
     font-size: var(--fs-sm);
   }
   .col a {
+    text-decoration: none;
+  }
+  .col :global(.footer-social) {
+    margin-top: 1.5rem;
+  }
+  .col :global(.footer-social a:hover) {
     text-decoration: none;
   }
   .col a:hover {

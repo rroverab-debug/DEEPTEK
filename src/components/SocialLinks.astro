@@ -1,0 +1,78 @@
+---
+// Social profile icons. Only accounts with a URL in site.social are shown,
+// so nothing appears until the links are filled in.
+import { content, langOf } from '../i18n';
+
+interface Props {
+  class?: string;
+}
+const lang = langOf(Astro.url);
+const { site } = content(lang);
+const links = Object.entries(site.social).filter(([, url]) => Boolean(url));
+
+// Simple monochrome marks drawn on a 24 by 24 grid.
+const icons: Record<string, string> = {
+  Instagram:
+    '<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/>',
+  LinkedIn:
+    '<rect x="3" y="3" width="18" height="18" rx="2.5" fill="currentColor"/><g fill="var(--icon-cut)"><rect x="6.4" y="10" width="2.6" height="7.6"/><circle cx="7.7" cy="7.3" r="1.5"/><path d="M11.2 10h2.5v1.1c.4-.7 1.3-1.3 2.6-1.3 2.2 0 2.9 1.4 2.9 3.4v4.4h-2.6v-3.9c0-1-.2-1.8-1.2-1.8s-1.6.7-1.6 1.8v3.9h-2.6z"/></g>',
+  Facebook:
+    '<path fill="currentColor" d="M13.4 21v-7.4h2.5l.4-3h-2.9V8.8c0-.9.3-1.5 1.5-1.5h1.5V4.6c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.3H8v3h2.5V21z"/>',
+  TikTok:
+    '<path fill="currentColor" d="M15.8 3c.3 2.2 1.7 3.6 4.2 3.8v3c-1.5 0-2.9-.4-4.1-1.2v6.1A5.7 5.7 0 1 1 10.2 9v3.1a2.7 2.7 0 1 0 2.6 2.7V3z"/>',
+  X: '<path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M5 4l14 16M19 4L5 20"/>',
+  YouTube:
+    '<rect x="2.5" y="5.5" width="19" height="13" rx="3.5" fill="currentColor"/><path fill="var(--icon-cut)" d="M10 9v6l5.2-3z"/>',
+};
+const label = (name: string) => (lang === 'ar' ? `${site.name} على ${name}` : `${site.name} on ${name}`);
+const { class: className } = Astro.props;
+---
+
+{
+  links.length > 0 && (
+    <ul class:list={['social', className]} role="list">
+      {links.map(([name, url]) => (
+        <li>
+          <a href={url} rel="noopener noreferrer me" target="_blank" aria-label={label(name)} title={name}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" set:html={icons[name] ?? ''} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    /* Colour of the cut-outs inside filled marks: the surface behind them. */
+    --icon-cut: var(--paper);
+  }
+  :global(.theme-night) .social {
+    --icon-cut: var(--night);
+  }
+  a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: 999px;
+    color: inherit;
+    transition:
+      border-color 0.2s,
+      transform 0.2s var(--ease);
+  }
+  a:hover {
+    border-color: currentColor;
+    transform: translateY(-2px);
+  }
+  svg {
+    display: block;
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import SocialLinks from '../../components/SocialLinks.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import { pillars as enPillars } from '../../data/site';
@@ -27,6 +28,7 @@ const t = {
     phone: 'Phone and WhatsApp',
     whatsapp: 'Message us on WhatsApp',
     location: 'Location',
+    follow: 'Follow us',
     next: 'What happens next',
     steps: [
       'We read your message and reply within one working day.',
@@ -68,6 +70,7 @@ const t = {
     phone: 'الهاتف وواتساب',
     whatsapp: 'راسلنا على واتساب',
     location: 'المقر',
+    follow: 'تابعنا',
     next: 'ماذا يحدث بعد ذلك',
     steps: ['نقرأ رسالتك ونرد خلال يوم عمل واحد.', 'مكالمة قصيرة لفهم أهدافك.', 'عرض مكتوب يوضح النطاق والسعر.'],
     formTitle: 'نموذج الاستفسار عن مشروع',
@@ -95,6 +98,7 @@ const t = {
   },
 }[lang];
 const budgets = budgetValues.map((value, i) => ({ value, label: t.budgets[i] }));
+const hasSocial = Object.values(site.social).some(Boolean);
 ---
 
 <Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
@@ -129,6 +133,14 @@ const budgets = budgetValues.map((value, i) => ({ value, label: t.budgets[i] }))
           <h2 class="mono">{t.location}</h2>
           <p>{site.location}</p>
         </div>
+        {
+          hasSocial && (
+            <div>
+              <h2 class="mono">{t.follow}</h2>
+              <SocialLinks />
+            </div>
+          )
+        }
         <div>
           <h2 class="mono">{t.next}</h2>
           <ol role="list" class="next">
