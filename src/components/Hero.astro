@@ -6,22 +6,81 @@ const { pillars } = content(lang);
 const l = (href: string) => localize(href, lang);
 const t = {
   en: {
-    feedLabel: 'Example of what a client’s business gets from DeepTek each day: enquiries routed, backups verified, reports sent, invoices filed',
+    feedLabel: 'Example of what a client’s business gets from DeepTek each day: enquiries routed and answered, backups verified, emails and reports sent, invoices filed',
     eyebrow: 'IT · Digital marketing · AI automation · UAE & GCC',
     title: 'Technology that moves your business forward.',
     lead: 'DeepTek is a technology partner for businesses across the UAE and GCC. We set up reliable IT, grow your brand online and automate the work that slows your team down, all under one accountable team.',
     primary: 'Book a free consultation',
     secondary: 'Explore solutions',
-    feed: ['Your business today', 'Built by DeepTek', 'New website enquiry routed to Sales', 'Nightly backup verified, 42 devices', 'Weekly Google Ads report sent', 'Invoice #2041 read and filed', 'Hours your team saved this week'],
+    feed: ['Your business today', 'Built by DeepTek'],
+    // Illustrative updates. The card shows one batch per loop, in turn.
+    batches: [
+      {
+        rows: [
+          ['AI', 'New website enquiry routed to Sales', '09:02'],
+          ['IT', 'Nightly backup verified, 42 devices', '09:15'],
+          ['MKT', 'Weekly Google Ads report sent', '09:30'],
+          ['AI', 'Invoice #2041 read and filed', '09:41'],
+        ],
+        total: ['Hours your team saved this week', 18],
+      },
+      {
+        rows: [
+          ['AI', '12 new leads received and replied to', '11:05'],
+          ['MKT', 'Follow-up email sent to 340 clients', '11:20'],
+          ['IT', 'Security updates on 18 laptops', '11:42'],
+          ['AI', 'Tomorrow’s booking reminders sent', '12:10'],
+        ],
+        total: ['Enquiries answered today', 27],
+      },
+      {
+        rows: [
+          ['MKT', 'Google Business post published', '14:00'],
+          ['AI', '6 supplier invoices matched', '14:25'],
+          ['IT', 'Email account set up for new staff', '15:10'],
+          ['AI', 'Daily sales summary sent to owner', '17:30'],
+        ],
+        total: ['Manual tasks automated this month', 146],
+      },
+    ],
   },
   ar: {
-    feedLabel: 'مثال على ما تحصل عليه أعمال العميل من DeepTek كل يوم: توجيه الاستفسارات، والتحقق من النسخ الاحتياطي، وإرسال التقارير، وحفظ الفواتير',
+    feedLabel: 'مثال على ما تحصل عليه أعمال العميل من DeepTek كل يوم: توجيه الاستفسارات والرد عليها، والتحقق من النسخ الاحتياطي، وإرسال الرسائل والتقارير، وحفظ الفواتير',
     eyebrow: 'تقنية المعلومات · التسويق الرقمي · الأتمتة بالذكاء الاصطناعي · الإمارات والخليج',
     title: 'تقنية تدفع أعمالك إلى الأمام.',
     lead: 'DeepTek شريك تقني للشركات في الإمارات ودول الخليج. نجهّز لك تقنية معلومات موثوقة، وننمّي علامتك التجارية على الإنترنت، ونؤتمت الأعمال التي تبطئ فريقك، كل ذلك مع فريق واحد مسؤول.',
     primary: 'احجز استشارة مجانية',
     secondary: 'استكشف الحلول',
-    feed: ['أعمالك اليوم', 'من تنفيذ DeepTek', 'استفسار جديد من الموقع وُجّه إلى المبيعات', 'تم التحقق من النسخ الاحتياطي الليلي، 42 جهازاً', 'أُرسل تقرير إعلانات Google الأسبوعي', 'قُرئت الفاتورة رقم 2041 وحُفظت', 'ساعات وفّرها فريقك هذا الأسبوع'],
+    feed: ['أعمالك اليوم', 'من تنفيذ DeepTek'],
+    batches: [
+      {
+        rows: [
+          ['AI', 'استفسار جديد وُجّه إلى المبيعات', '09:02'],
+          ['IT', 'نسخ احتياطي ليلي سليم، 42 جهازاً', '09:15'],
+          ['MKT', 'أُرسل تقرير إعلانات Google الأسبوعي', '09:30'],
+          ['AI', 'قُرئت الفاتورة رقم 2041 وحُفظت', '09:41'],
+        ],
+        total: ['ساعات وفّرها فريقك هذا الأسبوع', 18],
+      },
+      {
+        rows: [
+          ['AI', '12 عميلاً محتملاً جديداً وتم الرد عليهم', '11:05'],
+          ['MKT', 'أُرسلت رسالة متابعة إلى 340 عميلاً', '11:20'],
+          ['IT', 'ثُبّتت التحديثات الأمنية على 18 جهازاً', '11:42'],
+          ['AI', 'أُرسلت تذكيرات مواعيد الغد', '12:10'],
+        ],
+        total: ['استفسارات تم الرد عليها اليوم', 27],
+      },
+      {
+        rows: [
+          ['MKT', 'نُشر منشور جديد على Google', '14:00'],
+          ['AI', 'طوبقت 6 فواتير موردين', '14:25'],
+          ['IT', 'جُهّز بريد إلكتروني لموظف جديد', '15:10'],
+          ['AI', 'أُرسل ملخص المبيعات اليومي', '17:30'],
+        ],
+        total: ['مهام يدوية مؤتمتة هذا الشهر', 146],
+      },
+    ],
   },
 }[lang];
 ---
@@ -30,20 +89,25 @@ const t = {
   <div class="backdrop" aria-hidden="true"></div>
 
   <div class="feed" data-scene role="img" aria-label={t.feedLabel}>
-    <div class="feed-win" data-stage aria-hidden="true">
+    <div class="feed-win" data-stage aria-hidden="true" data-batches={JSON.stringify(t.batches)}>
       <div class="feed-bar">
         <span>{t.feed[0]}</span>
         <span class="mono">{t.feed[1]}</span>
       </div>
       <ul role="list">
-        <li data-step="1"><span class="k mono">AI</span><span>{t.feed[2]}</span><span class="t mono">09:02</span></li>
-        <li data-step="2"><span class="k mono">IT</span><span>{t.feed[3]}</span><span class="t mono">09:15</span></li>
-        <li data-step="3"><span class="k mono">MKT</span><span>{t.feed[4]}</span><span class="t mono">09:30</span></li>
-        <li data-step="4"><span class="k mono">AI</span><span>{t.feed[5]}</span><span class="t mono">09:41</span></li>
+        {
+          t.batches[0].rows.map(([k, text, time], i) => (
+            <li data-step={i + 1} data-row>
+              <span class="k mono">{k}</span>
+              <span>{text}</span>
+              <span class="t mono">{time}</span>
+            </li>
+          ))
+        }
       </ul>
       <div class="feed-foot" data-step="5">
-        <span class="mono">{t.feed[6]}</span>
-        <b data-fx="count" data-to="18">18</b>
+        <span class="mono" data-total-label>{t.batches[0].total[0]}</span>
+        <b data-fx="count" data-to={t.batches[0].total[1]}>{t.batches[0].total[1]}</b>
       </div>
     </div>
   </div>

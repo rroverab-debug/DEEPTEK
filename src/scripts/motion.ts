@@ -163,6 +163,30 @@ function showcases() {
   });
 }
 
+type Batch = { rows: string[][]; total: [string, number] };
+const batchIndex = new WeakMap<HTMLElement, number>();
+
+function nextBatch(stage: HTMLElement) {
+  if (!stage.dataset.batches) return;
+  const batches = JSON.parse(stage.dataset.batches) as Batch[];
+  const i = ((batchIndex.get(stage) ?? 0) + 1) % batches.length;
+  batchIndex.set(stage, i);
+  const batch = batches[i];
+  stage.querySelectorAll<HTMLElement>('[data-row]').forEach((row, n) => {
+    const cells = row.children;
+    batch.rows[n]?.forEach((text, j) => {
+      if (cells[j]) cells[j].textContent = text;
+    });
+  });
+  const label = stage.querySelector<HTMLElement>('[data-total-label]');
+  if (label) label.textContent = batch.total[0];
+  const count = stage.querySelector<HTMLElement>('[data-fx="count"]');
+  if (count) {
+    count.dataset.to = String(batch.total[1]);
+    count.textContent = '0';
+  }
+}
+
 // Product scenes: each [data-step] group plays in order, holds, fades and
 // loops. Only runs while the scene is on screen.
 function scenes() {
@@ -175,7 +199,15 @@ function scenes() {
       groups.set(n, [...(groups.get(n) ?? []), el]);
     });
 
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.1, paused: true, defaults: { ease: EASE } });
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0.1,
+      paused: true,
+      defaults: { ease: EASE },
+      // Scenes with several batches of example content show the next one on
+      // each loop, while the stage is faded out.
+      onRepeat: () => nextBatch(stage),
+    });
     tl.fromTo(stage, { opacity: 0 }, { opacity: 1, duration: 0.25 });
 
     [...groups.keys()]
@@ -218,18 +250,19 @@ function scenes() {
             tl.from(f, { opacity: 0, duration: 0.8 }, '<0.6');
           });
           el.querySelectorAll<HTMLElement>('[data-fx="count"]').forEach((c) => {
-            const to = Number(c.dataset.to ?? c.textContent);
             const decimals = Number(c.dataset.decimals ?? 0);
-            const obj = { v: 0 };
+            const obj = { p: 0 };
             tl.fromTo(
               obj,
-              { v: 0 },
+              { p: 0 },
               {
-                v: to,
+                p: 1,
                 duration: 1.1,
                 ease: 'power2.out',
                 onUpdate: () => {
-                  c.textContent = obj.v.toLocaleString('en-US', {
+                  // Read the target each frame: rotating batches change it.
+                  const v = obj.p * Number(c.dataset.to ?? 0);
+                  c.textContent = v.toLocaleString('en-US', {
                     minimumFractionDigits: decimals,
                     maximumFractionDigits: decimals,
                   });
