@@ -386,4 +386,28 @@ export const faqs = [
     q: 'Is AI automation safe for customer data?',
     a: 'We choose tools that meet your data requirements, keep sensitive data out of public models where needed, and design automations so a person approves important actions.',
   },
+  {
+    q: 'Do you work with businesses outside the UAE?',
+    a: 'Yes. Most of our work can be done remotely, so we support businesses in Saudi Arabia, Qatar, Kuwait, Bahrain and Oman as well as the UAE.',
+  },
+  {
+    q: 'What kinds of businesses do you work with?',
+    a: 'Mostly small and growing businesses: restaurants and cafes, retail shops, clinics, salons, real estate, logistics, professional services and more. If your business is not listed, we can still help.',
+  },
+  {
+    q: 'How long does a project take?',
+    a: 'It depends on the scope. A simple website or a first automation usually takes a few weeks. Larger systems are delivered in stages, so you see working results early instead of waiting for one big launch.',
+  },
+  {
+    q: 'Can you work with the tools we already use?',
+    a: 'Yes. Where possible we connect and improve what you already pay for, such as Microsoft 365, Google Workspace, your accounting software or WhatsApp Business, rather than replacing it.',
+  },
+  {
+    q: 'Will we own our website, accounts and data?',
+    a: 'Yes. Domains, hosting, ad accounts and data are set up in your company’s name, and everything we build is documented and handed over.',
+  },
+  {
+    q: 'Do you offer support after launch?',
+    a: 'Yes. You can choose ongoing IT support, marketing management or automation improvements on a monthly plan, or ask for help only when you need it.',
+  },
 ] as const;

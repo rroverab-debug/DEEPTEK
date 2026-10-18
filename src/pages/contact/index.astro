@@ -1,4 +1,5 @@
 ---
+import Faq from '../../components/Faq.astro';
 import SocialLinks from '../../components/SocialLinks.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
@@ -30,6 +31,16 @@ const t = {
     location: 'Location',
     follow: 'Follow us',
     next: 'What happens next',
+    faqLabel: 'Questions',
+    faqHeading: 'Before you get in touch.',
+    faqs: [
+      { q: 'Is the first consultation free?', a: 'Yes. The first call is free and there is no obligation. We use it to understand your goals and tell you honestly whether we can help.' },
+      { q: 'How quickly will you reply?', a: 'We reply within one working day. If your message is urgent, call or message us on WhatsApp.' },
+      { q: 'What should I include in my message?', a: 'A few lines about your business, what you want to achieve, the tools you use today and any timing you have in mind. A rough budget helps us suggest the right option, but it is not required.' },
+      { q: 'Do you work with businesses across the GCC?', a: 'Yes. We work with businesses in the UAE, Saudi Arabia, Qatar, Kuwait, Bahrain and Oman. Most meetings happen by video call or WhatsApp.' },
+      { q: 'Can we talk in Arabic?', a: 'Yes. You can write to us and speak with us in Arabic or English.' },
+      { q: 'What happens to the details I send?', a: 'We use them only to reply to your enquiry. You can read more in our privacy notice.' },
+    ],
     steps: [
       'We read your message and reply within one working day.',
       'A short call to understand your goals.',
@@ -72,6 +83,16 @@ const t = {
     location: 'المقر',
     follow: 'تابعنا',
     next: 'ماذا يحدث بعد ذلك',
+    faqLabel: 'أسئلة',
+    faqHeading: 'قبل أن تتواصل معنا.',
+    faqs: [
+      { q: 'هل الاستشارة الأولى مجانية؟', a: 'نعم. المكالمة الأولى مجانية ودون أي التزام. نستخدمها لفهم أهدافك ونخبرك بصراحة إن كنا نستطيع مساعدتك.' },
+      { q: 'متى ستردون عليّ؟', a: 'نرد خلال يوم عمل واحد. وإذا كان الأمر عاجلاً، اتصل بنا أو راسلنا على واتساب.' },
+      { q: 'ماذا أكتب في رسالتي؟', a: 'بضعة أسطر عن نشاطك، وما تريد تحقيقه، والأدوات التي تستخدمها اليوم، وأي موعد في بالك. الميزانية التقريبية تساعدنا على اقتراح الخيار المناسب، لكنها ليست مطلوبة.' },
+      { q: 'هل تعملون مع الشركات في دول الخليج؟', a: 'نعم. نعمل مع الشركات في الإمارات والسعودية وقطر والكويت والبحرين وعُمان. وتتم معظم الاجتماعات عبر مكالمات الفيديو أو واتساب.' },
+      { q: 'هل يمكننا التحدث بالعربية؟', a: 'نعم. يمكنك مراسلتنا والتحدث معنا بالعربية أو الإنجليزية.' },
+      { q: 'ماذا يحدث للبيانات التي أرسلها؟', a: 'نستخدمها فقط للرد على استفسارك. يمكنك معرفة المزيد في إشعار الخصوصية.' },
+    ],
     steps: ['نقرأ رسالتك ونرد خلال يوم عمل واحد.', 'مكالمة قصيرة لفهم أهدافك.', 'عرض مكتوب يوضح النطاق والسعر.'],
     formTitle: 'نموذج الاستفسار عن مشروع',
     name: 'الاسم الكامل',
@@ -245,6 +266,8 @@ const hasSocial = [...Object.values(site.social), ...Object.values(site.socialDe
       </div>
     </div>
   </section>
+
+  <Faq label={t.faqLabel} heading={t.faqHeading} items={t.faqs} />
 </Base>
 
 <script>

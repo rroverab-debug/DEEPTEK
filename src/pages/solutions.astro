@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import StickyStory from '../components/StickyStory.astro';
+import Faq from '../components/Faq.astro';
 import CallToAction from '../components/CallToAction.astro';
 import { content, langOf } from '../i18n';
 
@@ -76,19 +77,9 @@ const t = {
 }[lang];
 const engagements = t.engagements;
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
 ---
 
 <Base title={t.title} seoTitle={t.seoTitle} description={t.description}>
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <PageHero
     label={t.label}
@@ -171,27 +162,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <section class="section faq" aria-labelledby="faq-title">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">{t.faqLabel}</p>
-        <h2 id="faq-title" data-split>{t.faqHeading}</h2>
-      </div>
-      <div class="faq-list" data-reveal>
-        {
-          faqs.map((f) => (
-            <details>
-              <summary>
-                <span>{f.q}</span>
-                <span class="plus" aria-hidden="true" />
-              </summary>
-              <p>{f.a}</p>
-            </details>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  <Faq label={t.faqLabel} heading={t.faqHeading} items={faqs} />
 
   <CallToAction />
 </Base>
@@ -298,8 +269,7 @@ const faqSchema = {
     font-weight: 500;
   }
 
-  .engage,
-  .faq {
+  .engage {
     border-top: 1px solid var(--line);
   }
   .engage-grid {
@@ -329,53 +299,4 @@ const faqSchema = {
     font-size: var(--fs-sm);
   }
 
-  .faq-list {
-    border-top: 1px solid var(--line);
-    max-width: 60rem;
-    margin-inline-start: auto;
-  }
-  details {
-    border-bottom: 1px solid var(--line);
-  }
-  summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    padding-block: 1.5rem;
-    font-size: var(--fs-lg);
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    cursor: pointer;
-    list-style: none;
-  }
-  summary::-webkit-details-marker {
-    display: none;
-  }
-  .plus {
-    position: relative;
-    flex: none;
-    width: 14px;
-    height: 14px;
-  }
-  .plus::before,
-  .plus::after {
-    content: '';
-    position: absolute;
-    inset: 6px 0 auto;
-    height: 1.5px;
-    background: currentColor;
-    transition: transform 0.3s var(--ease);
-  }
-  .plus::after {
-    transform: rotate(90deg);
-  }
-  details[open] .plus::after {
-    transform: rotate(0deg);
-  }
-  details p {
-    color: var(--muted);
-    padding-bottom: 1.75rem;
-    max-width: 60ch;
-  }
 </style>

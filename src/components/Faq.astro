@@ -1,0 +1,98 @@
+---
+// Questions and answers as an accordion, plus FAQPage search markup.
+interface Props {
+  label: string;
+  heading: string;
+  items: readonly { q: string; a: string }[];
+  id?: string;
+}
+const { label, heading, items, id = 'faq-title' } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<section class="section faq" aria-labelledby={id}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">{label}</p>
+      <h2 id={id} data-split>{heading}</h2>
+    </div>
+    <div class="faq-list" data-reveal>
+      {
+        items.map((f) => (
+          <details>
+            <summary>
+              <span>{f.q}</span>
+              <span class="plus" aria-hidden="true" />
+            </summary>
+            <p>{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+  .faq-list {
+    border-top: 1px solid var(--line);
+    max-width: 60rem;
+    margin-inline-start: auto;
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .plus {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    inset: 6px 0 auto;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s var(--ease);
+  }
+  .plus::after {
+    transform: rotate(90deg);
+  }
+  details[open] .plus::after {
+    transform: rotate(0deg);
+  }
+  details p {
+    color: var(--muted);
+    padding-bottom: 1.75rem;
+    max-width: 60ch;
+  }
+</style>
