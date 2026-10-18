@@ -30,20 +30,20 @@ export const site = {
     // Full profile URLs. Empty ones are hidden everywhere (footer, contact
     // page and search markup), so fill in only the accounts that exist.
     Instagram: 'https://www.instagram.com/deeptek.digital/',
-    LinkedIn: 'https://www.linkedin.com/company/deeptek-innovations/',
     Facebook: 'https://www.facebook.com/Deeptek.digital',
-    TikTok: '',
     X: '',
+    LinkedIn: 'https://www.linkedin.com/company/deeptek-innovations/',
+    TikTok: '',
     YouTube: '',
   },
   // Second set of profiles for the DeepTek Dev brand. When any is filled in,
   // both sets are shown with a small caption each.
   socialDev: {
     Instagram: 'https://www.instagram.com/deeptek_dev/',
-    LinkedIn: '',
     Facebook: 'https://www.facebook.com/Deeptek.dev',
-    TikTok: '',
     X: 'https://x.com/Deeptekdev',
+    LinkedIn: '',
+    TikTok: '',
     YouTube: '',
   },
 } as const;
