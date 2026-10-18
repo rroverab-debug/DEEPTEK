@@ -1,5 +1,9 @@
 ---
 import '../styles/global.css';
+// The main text font for each language, preloaded so headlines do not wait
+// for the stylesheet before the font starts downloading.
+import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
+import kufiArabic from '@fontsource-variable/noto-kufi-arabic/files/noto-kufi-arabic-arabic-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
@@ -131,6 +135,8 @@ const breadcrumbSchema = title && {
     <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#0c0c0c" />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    {lang === 'ar' && <link rel="preload" href={kufiArabic} as="font" type="font/woff2" crossorigin />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />

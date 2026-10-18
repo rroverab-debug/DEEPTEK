@@ -313,12 +313,47 @@ ol[role='list'] {
    reduced motion. If the animation script fails to start, the
    failsafe class shows everything again. */
 
-.motion-ok:not(.motion-failed) [data-reveal],
+.motion-ok:not(.motion-failed) [data-reveal]:not([data-intro] *),
 .motion-ok:not(.motion-failed) [data-reveal-stagger] > * {
   opacity: 0;
 }
-.motion-ok:not(.motion-failed) [data-split] {
+.motion-ok:not(.motion-failed) [data-split]:not([data-intro] *) {
   visibility: hidden;
+}
+
+/* The first screen ([data-intro]) animates with CSS alone, so the headline
+   and intro text appear as soon as the page paints instead of waiting for
+   the animation script to download and run. */
+.motion-ok [data-intro] :is([data-split], [data-reveal]) {
+  animation: intro-rise 0.7s var(--ease) both;
+}
+.motion-ok [data-intro] [data-reveal] {
+  animation-delay: 0.08s;
+}
+.motion-ok [data-intro] [data-delay='0.3'] {
+  animation-delay: 0.15s;
+}
+.motion-ok [data-intro] [data-delay='0.35'] {
+  animation-delay: 0.18s;
+}
+.motion-ok [data-intro] [data-delay='0.4'] {
+  animation-delay: 0.2s;
+}
+.motion-ok [data-intro] [data-delay='0.45'] {
+  animation-delay: 0.23s;
+}
+.motion-ok [data-intro] [data-delay='0.5'] {
+  animation-delay: 0.25s;
+}
+.motion-ok [data-intro] [data-delay='0.55'] {
+  animation-delay: 0.28s;
+}
+@keyframes intro-rise {
+  from {
+    /* Not fully transparent, so browsers count it as painted straight away. */
+    opacity: 0.01;
+    transform: translateY(14px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

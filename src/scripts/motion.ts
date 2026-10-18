@@ -20,7 +20,8 @@ const root = document.documentElement;
 const EASE = 'power3.out';
 
 function lineReveals() {
-  gsap.utils.toArray<HTMLElement>('[data-split]').forEach((el) => {
+  // The first screen ([data-intro]) is animated by CSS; see global.css.
+  gsap.utils.toArray<HTMLElement>('[data-split]').filter((el) => !el.closest('[data-intro]')).forEach((el) => {
     const immediate = el.dataset.split === 'now';
     SplitText.create(el, {
       type: 'lines',
@@ -44,7 +45,7 @@ function lineReveals() {
 }
 
 function fades() {
-  gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+  gsap.utils.toArray<HTMLElement>('[data-reveal]').filter((el) => !el.closest('[data-intro]')).forEach((el) => {
     gsap.fromTo(
       el,
       { opacity: 0, y: 16 },

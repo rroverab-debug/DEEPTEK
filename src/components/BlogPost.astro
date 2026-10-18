@@ -109,7 +109,7 @@ const faqSchema = faqs.length > 0 && {
     {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   </Fragment>
 
-  <header class="post-hero">
+  <header class="post-hero" data-intro>
     <div class="container inner">
       <nav aria-label={t.crumbs} class="crumbs mono" data-reveal>
         <ol role="list">

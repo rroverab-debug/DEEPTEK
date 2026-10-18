@@ -135,6 +135,12 @@ const listSchema = {
   .filters[hidden] {
     display: none;
   }
+  /* With JavaScript on, keep the space for the filters while the script
+     loads, so the articles below do not jump down when they appear. */
+  :global(.js) .filters[hidden] {
+    display: flex;
+    visibility: hidden;
+  }
   .filters button {
     font: inherit;
     font-size: var(--fs-sm);
