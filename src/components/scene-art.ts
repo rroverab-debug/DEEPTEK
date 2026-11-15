@@ -162,3 +162,96 @@ export const adArt = [
 <circle cx="10" cy="12" r="1.2" fill="#c8901f"/><circle cx="52" cy="40" r="1" fill="#c8901f"/><circle cx="48" cy="10" r=".8" fill="#c8901f"/>
 </svg>`,
 ];
+
+// ---------- property developer site ----------
+
+export const propDefs = `<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="pd-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16233d"/><stop offset=".45" stop-color="#3e5f8c"/><stop offset=".8" stop-color="#8fa6c2"/><stop offset="1" stop-color="#d9b99a"/></linearGradient>
+<linearGradient id="pd-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22302a"/><stop offset="1" stop-color="#0e1512"/></linearGradient>
+<linearGradient id="pd-wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#efe7da"/><stop offset="1" stop-color="#a9a092"/></linearGradient>
+<linearGradient id="pd-wall2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfc6b8"/><stop offset="1" stop-color="#8d8577"/></linearGradient>
+<linearGradient id="pd-timber" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a2f1c"/><stop offset=".5" stop-color="#6b4429"/><stop offset="1" stop-color="#3a2415"/></linearGradient>
+<pattern id="pd-slats" width="1.6" height="4" patternUnits="userSpaceOnUse"><rect width="1.6" height="4" fill="url(#pd-timber)"/><rect width=".35" height="4" fill="#24150b" opacity=".55"/></pattern>
+<linearGradient id="pd-glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2a8"/><stop offset=".6" stop-color="#f6b867"/><stop offset="1" stop-color="#d98a3d"/></linearGradient>
+<radialGradient id="pd-halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffc977" stop-opacity=".55"/><stop offset="1" stop-color="#ffc977" stop-opacity="0"/></radialGradient>
+<linearGradient id="pd-pool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8fb3"/><stop offset="1" stop-color="#1c3f57"/></linearGradient>
+<radialGradient id="pd-vig" cx=".5" cy=".45" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>
+<linearGradient id="pd-room" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efe4d2"/><stop offset="1" stop-color="#d6c6ae"/></linearGradient>
+<linearGradient id="pd-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c39467"/><stop offset="1" stop-color="#8e6440"/></linearGradient>
+<linearGradient id="pd-sofa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6ddd0"/><stop offset="1" stop-color="#b9ad9c"/></linearGradient>
+</defs>
+</svg>`;
+
+const palm = (x: number, y: number, h: number, flip = 1) => {
+  const top = y - h;
+  const fr = [-60, -25, 10, 45, 80, 120, 160]
+    .map((a) => {
+      const r = (a * Math.PI) / 180;
+      const ex = x + flip * Math.cos(r) * h * 0.42;
+      const ey = top + Math.sin(r) * h * 0.22 + h * 0.08;
+      const cx = x + flip * Math.cos(r) * h * 0.22;
+      const cy = top - h * 0.1;
+      return `<path d="M${x} ${top}Q${cx} ${cy} ${ex} ${ey}" stroke="#0b120e" stroke-width="${h * 0.045}" fill="none" stroke-linecap="round"/>`;
+    })
+    .join('');
+  return `<path d="M${x - h * 0.05} ${y}Q${x + flip * h * 0.08} ${y - h * 0.5} ${x} ${top}" stroke="#0e1611" stroke-width="${h * 0.05}" fill="none"/>${fr}`;
+};
+
+const villaScene = `
+<rect width="160" height="90" fill="url(#pd-sky)"/>
+${[[12, 6], [40, 10], [70, 4], [96, 9], [130, 5], [150, 12], [24, 18]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".35" fill="#fff" opacity=".7"/>`).join('')}
+<ellipse cx="120" cy="56" rx="60" ry="14" fill="#ffd2a0" opacity=".18"/>
+<path d="M0 56 18 47 34 52 52 41 70 50 92 43 112 51 130 39 148 47 160 44V70H0z" fill="#3b5274" opacity=".85"/>
+<path d="M0 62 26 55 58 60 88 53 118 59 160 54V75H0z" fill="#263650"/>
+<rect y="64" width="160" height="26" fill="url(#pd-ground)"/>
+<ellipse cx="80" cy="74" rx="62" ry="10" fill="url(#pd-halo)"/>
+<rect x="32" y="50" width="96" height="20" fill="url(#pd-wall)"/>
+<rect x="104" y="40" width="26" height="30" fill="url(#pd-wall2)"/>
+<rect x="50" y="35" width="56" height="15" fill="url(#pd-slats)"/>
+<rect x="48" y="33.6" width="60" height="1.6" fill="#f3ede3"/>
+<rect x="102" y="38.6" width="30" height="1.5" fill="#f3ede3"/>
+<rect x="30" y="49" width="74" height="1.6" fill="#f3ede3"/>
+<rect x="38" y="53.5" width="28" height="15" fill="url(#pd-glow)"/>
+<rect x="70" y="53.5" width="22" height="15" fill="url(#pd-glow)"/>
+<rect x="56" y="38" width="34" height="9.5" fill="url(#pd-glow)"/>
+<rect x="108" y="44" width="12" height="9" fill="url(#pd-glow)"/>
+<rect x="108" y="56" width="18" height="12.5" fill="url(#pd-glow)"/>
+${[[47, 53.5, 15], [56.5, 53.5, 15], [81, 53.5, 15], [67.3, 38, 9.5], [78.6, 38, 9.5], [117, 56, 12.5]].map(([x, y, h]) => `<rect x="${x}" y="${y}" width=".5" height="${h}" fill="#3b2a1c" opacity=".8"/>`).join('')}
+<rect x="96" y="53.5" width="6" height="15" fill="#2a1a0f"/>
+<path d="M42 68.5h10v-3h-10zM74 68.5h6v-4.5h-6z" fill="#7a4d2a" opacity=".55"/>
+<circle cx="60" cy="58" r="2" fill="#fff6dc" opacity=".9"/>
+<circle cx="86" cy="42" r="1.5" fill="#fff6dc" opacity=".9"/>
+<rect x="26" y="69.6" width="108" height="1.4" fill="#d8cfc0"/>
+<rect x="36" y="71" width="64" height="6" fill="url(#pd-pool)"/>
+<rect x="40" y="71.4" width="26" height="3" fill="#ffd38a" opacity=".35"/>
+<rect x="72" y="71.4" width="18" height="3" fill="#ffd38a" opacity=".3"/>
+<rect x="34" y="70.8" width="68" height=".5" fill="#e9e2d6"/>
+${[[18, 78], [30, 80], [110, 78], [124, 80], [138, 78]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".6" fill="#ffd38a"/><ellipse cx="${x}" cy="${y + 0.6}" rx="3" ry="1" fill="#ffc977" opacity=".18"/>`).join('')}
+${palm(16, 72, 30)}${palm(146, 72, 26, -1)}${palm(134, 70, 18)}
+<ellipse cx="6" cy="86" rx="20" ry="7" fill="#0a100c"/><ellipse cx="156" cy="88" rx="22" ry="7" fill="#0a100c"/>
+<rect width="160" height="90" fill="url(#pd-vig)"/>`;
+
+/** Dusk exterior of a fictional villa; `view` crops the same drawing. */
+export const villaPhoto = (view = '0 0 160 90') =>
+  `<svg viewBox="${view}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${villaScene}</svg>`;
+
+/** Living room looking out to the same dusk hills. */
+export const interiorPhoto = `<svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<rect width="160" height="90" fill="url(#pd-room)"/>
+<rect x="18" y="8" width="96" height="52" fill="#2a2a2a"/>
+<svg x="19" y="9" width="94" height="50" viewBox="0 25 160 50" preserveAspectRatio="xMidYMid slice"><rect width="160" height="90" fill="url(#pd-sky)"/><path d="M0 56 18 47 34 52 52 41 70 50 92 43 112 51 130 39 148 47 160 44V90H0z" fill="#3b5274"/><path d="M0 62 26 55 58 60 88 53 118 59 160 54V90H0z" fill="#263650"/>${palm(30, 75, 26)}</svg>
+<rect x="65.5" y="8" width="1" height="52" fill="#2a2a2a"/>
+<rect y="60" width="160" height="30" fill="url(#pd-floor)"/>
+${[66, 72, 79, 87].map((y) => `<rect y="${y}" width="160" height=".3" fill="#6e4a2c" opacity=".35"/>`).join('')}
+<ellipse cx="68" cy="76" rx="44" ry="8" fill="#c9b79c" opacity=".9"/>
+<ellipse cx="66" cy="68" rx="40" ry="3" fill="#000" opacity=".18"/>
+<rect x="28" y="50" width="76" height="16" rx="3" fill="url(#pd-sofa)"/>
+<rect x="30" y="46" width="22" height="9" rx="3" fill="#f1eadf"/><rect x="54" y="46" width="22" height="9" rx="3" fill="#ece4d8"/><rect x="78" y="46" width="22" height="9" rx="3" fill="#f1eadf"/>
+<rect x="40" y="48" width="8" height="6" rx="1.5" fill="#c7704a"/><rect x="84" y="48" width="8" height="6" rx="1.5" fill="#5c7a68"/>
+<ellipse cx="66" cy="76" rx="16" ry="3.6" fill="#3a2a1d"/><rect x="58" y="73" width="16" height="3" rx="1.5" fill="#5a4030"/>
+<circle cx="132" cy="40" r="22" fill="url(#pd-halo)"/>
+<path d="M126 30h12l3 8h-18z" fill="#f6e6c4"/><rect x="131.6" y="38" width=".8" height="30" fill="#2b2b2b"/><ellipse cx="132" cy="68.5" rx="4" ry="1" fill="#2b2b2b"/>
+<rect x="142" y="58" width="9" height="10" rx="1.5" fill="#b3876a"/><path d="M146.5 58c-6-6-3-14 0-18 3 4 6 12 0 18zM146.5 58c-8-2-10-8-9-11 4 1 8 5 9 11zM146.5 58c8-2 10-8 9-11-4 1-8 5-9 11z" fill="#4f7a45"/>
+<rect width="160" height="90" fill="url(#pd-vig)" opacity=".6"/>
+</svg>`;

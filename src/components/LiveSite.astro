@@ -1,0 +1,651 @@
+---
+// A small, complete one-page website rendered inside a device frame in the
+// project demos. Editorial and minimal: a full-bleed hero with a floating pill
+// menu, a large intro paragraph, key numbers, a gallery and an enquiry form.
+// motion.ts sets --max (how far the page can scroll) so CSS can auto-scroll
+// it like a live site; without that, or with reduced motion, it stays at the top.
+import type { Lang } from '../i18n';
+import { heroPhoto, dishPhoto, villaPhoto, interiorPhoto } from './scene-art';
+
+interface Props {
+  kind: 'property' | 'restaurant';
+  lang: Lang;
+  mobile?: boolean;
+}
+const { kind, lang, mobile = false } = Astro.props;
+
+const copy = {
+  property: {
+    en: {
+      brand: 'Wadi Villas',
+      links: ['The villas', 'Location', 'Prices'],
+      pill: 'Contact',
+      h: 'Homes that hold the evening light',
+      sub: 'Twelve stone and timber villas at the edge of the wadi. Ready to move in.',
+      cta: 'Book a viewing',
+      aboutK: 'About the project',
+      about:
+        'Each villa sits on its own garden plot, with a shaded terrace, a private pool and floor-to-ceiling glass facing the hills. Everything is finished, down to the kitchen and lighting.',
+      numK: 'In numbers',
+      numH: 'Space for the whole family, minutes from the city.',
+      stats: [
+        ['420', 'm² built area'],
+        ['4', 'bedrooms'],
+        ['15', 'minutes to the city'],
+      ],
+      gal: ['Finished and ready to move in', 'Private pool and garden'],
+      formK: 'Contact',
+      formT: 'Leave your details and we will arrange a private viewing or a live video tour. We reply the same day.',
+      fields: ['Name', 'Phone', 'Email'],
+      foot: 'Wadi Villas · Example design',
+    },
+    ar: {
+      brand: 'فلل الوادي',
+      links: ['الفلل', 'الموقع', 'الأسعار'],
+      pill: 'تواصل',
+      h: 'بيوت تحتضن ضوء المساء',
+      sub: 'اثنتا عشرة فيلا من الحجر والخشب على طرف الوادي، جاهزة للسكن.',
+      cta: 'احجز معاينة',
+      aboutK: 'عن المشروع',
+      about:
+        'كل فيلا على قطعة حديقة خاصة، مع تراس مظلل ومسبح خاص وواجهات زجاجية من الأرض إلى السقف تطل على التلال. كل شيء مكتمل، حتى المطبخ والإضاءة.',
+      numK: 'بالأرقام',
+      numH: 'مساحة للعائلة كلها، على بُعد دقائق من المدينة.',
+      stats: [
+        ['420', 'م² مساحة البناء'],
+        ['4', 'غرف نوم'],
+        ['15', 'دقيقة إلى المدينة'],
+      ],
+      gal: ['مكتملة وجاهزة للسكن', 'مسبح وحديقة خاصة'],
+      formK: 'تواصل',
+      formT: 'اترك بياناتك وسنرتب لك معاينة خاصة أو جولة فيديو مباشرة. نرد في اليوم نفسه.',
+      fields: ['الاسم', 'الهاتف', 'البريد'],
+      foot: 'فلل الوادي · تصميم توضيحي',
+    },
+  },
+  restaurant: {
+    en: {
+      brand: 'Al Noor',
+      links: ['Menu', 'Branches', 'Catering'],
+      pill: 'Book',
+      h: 'Slow-cooked flavours, served fresh',
+      sub: 'Arabic and Mediterranean kitchen. Open daily, 12pm to midnight.',
+      cta: 'Book a table',
+      aboutK: 'Our kitchen',
+      about:
+        'Rice cooked the slow way, bread from the oven every hour and family recipes we have kept for years. Come hungry, stay for tea.',
+      numK: 'At a glance',
+      numH: 'Three branches, one family recipe book.',
+      stats: [
+        ['3', 'branches'],
+        ['120', 'seats per branch'],
+        ['12', 'hours open daily'],
+      ],
+      dishes: [
+        ['Chicken machboos', 'AED 48', 'rice'],
+        ['Hummus and bread', 'AED 28', 'mezze'],
+        ['Kunafa', 'AED 26', 'sweet'],
+      ],
+      menuK: 'Signature dishes',
+      formK: 'Reservations',
+      formT: 'Tell us when you are coming and we will hold your table. We confirm on WhatsApp within minutes.',
+      fields: ['Date', 'Guests', 'Phone'],
+      foot: 'Al Noor Kitchen · Example design',
+    },
+    ar: {
+      brand: 'النور',
+      links: ['المنيو', 'الفروع', 'الضيافة'],
+      pill: 'احجز',
+      h: 'نكهات مطهوّة على مهل، تُقدَّم طازجة',
+      sub: 'مطبخ عربي ومتوسطي. مفتوح يوميًا من 12 ظهرًا حتى منتصف الليل.',
+      cta: 'احجز طاولة',
+      aboutK: 'مطبخنا',
+      about: 'أرز مطهو على مهل، وخبز يخرج من الفرن كل ساعة، ووصفات عائلية نحافظ عليها منذ سنوات. تعال جائعًا وابقَ لشرب الشاي.',
+      numK: 'لمحة سريعة',
+      numH: 'ثلاثة فروع، ودفتر وصفات عائلي واحد.',
+      stats: [
+        ['3', 'فروع'],
+        ['120', 'مقعدًا في كل فرع'],
+        ['12', 'ساعة عمل يوميًا'],
+      ],
+      dishes: [
+        ['مجبوس دجاج', '48 د.إ', 'rice'],
+        ['حمص وخبز', '28 د.إ', 'mezze'],
+        ['كنافة', '26 د.إ', 'sweet'],
+      ],
+      menuK: 'أطباقنا المميزة',
+      formK: 'الحجوزات',
+      formT: 'أخبرنا بموعد زيارتك وسنحجز لك طاولتك. نؤكد الحجز عبر واتساب خلال دقائق.',
+      fields: ['التاريخ', 'عدد الضيوف', 'الهاتف'],
+      foot: 'مطبخ النور · تصميم توضيحي',
+    },
+  },
+};
+const c = copy[kind][lang] as (typeof copy)['restaurant']['en'] & (typeof copy)['property']['en'];
+const hero = kind === 'property' ? villaPhoto() : heroPhoto;
+const formImg = kind === 'property' ? villaPhoto('40 20 100 56') : heroPhoto;
+---
+
+<div class:list={['lp', `lp--${kind}`, { 'lp--m': mobile }]} data-live-page>
+  <header class="lp-hero">
+    <span class="lp-img"><Fragment set:html={hero} /></span>
+    <span class="lp-veil"></span>
+    <nav class="lp-nav">
+      <span class="lp-logo">
+        <span class="lp-mark"></span>
+        {c.brand}
+      </span>
+      {
+        mobile ? (
+          <span class="lp-burger">
+            <i />
+            <i />
+          </span>
+        ) : (
+          <span class="lp-links">
+            {c.links.map((l) => (
+              <span>{l}</span>
+            ))}
+            <span class="lp-pill">{c.pill}</span>
+          </span>
+        )
+      }
+    </nav>
+    <div class="lp-hero-t">
+      <span class="lp-h1">{c.h}</span>
+      <span class="lp-sub">{c.sub}</span>
+      <span class="lp-btn">
+        {c.cta}
+        <i>→</i>
+      </span>
+    </div>
+  </header>
+
+  <section class="lp-about">
+    <span class="lp-k">{c.aboutK}</span>
+    <span class="lp-big">{c.about}</span>
+  </section>
+
+  <section class="lp-num">
+    <span class="lp-k">{c.numK}</span>
+    <span class="lp-h2">{c.numH}</span>
+    <span class="lp-stats">
+      {
+        c.stats.map(([v, l]) => (
+          <span>
+            <b>{v}</b>
+            <small>{l}</small>
+          </span>
+        ))
+      }
+    </span>
+  </section>
+
+  {
+    kind === 'property' ? (
+      <section class="lp-gal">
+        <span class="lp-shot">
+          <Fragment set:html={interiorPhoto} />
+          <span class="lp-cap">{c.gal[0]}</span>
+        </span>
+        <span class="lp-shot">
+          <Fragment set:html={villaPhoto('20 46 100 44')} />
+          <span class="lp-cap">{c.gal[1]}</span>
+        </span>
+      </section>
+    ) : (
+      <section class="lp-menu">
+        <span class="lp-k">{c.menuK}</span>
+        <span class="lp-dishes">
+          {c.dishes.map(([n, p, k]) => (
+            <span class="lp-dish">
+              <span class="lp-dish-img">
+                <Fragment set:html={dishPhoto(k)} />
+              </span>
+              <span class="lp-dish-t">
+                <b>{n}</b>
+                <i>{p}</i>
+              </span>
+            </span>
+          ))}
+        </span>
+      </section>
+    )
+  }
+
+  <section class="lp-form">
+    <span class="lp-img"><Fragment set:html={formImg} /></span>
+    <span class="lp-card">
+      <span class="lp-k">{c.formK}</span>
+      <span class="lp-ft">{c.formT}</span>
+      <span class="lp-fields">
+        {
+          c.fields.map((f) => (
+            <span>{f}</span>
+          ))
+        }
+      </span>
+      <span class="lp-btn lp-btn--wide">
+        {c.cta}
+        <i>→</i>
+      </span>
+    </span>
+  </section>
+
+  <footer class="lp-foot">© {c.foot}</footer>
+</div>
+
+<style>
+  .lp {
+    --lp-ink: #111;
+    --lp-sub: #6b6b6b;
+    --lp-acc: #1a1a1a;
+    display: grid;
+    background: #fff;
+    color: var(--lp-ink);
+    font-size: 1.45cqi;
+    line-height: 1.4;
+    animation: lp-scroll 24s ease-in-out infinite paused;
+  }
+  :global([data-live-on]) > .lp {
+    animation-play-state: running;
+  }
+  .lp--restaurant {
+    --lp-acc: #c2410c;
+    background: #fffaf3;
+  }
+  .lp--m {
+    font-size: 4.4cqi;
+    animation-delay: -4s;
+  }
+  @keyframes lp-scroll {
+    0%,
+    10% {
+      transform: translateY(0);
+    }
+    28%,
+    36% {
+      transform: translateY(calc(var(--max, 0px) * -0.3));
+    }
+    54%,
+    62% {
+      transform: translateY(calc(var(--max, 0px) * -0.62));
+    }
+    82%,
+    92% {
+      transform: translateY(calc(var(--max, 0px) * -1));
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lp {
+      animation: none;
+    }
+  }
+  .lp :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* hero */
+  .lp-hero {
+    position: relative;
+    display: grid;
+    align-content: space-between;
+    min-height: 34em;
+    padding: 1.4em 2em 2.4em;
+    color: #fff;
+    overflow: hidden;
+  }
+  .lp--m .lp-hero {
+    min-height: 30em;
+    padding: 1em 1.1em 1.6em;
+  }
+  .lp-img {
+    position: absolute;
+    inset: 0;
+  }
+  .lp-veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(10 14 22 / 0.35), rgb(10 14 22 / 0) 28%, rgb(10 14 22 / 0) 42%, rgb(10 14 22 / 0.78)),
+      linear-gradient(90deg, rgb(10 14 22 / 0.5), rgb(10 14 22 / 0) 60%);
+  }
+  [dir='rtl'] .lp-veil {
+    background:
+      linear-gradient(180deg, rgb(10 14 22 / 0.35), rgb(10 14 22 / 0) 28%, rgb(10 14 22 / 0) 42%, rgb(10 14 22 / 0.78)),
+      linear-gradient(270deg, rgb(10 14 22 / 0.5), rgb(10 14 22 / 0) 60%);
+  }
+  .lp-nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lp-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .lp-mark {
+    width: 1.1em;
+    height: 1.1em;
+    border: 0.18em solid currentColor;
+    border-radius: 0.3em;
+    transform: rotate(45deg);
+  }
+  .lp-links {
+    display: flex;
+    align-items: center;
+    gap: 1.6em;
+    padding: 0.35em 0.4em 0.35em 1.4em;
+    border-radius: 0.6em;
+    background: rgb(255 255 255 / 0.92);
+    color: #333;
+    font-size: 0.85em;
+  }
+  [dir='rtl'] .lp-links {
+    padding: 0.35em 1.4em 0.35em 0.4em;
+  }
+  .lp-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.35em 0.9em;
+    border-radius: 0.45em;
+    background: #111;
+    color: #fff;
+  }
+  .lp-pill::before {
+    content: '';
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .lp-burger {
+    display: grid;
+    gap: 0.25em;
+    padding: 0.5em;
+    border-radius: 0.4em;
+    background: rgb(255 255 255 / 0.92);
+  }
+  .lp-burger i {
+    width: 1.1em;
+    height: 0.12em;
+    background: #111;
+  }
+  .lp-hero-t {
+    position: relative;
+    display: grid;
+    gap: 0.8em;
+    justify-items: start;
+    max-width: 30em;
+  }
+  .lp-h1 {
+    font-size: 3.2em;
+    font-weight: 300;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  [lang='ar'] .lp-h1 {
+    letter-spacing: 0;
+    line-height: 1.3;
+    font-size: 2.7em;
+  }
+  .lp--m .lp-h1 {
+    font-size: 2.4em;
+  }
+  .lp-sub {
+    max-width: 24em;
+    color: rgb(255 255 255 / 0.85);
+    font-size: 0.95em;
+  }
+  .lp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4em;
+    padding: 0.3em 0.3em 0.3em 1em;
+    border-radius: 0.45em;
+    background: #111;
+    color: #fff;
+    font-size: 0.85em;
+  }
+  [dir='rtl'] .lp-btn {
+    padding: 0.3em 1em 0.3em 0.3em;
+  }
+  .lp-btn i {
+    display: grid;
+    place-items: center;
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 0.3em;
+    background: #fff;
+    color: #111;
+    font-style: normal;
+  }
+  [dir='rtl'] .lp-btn i {
+    transform: scaleX(-1);
+  }
+  .lp-hero .lp-btn {
+    background: #fff;
+    color: #111;
+  }
+  .lp-hero .lp-btn i {
+    background: var(--lp-acc);
+    color: #fff;
+  }
+
+  /* sections */
+  .lp-about,
+  .lp-num,
+  .lp-menu {
+    display: grid;
+    gap: 1.2em;
+    padding: 4em 2em;
+  }
+  .lp--m .lp-about,
+  .lp--m .lp-num,
+  .lp--m .lp-menu {
+    padding: 2.6em 1.1em;
+  }
+  .lp-about {
+    grid-template-columns: 1fr 2.2fr;
+  }
+  .lp--m .lp-about {
+    grid-template-columns: 1fr;
+  }
+  .lp-k {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--lp-sub);
+    font-size: 0.8em;
+  }
+  .lp-k::before {
+    content: '';
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    background: var(--lp-acc);
+  }
+  .lp-big {
+    font-size: 1.75em;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  [lang='ar'] .lp-big {
+    letter-spacing: 0;
+    line-height: 1.6;
+    font-size: 1.45em;
+  }
+  .lp-num {
+    justify-items: center;
+    text-align: center;
+    background: #f5f5f3;
+  }
+  .lp--restaurant .lp-num {
+    background: #f6eee2;
+  }
+  .lp-h2 {
+    font-size: 1.5em;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .lp-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2em;
+    width: 100%;
+    margin-top: 1em;
+  }
+  .lp-stats > span {
+    display: grid;
+    gap: 0.3em;
+  }
+  .lp-stats b {
+    font-size: 3em;
+    font-weight: 300;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .lp-stats small {
+    color: var(--lp-sub);
+    font-size: 0.75em;
+  }
+  .lp--m .lp-stats {
+    gap: 0.8em;
+  }
+  .lp--m .lp-stats b {
+    font-size: 2.2em;
+  }
+
+  /* gallery */
+  .lp-gal {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 0.8em;
+    padding: 0 2em 4em;
+  }
+  .lp--m .lp-gal {
+    grid-template-columns: 1fr;
+    padding: 0 1.1em 2.6em;
+  }
+  .lp-shot {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
+    border-radius: 0.4em;
+    overflow: hidden;
+  }
+  .lp-cap {
+    position: absolute;
+    inset-inline: 0.8em;
+    bottom: 0.8em;
+    padding: 0.6em 0.8em;
+    border-radius: 0.35em;
+    background: rgb(255 255 255 / 0.94);
+    color: #111;
+    font-size: 0.8em;
+  }
+
+  /* menu */
+  .lp-dishes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8em;
+  }
+  .lp--m .lp-dishes {
+    grid-template-columns: 1fr;
+  }
+  .lp-dish {
+    display: grid;
+    border-radius: 0.4em;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(80 50 20 / 0.08);
+  }
+  .lp-dish-img {
+    aspect-ratio: 60 / 38;
+  }
+  .lp-dish-t {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5em;
+    padding: 0.7em 0.8em;
+    font-size: 0.85em;
+  }
+  .lp-dish-t b {
+    font-weight: 500;
+  }
+  .lp-dish-t i {
+    font-style: normal;
+    color: var(--lp-acc);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* form */
+  .lp-form {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: 30em;
+    padding: 2em;
+    overflow: hidden;
+  }
+  .lp--m .lp-form {
+    min-height: 26em;
+    padding: 1.1em;
+  }
+  .lp-card {
+    position: relative;
+    display: grid;
+    gap: 1em;
+    padding: 1.4em 1.5em;
+    border-radius: 0.5em;
+    background: rgb(255 255 255 / 0.95);
+  }
+  .lp-ft {
+    font-size: 1.15em;
+    font-weight: 300;
+    line-height: 1.35;
+  }
+  [lang='ar'] .lp-ft {
+    line-height: 1.7;
+    font-size: 1.05em;
+  }
+  .lp-fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4em;
+  }
+  .lp--m .lp-fields {
+    grid-template-columns: 1fr;
+    gap: 0.9em;
+  }
+  .lp-fields span {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #c9c9c9;
+    color: var(--lp-sub);
+    font-size: 0.8em;
+  }
+  .lp-btn--wide {
+    justify-content: space-between;
+  }
+  .lp-foot {
+    padding: 1.4em 2em;
+    background: #111;
+    color: #9a9a9a;
+    font-size: 0.75em;
+  }
+  .lp--m .lp-foot {
+    padding: 1.2em 1.1em;
+  }
+</style>

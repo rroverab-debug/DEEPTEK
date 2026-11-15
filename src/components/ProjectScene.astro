@@ -8,7 +8,8 @@
 import type { Project } from '../data/site';
 import { langOf, dirOf } from '../i18n';
 import AppShell from './AppShell.astro';
-import { foodDefs, heroPhoto, dishPhoto, adArt } from './scene-art';
+import { foodDefs, propDefs, adArt } from './scene-art';
+import LiveSite from './LiveSite.astro';
 
 interface Props {
   scene: Project['scene'];
@@ -19,9 +20,6 @@ const lang = langOf(Astro.url);
 const dir = dirOf(lang);
 const ar = lang === 'ar';
 
-const growth = [12, 14, 13, 18, 17, 22, 26, 25, 31, 35, 38, 44];
-const max = 48;
-const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v / max) * 36}`).join(' ');
 
 const t = {
   en: {
@@ -296,84 +294,33 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
   <div class="stage" data-stage aria-hidden="true" dir={dir} lang={lang}>
     {
       scene === 'website' && (
-        <div class="site-wrap">
+        <div class="duo">
           <Fragment set:html={foodDefs} />
-          <div class="browser" data-step="1">
-            <div class="b-bar" dir="ltr">
-              <span class="dots"><i /><i /><i /></span>
-              <span class="url">
-                <svg viewBox="0 0 10 12" class="lock"><rect x="1" y="5" width="8" height="6.5" rx="1.2" /><path d="M3 5V3.6a2 2 0 0 1 4 0V5" /></svg>
-                {t.w.url}
-              </span>
-            </div>
-            <div class="b-page">
-              <div class="b-nav">
-                <span class="brand">
-                  <svg viewBox="0 0 20 20" class="sun"><circle cx="10" cy="10" r="4.2" />{[0, 45, 90, 135, 180, 225, 270, 315].map((a) => <rect x="9.3" y="1" width="1.4" height="3.4" rx="0.7" transform={`rotate(${a} 10 10)`} />)}</svg>
-                  {t.w.brand}
-                </span>
-                <span class="links">{t.w.links.map((l) => <span>{l}</span>)}</span>
-                <span class="nav-end">
-                  <span class="lang">{t.w.lang}</span>
-                  <span class="nav-cta">{t.w.navCta}</span>
-                </span>
-              </div>
-              <div class="b-hero" data-step="2" data-fx="wipe">
-                <span class="photo"><Fragment set:html={heroPhoto} /></span>
-                <span class="shade" />
-                <div class="b-copy">
-                  <span class="w-eye" data-step="3">{t.w.eyebrow}</span>
-                  <span class="headline" data-step="3">{t.w.h}</span>
-                  <span class="sub" data-step="3">{t.w.sub}</span>
-                  <span class="ctas">
-                    <span class="cta-s" data-step="4" data-fx="pop">{t.w.book}</span>
-                    <span class="cta-o" data-step="4" data-fx="pop">{t.w.menu}</span>
-                  </span>
-                </div>
-              </div>
-              <div class="sec-h" data-step="5">
-                <b>{t.w.secH}</b>
-                <span>{t.w.secL}</span>
-              </div>
-              <div class="b-cards" data-step="5">
-                {t.w.items.map(([n, d, p, k]) => (
-                  <span class="mi">
-                    <span class="mi-pic"><Fragment set:html={dishPhoto(k)} /></span>
-                    <span class="mi-t">
-                      <b>{n}</b>
-                      <small>{d}</small>
-                      <i>{p}</i>
-                    </span>
-                  </span>
-                ))}
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <LiveSite kind="restaurant" lang={lang} />
               </div>
             </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
           </div>
-          <div class="phone" data-step="6" data-fx="pop">
-            <span class="notch" />
-            <span class="p-nav">
-              <b>{t.w.brand}</b>
-              <span class="burger"><i /><i /><i /></span>
-            </span>
-            <span class="p-hero">
-              <span class="photo"><Fragment set:html={heroPhoto} /></span>
-              <span class="shade" />
-              <span class="p-h">{t.w.phoneH}</span>
-            </span>
-            <span class="cta-s">{t.w.book}</span>
-            <span class="p-card">
-              <span class="mi-pic"><Fragment set:html={dishPhoto('rice')} /></span>
-              <span class="mi-t">
-                <b>{t.w.items[0][0]}</b>
-                <i>{t.w.items[0][2]}</i>
+          <div class="mphone" data-step="2" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
               </span>
             </span>
+            <div class="mscreen" data-live-view>
+              <LiveSite kind="restaurant" lang={lang} mobile />
+            </div>
           </div>
-          <span class="score" data-step="7" data-fx="pop">
-            <span class="ring" />
-            <b data-fx="count" data-to="98">98</b>
-            {t.w.speed}
-          </span>
         </div>
       )
     }
@@ -655,62 +602,34 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
 
     {
       scene === 'growth' && (
-        <AppShell url="leads.estatly.example" brand="Estatly" nav={t.g.nav} icons={['home', 'users', 'megaphone', 'search', 'chart']} search={t.g.search} me="RE" step="1">
-          <div class="head">
-            <span class="hd">
-              <b>{t.g.title}</b>
-            </span>
-            <span class="chip">{t.g.n}</span>
-          </div>
-          <div class="kpis">
-            <div class="k k--1" data-step="2">
-              <span class="kl">{t.g.k[0]}</span>
-              <b data-fx="count" data-to="44">44</b>
-              <i>{t.g.wk}</i>
+        <div class="duo">
+          <Fragment set:html={propDefs} />
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <LiveSite kind="property" lang={lang} />
+              </div>
             </div>
-            <div class="k k--2" data-step="2">
-              <span class="kl">{t.g.k[1]}</span>
-              <span class="num" dir="ltr">
-                <b>−</b>
-                <b data-fx="count" data-to="38">38</b>
-                <i>%</i>
-              </span>
+            <div class="base">
+              <span class="notch-b" />
             </div>
           </div>
-          <div class="panel chart-panel" dir="ltr">
-            <span class="ylab">
-              <span>48</span>
-              <span>24</span>
-              <span>0</span>
-            </span>
-            <svg class="chart" viewBox="0 0 100 42" preserveAspectRatio="none" data-step="3" data-fx="wipe">
-              <defs>
-                <linearGradient id="g-area" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#7c3aed" stop-opacity="0.3" />
-                  <stop offset="1" stop-color="#7c3aed" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              <line x1="0" y1="40" x2="100" y2="40" class="axis" />
-              <line x1="0" y1="22" x2="100" y2="22" class="grid" />
-              <line x1="0" y1="4" x2="100" y2="4" class="grid" />
-              <polyline points={`0,40 ${pts} 100,40`} class="area" data-fx="fade" />
-              <polyline points={pts} class="line" />
-            </svg>
-            <span class="xlab">{t.g.x.map((x) => <span>{x}</span>)}</span>
-          </div>
-          <div class="sources" data-step="4">
-            <span class="ph">{t.g.srcH}</span>
-            {t.g.src.map(([s, v], i) => (
-              <span class={`src src--${i + 1}`}>
-                <span class="sn">{s}</span>
-                <span class="b">
-                  <i data-fx="grow-x" />
-                </span>
-                <span class="sv">{v}</span>
+          <div class="mphone" data-step="2" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
               </span>
-            ))}
+            </span>
+            <div class="mscreen" data-live-view>
+              <LiveSite kind="property" lang={lang} mobile />
+            </div>
           </div>
-        </AppShell>
+        </div>
       )
     }
 
@@ -1052,7 +971,130 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
     border-bottom: 0;
   }
 
-  /* ---------- website ---------- */
+
+  /* ---------- live website demos: laptop and phone ---------- */
+  .duo {
+    position: relative;
+    width: min(100%, 46em);
+    padding-inline-end: 3em;
+    padding-bottom: 0.6em;
+  }
+  .duo :global(.defs) {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .laptop {
+    display: grid;
+    justify-items: center;
+  }
+  .lid {
+    position: relative;
+    width: 100%;
+    padding: 0.75em 0.75em 0.9em;
+    border-radius: 1em 1em 0.25em 0.25em;
+    background: linear-gradient(180deg, #2a2a2c, #111113);
+    box-shadow:
+      0 0 0 1px #4a4a4d,
+      0 2em 3em -1.5em rgb(0 0 0 / 0.45);
+  }
+  .cam {
+    position: absolute;
+    top: 0.28em;
+    left: 50%;
+    width: 0.3em;
+    height: 0.3em;
+    border-radius: 50%;
+    background: #3c3f46;
+    transform: translateX(-50%);
+  }
+  .screen,
+  .mscreen {
+    position: relative;
+    overflow: hidden;
+    container-type: inline-size;
+    background: #fff;
+  }
+  .screen {
+    aspect-ratio: 16 / 10;
+    border-radius: 0.2em;
+  }
+  .base {
+    position: relative;
+    width: 112%;
+    height: 0.9em;
+    margin-top: -0.05em;
+    border-radius: 0.1em 0.1em 0.9em 0.9em;
+    background: linear-gradient(180deg, #d9dbe0, #a7aab2 60%, #7d8088);
+    box-shadow: 0 1.2em 1.6em -0.8em rgb(0 0 0 / 0.5);
+  }
+  .notch-b {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 14%;
+    height: 0.35em;
+    border-radius: 0 0 0.5em 0.5em;
+    background: #9ea1a9;
+    transform: translateX(-50%);
+  }
+  .mphone {
+    position: absolute;
+    inset-inline-end: 0;
+    bottom: 0;
+    width: 23%;
+    aspect-ratio: 9 / 19;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding: 0.35em;
+    border-radius: 1.8em;
+    background: #111;
+    box-shadow:
+      0 0 0 1px #3a3a3a,
+      0 1.5em 2.5em -1em rgb(0 0 0 / 0.55);
+    overflow: hidden;
+  }
+  .island {
+    position: absolute;
+    top: 0.75em;
+    left: 50%;
+    z-index: 3;
+    width: 30%;
+    height: 0.9em;
+    border-radius: 99px;
+    background: #000;
+    transform: translateX(-50%);
+  }
+  .sbar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55em 1.1em 0.35em;
+    border-radius: 1.45em 1.45em 0 0;
+    background: #fff;
+    color: #111;
+    font-size: 0.62em;
+  }
+  .sig {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.15em;
+  }
+  .sig i {
+    width: 0.25em;
+    background: #111;
+    border-radius: 0.1em;
+  }
+  .sig i:nth-child(1) { height: 0.4em; }
+  .sig i:nth-child(2) { height: 0.6em; }
+  .sig i:nth-child(3) { height: 0.8em; }
+  .mscreen {
+    border-radius: 0 0 1.45em 1.45em;
+  }
+
+  /* ---------- website (legacy styles) ---------- */
   .site-wrap {
     position: relative;
     width: min(100%, 38em);

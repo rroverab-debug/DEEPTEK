@@ -314,6 +314,19 @@ function parallax() {
   });
 }
 
+// Live website demos: the page inside each device frame auto-scrolls with a
+// CSS animation. Tell it how far it can scroll, and only run it on screen.
+function liveSites() {
+  document.querySelectorAll<HTMLElement>('[data-live-view]').forEach((view) => {
+    const page = view.querySelector<HTMLElement>('[data-live-page]');
+    if (!page) return;
+    const measure = () => page.style.setProperty('--max', `${Math.max(0, page.scrollHeight - view.clientHeight)}px`);
+    measure();
+    new ResizeObserver(measure).observe(view);
+    new IntersectionObserver(([entry]) => view.toggleAttribute('data-live-on', entry.isIntersecting)).observe(view);
+  });
+}
+
 function init() {
   const mm = gsap.matchMedia();
 
@@ -329,6 +342,7 @@ function init() {
     progressiveText();
     showcases();
     scenes();
+    liveSites();
     parallax();
   });
 
