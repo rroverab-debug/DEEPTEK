@@ -1,0 +1,276 @@
+---
+// A realistic web-app window for the project demo scenes: browser chrome,
+// a sidebar with icons and labels, and a top bar with search and a user.
+// Collapses to an icon rail on narrow containers. Purely decorative.
+interface Props {
+  url: string;
+  brand: string;
+  nav: string[];
+  icons: string[];
+  active?: number;
+  search: string;
+  me: string;
+  step?: string;
+}
+const { url, brand, nav, icons, active = 0, search, me, step } = Astro.props;
+
+const paths: Record<string, string> = {
+  home: 'M3 9.5 10 4l7 5.5V16a1 1 0 0 1-1 1h-3.5v-4.5h-5V17H4a1 1 0 0 1-1-1z',
+  cal: 'M4 5.5h12a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1zM3 9h14M7 3.5v3.5M13 3.5v3.5',
+  users: 'M7.5 9.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2.5 17c0-3 2.3-5 5-5s5 2 5 5M13.5 9a2.5 2.5 0 1 0 0-5M14.5 12c1.8.4 3 2 3 4.5',
+  card: 'M3 5.5h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1zM2 9h16M5 12.5h3',
+  gear: 'M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4',
+  chart: 'M3 17h14M5.5 14V9M10 14V5M14.5 14v-3',
+  doc: 'M5.5 2.5h6l3.5 3.5v10.5a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1zM11.5 2.5V6H15M7.5 10h5M7.5 13h5',
+  inbox: 'M3 11.5 5 4.5h10l2 7V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM3 11.5h4l1 2h4l1-2h4',
+  chat: 'M4 4h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8l-4 3V5a1 1 0 0 1 1-1z',
+  shield: 'M10 2.5 4 5v4.5c0 3.7 2.5 6.5 6 8 3.5-1.5 6-4.3 6-8V5z',
+  cloud: 'M6 15.5a3.5 3.5 0 0 1-.4-7 4.5 4.5 0 0 1 8.7-.7A3.5 3.5 0 0 1 14 15.5z',
+  bank: 'M2.5 8 10 3.5 17.5 8M4 8.5v6M8 8.5v6M12 8.5v6M16 8.5v6M2.5 16.5h15',
+  flow: 'M4 4h4v4H4zM12 12h4v4h-4zM6 8v3a1 1 0 0 0 1 1h5',
+  target: 'M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM10 13.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM10 10.5a.5.5 0 1 0 0-1',
+  megaphone: 'M3 8v4h3l6 4V4L6 8zM15 7.5a3.5 3.5 0 0 1 0 5',
+  laptop: 'M4 4.5h12a1 1 0 0 1 1 1V13H3V5.5a1 1 0 0 1 1-1zM1.5 15.5h17',
+  search: 'M9 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM13.5 13.5 17 17',
+  bell: 'M5 13.5V9a5 5 0 0 1 10 0v4.5l1.5 1.5h-13zM8.5 17.5h3',
+};
+---
+
+<div class="shell-win" data-step={step}>
+  <div class="chrome" dir="ltr">
+    <span class="dots"><i /><i /><i /></span>
+    <span class="url">
+      <svg viewBox="0 0 10 12" class="lock"><rect x="1" y="5" width="8" height="6.5" rx="1.2" /><path d="M3 5V3.6a2 2 0 0 1 4 0V5" /></svg>
+      {url}
+    </span>
+  </div>
+  <div class="shell">
+    <aside class="nav">
+      <span class="nav-brand">
+        <span class="mark">{brand.slice(0, 1)}</span>
+        <b>{brand}</b>
+      </span>
+      {
+        nav.map((n, i) => (
+          <span class:list={['nav-i', { on: i === active }]}>
+            <svg viewBox="0 0 20 20">
+              <path d={paths[icons[i]] ?? paths.home} />
+            </svg>
+            <span class="nav-l">{n}</span>
+          </span>
+        ))
+      }
+    </aside>
+    <div class="main">
+      <div class="top">
+        <span class="search">
+          <svg viewBox="0 0 20 20"><path d={paths.search} /></svg>
+          <span>{search}</span>
+        </span>
+        <span class="top-r">
+          <svg viewBox="0 0 20 20" class="bell"><path d={paths.bell} /></svg>
+          <span class="me">{me}</span>
+        </span>
+      </div>
+      <div class="content">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .shell-win {
+    width: min(100%, 42em);
+    background: #fff;
+    border-radius: 0.75em;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgb(15 23 42 / 0.08),
+      0 1.2em 2.5em -1em rgb(15 23 42 / 0.35),
+      0 3em 5em -2.5em rgb(15 23 42 / 0.35);
+    line-height: 1.35;
+    color: #0f172a;
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.5em 0.8em;
+    background: #f1f3f6;
+    border-bottom: 1px solid #e5e8ee;
+  }
+  .dots {
+    display: flex;
+    gap: 0.35em;
+  }
+  .dots i {
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+  .dots i:nth-child(2) { background: #febc2e; }
+  .dots i:nth-child(3) { background: #28c840; }
+  .url {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-inline: auto;
+    padding: 0.18em 1.2em;
+    border-radius: 0.4em;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.74em;
+    min-width: 45%;
+    justify-content: center;
+  }
+  .lock {
+    width: 0.75em;
+    fill: none;
+    stroke: #64748b;
+    stroke-width: 1.4;
+  }
+  .shell {
+    display: grid;
+    grid-template-columns: 9.5em 1fr;
+  }
+  .nav {
+    display: grid;
+    align-content: start;
+    gap: 0.2em;
+    padding: 0.9em 0.6em;
+    background: #f8fafc;
+    border-inline-end: 1px solid #eef1f5;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0 0.35em 0.8em;
+    font-size: 0.9em;
+  }
+  .nav-brand b {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.75em;
+    height: 1.75em;
+    border-radius: 0.45em;
+    background: var(--a);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.85em;
+  }
+  .nav-i {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.42em 0.5em;
+    border-radius: 0.45em;
+    color: #64748b;
+    font-size: 0.8em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .nav-i svg,
+  .search svg,
+  .bell {
+    flex: none;
+    width: 1.25em;
+    height: 1.25em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .nav-i.on {
+    background: var(--a-soft);
+    color: var(--a);
+    font-weight: 650;
+  }
+  .main {
+    min-width: 0;
+    display: grid;
+    align-content: start;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.6em 1.1em;
+    border-bottom: 1px solid #eef1f5;
+  }
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    width: min(100%, 15em);
+    padding: 0.35em 0.7em;
+    border-radius: 0.45em;
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 0.75em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .top-r {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    color: #94a3b8;
+  }
+  .me {
+    display: grid;
+    place-items: center;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #334155, #0f172a);
+    color: #fff;
+    font-size: 0.7em;
+    font-weight: 700;
+  }
+  .content {
+    display: grid;
+    gap: 0.85em;
+    padding: 1em 1.1em 1.15em;
+    min-width: 0;
+  }
+  @container (max-width: 34rem) {
+    .shell {
+      grid-template-columns: 2.9em 1fr;
+    }
+    .nav {
+      justify-items: center;
+      padding-inline: 0.35em;
+    }
+    .nav-brand {
+      padding-inline: 0;
+    }
+    .nav-brand b,
+    .nav-l {
+      display: none;
+    }
+    .nav-i {
+      padding: 0.45em;
+    }
+  }
+  @container (max-width: 24rem) {
+    .bell {
+      display: none;
+    }
+    .content {
+      padding: 0.8em 0.8em 0.9em;
+    }
+    .top {
+      padding: 0.5em 0.8em;
+    }
+  }
+</style>
