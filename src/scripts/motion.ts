@@ -188,6 +188,10 @@ function nextBatch(stage: HTMLElement) {
   }
 }
 
+// Wipes reveal in reading direction: from the right on Arabic pages.
+const hiddenClip = (el: Element) =>
+  el.closest('[dir]')?.getAttribute('dir') === 'rtl' ? 'inset(0 0% 0 100%)' : 'inset(0 100% 0 0%)';
+
 // Product scenes: each [data-step] group plays in order, holds, fades and
 // loops. Only runs while the scene is on screen.
 function scenes() {
@@ -223,8 +227,8 @@ function scenes() {
           } else if (fx === 'wipe') {
             tl.fromTo(
               el,
-              { clipPath: 'inset(0 100% 0 0)' },
-              { clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power1.inOut' },
+              { clipPath: hiddenClip(el) },
+              { clipPath: 'inset(0 0% 0 0%)', duration: 1.6, ease: 'power1.inOut' },
               pos,
             );
           } else if (fx === 'grow-y') {
@@ -236,7 +240,7 @@ function scenes() {
           }
           // Effects on children that run once their parent is visible.
           el.querySelectorAll<HTMLElement>('[data-fx="type"]').forEach((t) => {
-            tl.from(t, { clipPath: 'inset(0 100% 0 0)', duration: 1.3, ease: 'none' }, '>-0.1');
+            tl.fromTo(t, { clipPath: hiddenClip(t) }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.3, ease: 'none' }, '>-0.1');
           });
           el.querySelectorAll<HTMLElement>('[data-fx="grow-x"]:not([data-step])').forEach((g) => {
             tl.from(g, { scaleX: 0, duration: 0.9, ease: 'power2.inOut' }, '<');

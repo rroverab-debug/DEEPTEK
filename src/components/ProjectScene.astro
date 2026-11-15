@@ -1,62 +1,345 @@
 ---
 // Animated product scenes for the project showcases. Each is a small,
-// original interface sketch that shows what the engagement delivers.
+// original, full-colour interface sketch of a fictional business that shows
+// what the engagement delivers. Everything is CSS and inline SVG: no photos.
 // Without JS or with reduced motion the scene shows its finished state;
 // with motion on, motion.ts plays each [data-step] in order on a loop
-// while the scene is in view. Swap for real screenshots once available.
-// The sketches are English product UIs, so they stay left-to-right on Arabic pages.
+// while the scene is in view. Text follows the page language and direction.
 import type { Project } from '../data/site';
+import { langOf, dirOf } from '../i18n';
 
 interface Props {
   scene: Project['scene'];
   label: string;
 }
 const { scene, label } = Astro.props;
+const lang = langOf(Astro.url);
+const dir = dirOf(lang);
 
 const growth = [12, 14, 13, 18, 17, 22, 26, 25, 31, 35, 38, 44];
 const max = 48;
 const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v / max) * 36}`).join(' ');
+
+const t = {
+  en: {
+    example: 'Example design',
+    w: {
+      url: 'alnoor.example',
+      brand: 'AL NOOR',
+      links: ['Menu', 'Branches', 'About'],
+      lang: 'عربي',
+      eyebrow: 'Arabic and Mediterranean kitchen',
+      h: 'Slow-cooked flavours, served fresh',
+      sub: 'Open daily, 12pm to midnight',
+      book: 'Book a table',
+      menu: 'View menu',
+      items: [
+        ['Chicken machboos', 'AED 48', 'rice'],
+        ['Mezze platter', 'AED 42', 'mezze'],
+        ['Kunafa', 'AED 26', 'sweet'],
+      ],
+      phoneH: 'Slow-cooked, served fresh',
+      speed: 'mobile speed',
+    },
+    s: {
+      brand: 'Glow',
+      title: 'Dashboard',
+      today: 'Today',
+      k: ['Bookings', 'Revenue', 'No-shows'],
+      cur: 'AED',
+      days: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+      a: [
+        ['10:00', 'M', 'Hair colour · Mariam', 'Paid'],
+        ['10:30', 'H', 'Manicure · Huda', 'Reminder sent'],
+      ],
+    },
+    h: {
+      title: 'Onboarding',
+      name: 'Sara Ali · Sales associate',
+      av: 'SA',
+      starts: 'Starts Sunday',
+      ready: 'Ready',
+      checks: ['Offer letter signed', 'Visa and ID submitted', 'Laptop and email ready', 'Day-one schedule sent'],
+      leave: 'Leave request',
+      who: 'Omar · 3 days',
+      ok: 'Approved',
+    },
+    c: {
+      title: 'Ramadan campaign',
+      ch: 'Meta · Google',
+      ads: [
+        ['Ramadan collection', 'Shop now', 'en'],
+        ['مجموعة رمضان', 'تسوق الآن', 'ar'],
+        ['Eid gift guide', 'Discover', 'en'],
+      ],
+      k: ['Reach', 'Click rate', 'Return on ads'],
+    },
+    i: {
+      title: 'Unified inbox',
+      n: '3 new',
+      m: [
+        ['LK', 'Layla K.', 'Do you have a slot on Thursday?', 'WhatsApp', 'wa'],
+        ['OM', 'Omar M.', 'Price for a dental check-up?', 'Web', 'web'],
+        ['RS', 'Rina S.', 'Can I change my appointment?', 'Email', 'mail'],
+      ],
+      draft: 'AI draft · Layla K.',
+      reply: 'Yes, Thursday 4:30pm is free at our Al Barsha branch. Shall I book it for you?',
+      send: 'Approve and send',
+      sent: '✓ Sent in 42s',
+    },
+    f: {
+      title: 'Devices',
+      n: '40 managed',
+      k: ['Two-step sign-in', 'Updated'],
+      ok: 'Secured',
+      backup: 'Nightly backup',
+      done: 'Complete',
+    },
+    g: {
+      title: 'Enquiries',
+      n: 'Last 12 weeks',
+      k: ['Direct enquiries', 'Cost per lead'],
+      wk: '/wk',
+      src: ['Search', 'Ads', 'Social'],
+    },
+    l: {
+      title: 'Month-end report',
+      n: 'Automated',
+      nodes: ['Bank feeds', 'Reconcile', 'Dashboard'],
+      rows: [
+        ['Revenue', 'AED 1.42M'],
+        ['Expenses', 'AED 0.97M'],
+        ['Unmatched', '3 items'],
+      ],
+      review: 'Review',
+      done: '✓ Ready in 6 min, was 3 days',
+    },
+  },
+  ar: {
+    example: 'تصميم توضيحي',
+    w: {
+      url: 'alnoor.example',
+      brand: 'النور',
+      links: ['المنيو', 'الفروع', 'من نحن'],
+      lang: 'EN',
+      eyebrow: 'مطبخ عربي ومتوسطي',
+      h: 'نكهات مطهوّة على مهل، تُقدَّم طازجة',
+      sub: 'مفتوح يوميًا من 12 ظهرًا حتى منتصف الليل',
+      book: 'احجز طاولة',
+      menu: 'عرض المنيو',
+      items: [
+        ['مجبوس دجاج', '48 د.إ', 'rice'],
+        ['طبق مقبلات', '42 د.إ', 'mezze'],
+        ['كنافة', '26 د.إ', 'sweet'],
+      ],
+      phoneH: 'نكهات تُقدَّم طازجة',
+      speed: 'سرعة الجوال',
+    },
+    s: {
+      brand: 'جلو',
+      title: 'لوحة التحكم',
+      today: 'اليوم',
+      k: ['الحجوزات', 'الإيرادات', 'عدم الحضور'],
+      cur: 'د.إ',
+      days: ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'],
+      a: [
+        ['10:00', 'م', 'صبغة شعر · مريم', 'مدفوع'],
+        ['10:30', 'هـ', 'مانيكير · هدى', 'أُرسل التذكير'],
+      ],
+    },
+    h: {
+      title: 'تجهيز موظفة جديدة',
+      name: 'سارة علي · مستشارة مبيعات',
+      av: 'سع',
+      starts: 'تبدأ الأحد',
+      ready: 'الجاهزية',
+      checks: ['تم توقيع خطاب العرض', 'تم تقديم التأشيرة والهوية', 'الحاسوب والبريد جاهزان', 'إرسال جدول اليوم الأول'],
+      leave: 'طلب إجازة',
+      who: 'عمر · 3 أيام',
+      ok: 'تمت الموافقة',
+    },
+    c: {
+      title: 'حملة رمضان',
+      ch: 'Meta · Google',
+      ads: [
+        ['مجموعة رمضان', 'تسوق الآن', 'ar'],
+        ['Ramadan collection', 'Shop now', 'en'],
+        ['دليل هدايا العيد', 'اكتشف', 'ar'],
+      ],
+      k: ['الوصول', 'نسبة النقر', 'العائد على الإعلان'],
+    },
+    i: {
+      title: 'صندوق رسائل موحّد',
+      n: '3 جديدة',
+      m: [
+        ['ل', 'ليلى ك.', 'هل لديكم موعد يوم الخميس؟', 'واتساب', 'wa'],
+        ['ع', 'عمر م.', 'كم سعر فحص الأسنان؟', 'الموقع', 'web'],
+        ['ر', 'رينا س.', 'هل يمكنني تغيير موعدي؟', 'البريد', 'mail'],
+      ],
+      draft: 'مسودة الذكاء الاصطناعي · ليلى ك.',
+      reply: 'نعم، الخميس الساعة 4:30 مساءً متاح في فرع البرشاء. هل أحجزه لكِ؟',
+      send: 'موافقة وإرسال',
+      sent: '✓ أُرسل خلال 42 ثانية',
+    },
+    f: {
+      title: 'الأجهزة',
+      n: '40 جهازًا مُدارًا',
+      k: ['التحقق بخطوتين', 'محدّثة'],
+      ok: 'محمي',
+      backup: 'النسخ الاحتياطي الليلي',
+      done: 'مكتمل',
+    },
+    g: {
+      title: 'الاستفسارات',
+      n: 'آخر 12 أسبوعًا',
+      k: ['استفسارات مباشرة', 'تكلفة العميل المحتمل'],
+      wk: '/أسبوع',
+      src: ['البحث', 'الإعلانات', 'التواصل'],
+    },
+    l: {
+      title: 'تقرير نهاية الشهر',
+      n: 'مؤتمت',
+      nodes: ['كشوف البنك', 'المطابقة', 'لوحة البيانات'],
+      rows: [
+        ['الإيرادات', '1.42 مليون د.إ'],
+        ['المصروفات', '0.97 مليون د.إ'],
+        ['غير مطابقة', '3 بنود'],
+      ],
+      review: 'مراجعة',
+      done: '✓ جاهز خلال 6 دقائق بدل 3 أيام',
+    },
+  },
+}[lang];
+
+// Inline SVG art (no photos): a top-down dish for the restaurant demo and
+// three seasonal ad creatives for the campaign demo.
+const dish = `<svg viewBox="0 0 120 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<circle cx="18" cy="16" r="22" fill="#ffffff" opacity=".08"/>
+<ellipse cx="62" cy="50" rx="34" ry="33" fill="#000" opacity=".18"/>
+<circle cx="60" cy="46" r="33" fill="#fff8ee"/>
+<circle cx="60" cy="46" r="27" fill="#f3e5cf"/>
+<circle cx="60" cy="46" r="23" fill="#f2c14e"/>
+<circle cx="52" cy="40" r="2" fill="#e8a93a"/><circle cx="67" cy="53" r="2" fill="#e8a93a"/><circle cx="50" cy="56" r="1.6" fill="#e8a93a"/>
+<ellipse cx="57" cy="44" rx="9" ry="6.5" fill="#8a4b2a" transform="rotate(-20 57 44)"/>
+<ellipse cx="68" cy="40" rx="7" ry="5" fill="#a0582f" transform="rotate(25 68 40)"/>
+<ellipse cx="55" cy="44" rx="4" ry="2" fill="#b86e3e" transform="rotate(-20 55 44)"/>
+<ellipse cx="46" cy="50" rx="3.2" ry="1.6" fill="#5f9137" transform="rotate(30 46 50)"/>
+<ellipse cx="72" cy="52" rx="3.2" ry="1.6" fill="#5f9137" transform="rotate(-30 72 52)"/>
+<ellipse cx="62" cy="58" rx="3" ry="1.5" fill="#6fa83f"/>
+<circle cx="74" cy="46" r="3" fill="#d9452b"/><circle cx="48" cy="38" r="2.6" fill="#d9452b"/>
+<path d="M76 30a7 7 0 0 1 9 9z" fill="#f7e06b"/>
+<circle cx="102" cy="22" r="13" fill="#fff8ee"/><circle cx="102" cy="22" r="9.5" fill="#e7c88f"/>
+<path d="M97 21q5-4 10 0" stroke="#c99a52" stroke-width="1.2" fill="none"/><circle cx="102" cy="22" r="2.2" fill="#7a9a2e"/><circle cx="99" cy="25" r="1" fill="#c0392b"/>
+<circle cx="102" cy="72" r="10" fill="#fff8ee" opacity=".95"/><circle cx="102" cy="72" r="7" fill="#9c4a1c"/><circle cx="100" cy="70" r="2" fill="#c46a2a"/>
+<rect x="8" y="58" width="13" height="22" rx="3" fill="#fff" opacity=".85"/><rect x="10" y="64" width="9" height="14" rx="2" fill="#b5341e"/>
+</svg>`;
+
+const adArt = [
+  `<svg viewBox="0 0 60 60" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<rect width="60" height="60" fill="#1b2550"/>
+<circle cx="8" cy="10" r=".9" fill="#fde68a"/><circle cx="50" cy="44" r=".8" fill="#fde68a"/><circle cx="26" cy="7" r=".7" fill="#fde68a"/><circle cx="14" cy="40" r=".7" fill="#fde68a"/>
+<circle cx="42" cy="17" r="9" fill="#f2c14e"/><circle cx="46" cy="14" r="8" fill="#1b2550"/>
+<path d="M24 0v13" stroke="#f2c14e" stroke-width=".8"/>
+<path d="M18 17h12l-2 3H20z" fill="#e0a83a"/>
+<rect x="19" y="20" width="10" height="16" rx="2" fill="#f2c14e"/>
+<rect x="21.5" y="22.5" width="5" height="11" rx="2.5" fill="#fff4c8"/>
+<path d="M18 36h12l-2 3H20z" fill="#e0a83a"/>
+<rect x="0" y="48" width="60" height="12" fill="#c8901f" opacity=".9"/>
+<path d="M0 48q7-5 15 0t15 0 15 0 15 0" fill="#c8901f"/>
+</svg>`,
+  `<svg viewBox="0 0 60 60" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<rect width="60" height="60" fill="#0f5257"/>
+<path d="M10 60V30a20 20 0 0 1 40 0v30" fill="#13676c"/>
+<path d="M16 60V32a14 14 0 0 1 28 0v28" fill="none" stroke="#f2c14e" stroke-width="1.4"/>
+<path d="M30 14l2 4.5 4.5 2-4.5 2-2 4.5-2-4.5-4.5-2 4.5-2z" fill="#f2c14e"/>
+<circle cx="30" cy="44" r="7" fill="#f7d98b"/><circle cx="32.5" cy="42" r="6" fill="#13676c"/>
+<circle cx="6" cy="8" r="1" fill="#f2c14e"/><circle cx="54" cy="10" r="1" fill="#f2c14e"/>
+</svg>`,
+  `<svg viewBox="0 0 60 60" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<rect width="60" height="60" fill="#f6dcc9"/>
+<circle cx="48" cy="12" r="14" fill="#f9e7d9"/>
+<rect x="15" y="27" width="30" height="22" rx="2" fill="#c2185b"/>
+<rect x="13" y="21" width="34" height="8" rx="2" fill="#d63a76"/>
+<rect x="27" y="21" width="6" height="28" fill="#f2c14e"/>
+<path d="M30 21c-4-8-12-6-9-1 2 2 6 1 9 1zm0 0c4-8 12-6 9-1-2 2-6 1-9 1z" fill="#f2c14e"/>
+<circle cx="10" cy="12" r="1.4" fill="#c8901f"/><circle cx="52" cy="40" r="1.2" fill="#c8901f"/>
+</svg>`,
+];
+
+const devices = [
+  ['Finance-01', 'Windows 11', 'laptop'],
+  ['Sales-07', 'macOS', 'laptop'],
+  ['Warehouse-03', 'Windows 11', 'laptop'],
+  ['Reception-02', 'iPadOS', 'tablet'],
+];
 ---
 
-<div class="scene" data-scene role="img" aria-label={label}>
-  <div class="stage" data-stage aria-hidden="true" dir="ltr" lang="en">
+<div class:list={['scene', `scene--${scene}`]} data-scene role="img" aria-label={label}>
+  <span class="ex" aria-hidden="true" dir={dir} lang={lang}>{t.example}</span>
+  <div class="stage" data-stage aria-hidden="true" dir={dir} lang={lang}>
     {
       scene === 'website' && (
         <div class="site-wrap">
           <div class="browser" data-step="1">
-            <div class="b-bar">
+            <div class="b-bar" dir="ltr">
               <span class="dots"><i /><i /><i /></span>
-              <span class="url">alnoor-hospitality.ae</span>
+              <span class="url">
+                <svg viewBox="0 0 10 12" class="lock"><rect x="1" y="5" width="8" height="6.5" rx="1.2" /><path d="M3 5V3.6a2 2 0 0 1 4 0V5" /></svg>
+                {t.w.url}
+              </span>
             </div>
             <div class="b-page">
               <div class="b-nav">
-                <span class="logo-s">AL NOOR</span>
-                <span class="links"><i /><i /><i /></span>
-                <span class="lang">EN | ع</span>
+                <span class="brand">
+                  <svg viewBox="0 0 20 20" class="sun"><circle cx="10" cy="10" r="4.2" />{[0, 45, 90, 135, 180, 225, 270, 315].map((a) => <rect x="9.3" y="1" width="1.4" height="3.4" rx="0.7" transform={`rotate(${a} 10 10)`} />)}</svg>
+                  {t.w.brand}
+                </span>
+                <span class="links">{t.w.links.map((l) => <span>{l}</span>)}</span>
+                <span class="lang">{t.w.lang}</span>
               </div>
               <div class="b-hero">
                 <div class="b-copy">
-                  <span class="ln ln-1" data-step="2" data-fx="grow-x" />
-                  <span class="ln ln-2" data-step="2" data-fx="grow-x" />
-                  <span class="ln ln-3" data-step="3" data-fx="grow-x" />
-                  <span class="cta-s" data-step="3" data-fx="pop">Book a table</span>
+                  <span class="w-eye" data-step="2">{t.w.eyebrow}</span>
+                  <span class="headline" data-step="2">{t.w.h}</span>
+                  <span class="sub" data-step="3">{t.w.sub}</span>
+                  <span class="ctas">
+                    <span class="cta-s" data-step="3" data-fx="pop">{t.w.book}</span>
+                    <span class="cta-o" data-step="3" data-fx="pop">{t.w.menu}</span>
+                  </span>
                 </div>
-                <span class="b-img" data-step="2" data-fx="wipe" />
+                <span class="b-img" data-step="2" data-fx="wipe">
+                  <Fragment set:html={dish} />
+                </span>
               </div>
               <div class="b-cards" data-step="4">
-                <span /><span /><span />
+                {t.w.items.map(([n, p, k]) => (
+                  <span class="mi">
+                    <span class:list={['mi-pic', `mi-pic--${k}`]} />
+                    <span class="mi-t">
+                      <b>{n}</b>
+                      <i>{p}</i>
+                    </span>
+                  </span>
+                ))}
               </div>
             </div>
           </div>
           <div class="phone" data-step="5" data-fx="pop">
             <span class="notch" />
-            <span class="p-img" />
-            <span class="ln ln-2" />
-            <span class="ln ln-3" />
-            <span class="cta-s">Book</span>
+            <span class="p-nav">
+              <b>{t.w.brand}</b>
+              <span class="burger"><i /><i /></span>
+            </span>
+            <span class="p-img">
+              <Fragment set:html={dish} />
+            </span>
+            <span class="p-h">{t.w.phoneH}</span>
+            <span class="cta-s">{t.w.book}</span>
           </div>
           <span class="score" data-step="6" data-fx="pop">
-            <b data-fx="count" data-to="98">98</b> mobile speed
+            <span class="ring" />
+            <b data-fx="count" data-to="98">98</b>
+            {t.w.speed}
           </span>
         </div>
       )
@@ -66,37 +349,48 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'saas' && (
         <div class="win app">
           <aside class="side" data-step="1">
-            <span class="logo-s">Glow</span>
+            <span class="logo-mark">{t.s.brand.slice(0, 1)}</span>
             <i class="on" /><i /><i /><i />
           </aside>
           <div class="app-main">
             <div class="bar">
-              <span>Dashboard</span>
-              <span class="mono">Today</span>
+              <span class="ttl">{t.s.title}</span>
+              <span class="chip">{t.s.today}</span>
             </div>
             <div class="kpis kpis--3">
-              <div data-step="2">
-                <span class="mono">Bookings</span>
+              <div class="k k--1" data-step="2">
+                <span class="kl">{t.s.k[0]}</span>
                 <b data-fx="count" data-to="128">128</b>
               </div>
-              <div data-step="2">
-                <span class="mono">Revenue</span>
-                <i>AED</i>
+              <div class="k k--2" data-step="2">
+                <span class="kl">{t.s.k[1]}</span>
+                <i>{t.s.cur}</i>
                 <b data-fx="count" data-to="9840">9,840</b>
               </div>
-              <div data-step="2">
-                <span class="mono">No-shows</span>
+              <div class="k k--3" data-step="2">
+                <span class="kl">{t.s.k[2]}</span>
                 <b data-fx="count" data-to="2">2</b>
               </div>
             </div>
-            <div class="bars" data-step="3">
-              {[40, 55, 48, 70, 62, 88, 76].map((h, i) => (
-                <span class={`bar-${i}`} data-fx="grow-y" />
-              ))}
+            <div class="bars-wrap">
+              <div class="bars" data-step="3" dir="ltr">
+                {[40, 55, 48, 70, 62, 88, 76].map((_, i) => (
+                  <span class={`bar-${i}`} data-fx="grow-y" />
+                ))}
+              </div>
+              <div class="days" dir="ltr">{t.s.days.map((d) => <span>{d}</span>)}</div>
             </div>
             <ul class="appts">
-              <li data-step="4"><span class="mono">10:00</span><span>Hair colour · Mariam</span><span class="pill">Paid</span></li>
-              <li data-step="5"><span class="mono">10:30</span><span>Manicure · Huda</span><span class="pill pill--o">Reminder sent</span></li>
+              {t.s.a.map(([time, av, what, st], i) => (
+                <li data-step={String(i + 4)}>
+                  <span class="time">{time}</span>
+                  <span class="who">
+                    <span class:list={['av', `av--${i + 1}`]}>{av}</span>
+                    <span class="what">{what}</span>
+                  </span>
+                  <span class:list={['pill', i === 0 ? 'pill--ok' : 'pill--info']}>{st}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -107,28 +401,46 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'hr' && (
         <div class="win">
           <div class="bar">
-            <span>Onboarding · Sara Ali</span>
-            <span class="mono">Starts Sunday</span>
+            <span class="person">
+              <span class="av av--big">{t.h.av}</span>
+              <span class="pn">
+                <b>{t.h.title}</b>
+                <small>{t.h.name}</small>
+              </span>
+            </span>
+            <span class="chip">{t.h.starts}</span>
           </div>
           <div class="progress" data-step="1">
-            <span class="mono">Ready</span>
+            <span class="pl">{t.h.ready}</span>
             <span class="track">
               <span class="fill fill--75" data-fx="grow-x" />
             </span>
-            <span class="mono">75%</span>
+            <span class="pv">75%</span>
           </div>
           <ul class="checks">
-            <li data-step="2"><span class="box" data-step="2" data-fx="pop">✓</span>Offer letter signed</li>
-            <li data-step="3"><span class="box" data-step="3" data-fx="pop">✓</span>Visa and Emirates ID submitted</li>
-            <li data-step="4"><span class="box" data-step="4" data-fx="pop">✓</span>Laptop and email account ready</li>
-            <li data-step="5"><span class="box box--empty" />Day-one schedule sent</li>
+            {t.h.checks.map((c, i) =>
+              i < 3 ? (
+                <li data-step={String(i + 2)}>
+                  <span class="box" data-step={String(i + 2)} data-fx="pop">✓</span>
+                  {c}
+                </li>
+              ) : (
+                <li data-step="5" class="pending">
+                  <span class="box box--empty" />
+                  {c}
+                </li>
+              ),
+            )}
           </ul>
           <div class="leave" data-step="6">
-            <span>
-              <b>Leave request</b>
-              <span class="muted">Omar · 3 days</span>
+            <span class="lv-ic">
+              <svg viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" /><path d="M2.5 8h15M6.5 2v4M13.5 2v4" /></svg>
             </span>
-            <span class="btn-s" data-step="7" data-fx="pop">Approved</span>
+            <span class="lv-t">
+              <b>{t.h.leave}</b>
+              <span>{t.h.who}</span>
+            </span>
+            <span class="btn-s" data-step="7" data-fx="pop">{t.h.ok}</span>
           </div>
         </div>
       )
@@ -138,39 +450,36 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'campaign' && (
         <div class="win">
           <div class="bar">
-            <span>Ramadan campaign</span>
-            <span class="mono">Meta · Google</span>
+            <span class="ttl">
+              <span class="moon" />
+              {t.c.title}
+            </span>
+            <span class="chip" dir="ltr">{t.c.ch}</span>
           </div>
           <div class="ads">
-            <div class="ad" data-step="1">
-              <span class="ad-img ad-img--1" />
-              <span class="ad-t">Ramadan collection</span>
-              <span class="ad-s">Shop now</span>
-            </div>
-            <div class="ad" data-step="2" dir="rtl" lang="ar">
-              <span class="ad-img ad-img--2" />
-              <span class="ad-t">مجموعة رمضان</span>
-              <span class="ad-s">تسوق الآن</span>
-            </div>
-            <div class="ad" data-step="3">
-              <span class="ad-img ad-img--3" />
-              <span class="ad-t">Eid gift guide</span>
-              <span class="ad-s">Discover</span>
-            </div>
+            {t.c.ads.map(([title, cta, l], i) => (
+              <div class="ad" data-step={String(i + 1)} dir={l === 'ar' ? 'rtl' : 'ltr'} lang={l}>
+                <span class:list={['ad-img', `ad-img--${i + 1}`]}>
+                  <Fragment set:html={adArt[i]} />
+                </span>
+                <span class="ad-t">{title}</span>
+                <span class="ad-s">{cta}</span>
+              </div>
+            ))}
           </div>
           <div class="kpis kpis--3">
-            <div data-step="4">
-              <span class="mono">Reach</span>
+            <div class="k k--1" data-step="4">
+              <span class="kl">{t.c.k[0]}</span>
               <b data-fx="count" data-to="1.2" data-decimals="1">1.2</b>
               <i>M</i>
             </div>
-            <div data-step="4">
-              <span class="mono">Click rate</span>
+            <div class="k k--2" data-step="4">
+              <span class="kl">{t.c.k[1]}</span>
               <b data-fx="count" data-to="3.4" data-decimals="1">3.4</b>
               <i>%</i>
             </div>
-            <div data-step="4">
-              <span class="mono">Return on ads</span>
+            <div class="k k--3" data-step="4">
+              <span class="kl">{t.c.k[2]}</span>
               <b data-fx="count" data-to="5.1" data-decimals="1">5.1</b>
               <i>×</i>
             </div>
@@ -183,46 +492,31 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'inbox' && (
         <div class="win">
           <div class="bar">
-            <span>Unified inbox</span>
-            <span class="mono">3 new</span>
+            <span class="ttl">{t.i.title}</span>
+            <span class="chip chip--hot">{t.i.n}</span>
           </div>
           <ul class="msgs">
-            <li data-step="1">
-              <span class="av">LK</span>
-              <span class="txt">
-                <b>Layla K.</b>
-                <span>Do you have a slot on Thursday?</span>
-              </span>
-              <span class="tag">WhatsApp</span>
-            </li>
-            <li data-step="2">
-              <span class="av">OM</span>
-              <span class="txt">
-                <b>Omar M.</b>
-                <span>Price for a dental check-up?</span>
-              </span>
-              <span class="tag">Web</span>
-            </li>
-            <li data-step="3">
-              <span class="av">RS</span>
-              <span class="txt">
-                <b>Rina S.</b>
-                <span>Can I change my appointment?</span>
-              </span>
-              <span class="tag">Email</span>
-            </li>
+            {t.i.m.map(([av, name, text, tag, k], i) => (
+              <li data-step={String(i + 1)}>
+                <span class:list={['av', `av--${i + 1}`]}>{av}</span>
+                <span class="txt">
+                  <b>{name}</b>
+                  <span>{text}</span>
+                </span>
+                <span class:list={['tag', `tag--${k}`]}>{tag}</span>
+              </li>
+            ))}
           </ul>
           <div class="draft" data-step="4">
-            <span class="mono">AI draft · Layla K.</span>
-            <p data-fx="type">Yes, Thursday 4:30pm is free at Al Barsha. Shall I book it for you?</p>
+            <span class="dl">
+              <span class="spark">✦</span>
+              {t.i.draft}
+            </span>
+            <p data-fx="type">{t.i.reply}</p>
           </div>
           <div class="actions">
-            <span class="btn-s" data-step="5" data-fx="pop">
-              Approve and send
-            </span>
-            <span class="ok" data-step="6" data-fx="pop">
-              ✓ Sent in 42s
-            </span>
+            <span class="btn-s" data-step="5" data-fx="pop">{t.i.send}</span>
+            <span class="ok" data-step="6" data-fx="pop">{t.i.sent}</span>
           </div>
         </div>
       )
@@ -232,45 +526,54 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'fleet' && (
         <div class="win">
           <div class="bar">
-            <span>Devices</span>
-            <span class="mono">40 managed</span>
+            <span class="ttl">
+              <span class="shield">
+                <svg viewBox="0 0 20 20"><path d="M10 1.5 3 4.3v5c0 4.4 3 7.7 7 9.2 4-1.5 7-4.8 7-9.2v-5z" /><path d="m6.7 10 2.3 2.3 4.4-4.6" class="tick" /></svg>
+              </span>
+              {t.f.title}
+            </span>
+            <span class="chip">{t.f.n}</span>
           </div>
           <div class="kpis">
-            <div data-step="1">
-              <span class="mono">MFA enabled</span>
+            <div class="k k--1" data-step="1">
+              <span class="kl">{t.f.k[0]}</span>
               <b data-fx="count" data-to="100">100</b>
               <i>%</i>
             </div>
-            <div data-step="1">
-              <span class="mono">Patched</span>
+            <div class="k k--2" data-step="1">
+              <span class="kl">{t.f.k[1]}</span>
               <b data-fx="count" data-to="38">38</b>
               <i>/40</i>
             </div>
           </div>
           <ul class="devices">
-            {[
-              ['Finance-01', 'Windows 11'],
-              ['Sales-07', 'macOS'],
-              ['Warehouse-03', 'Windows 11'],
-              ['Reception-02', 'iPadOS'],
-            ].map(([n, os], i) => (
+            {devices.map(([n, os, kind], i) => (
               <li data-step={String(i + 2)}>
                 <span class="dev">
-                  <b>{n}</b>
-                  <span>{os}</span>
+                  <span class="dev-ic">
+                    {kind === 'laptop' ? (
+                      <svg viewBox="0 0 24 18"><rect x="4" y="2" width="16" height="11" rx="1.5" /><path d="M1.5 15.5h21" /></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 18"><rect x="6" y="1" width="12" height="16" rx="2" /><path d="M11 14.5h2" /></svg>
+                    )}
+                  </span>
+                  <span class="dn" dir="ltr">
+                    <b>{n}</b>
+                    <span>{os}</span>
+                  </span>
                 </span>
                 <span class="status" data-step={String(i + 3)} data-fx="pop">
-                  ✓ Secured
+                  ✓ {t.f.ok}
                 </span>
               </li>
             ))}
           </ul>
           <div class="progress" data-step="6">
-            <span class="mono">Nightly backup</span>
+            <span class="pl">{t.f.backup}</span>
             <span class="track">
               <span class="fill" data-fx="grow-x" />
             </span>
-            <span class="mono">Complete</span>
+            <span class="pv">{t.f.done}</span>
           </div>
         </div>
       )
@@ -280,23 +583,31 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'growth' && (
         <div class="win">
           <div class="bar">
-            <span>Enquiries</span>
-            <span class="mono">Last 12 weeks</span>
+            <span class="ttl">{t.g.title}</span>
+            <span class="chip">{t.g.n}</span>
           </div>
           <div class="kpis">
-            <div data-step="1">
-              <span class="mono">Direct enquiries</span>
+            <div class="k k--1" data-step="1">
+              <span class="kl">{t.g.k[0]}</span>
               <b data-fx="count" data-to="44">44</b>
-              <i>/wk</i>
+              <i>{t.g.wk}</i>
             </div>
-            <div data-step="1">
-              <span class="mono">Cost per lead</span>
-              <b>−</b>
-              <b data-fx="count" data-to="38">38</b>
-              <i>%</i>
+            <div class="k k--2" data-step="1">
+              <span class="kl">{t.g.k[1]}</span>
+              <span class="num" dir="ltr">
+                <b>−</b>
+                <b data-fx="count" data-to="38">38</b>
+                <i>%</i>
+              </span>
             </div>
           </div>
-          <svg class="chart" viewBox="0 0 100 42" preserveAspectRatio="none" data-step="2" data-fx="wipe">
+          <svg class="chart" viewBox="0 0 100 42" preserveAspectRatio="none" data-step="2" data-fx="wipe" direction="ltr">
+            <defs>
+              <linearGradient id="g-area" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#7c3aed" stop-opacity="0.35" />
+                <stop offset="1" stop-color="#7c3aed" stop-opacity="0" />
+              </linearGradient>
+            </defs>
             <line x1="0" y1="40" x2="100" y2="40" class="axis" />
             <line x1="0" y1="22" x2="100" y2="22" class="grid" />
             <line x1="0" y1="4" x2="100" y2="4" class="grid" />
@@ -304,9 +615,14 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
             <polyline points={pts} class="line" />
           </svg>
           <div class="sources" data-step="3">
-            <span><span class="b"><i data-fx="grow-x" /></span>Search</span>
-            <span><span class="b"><i data-fx="grow-x" /></span>Ads</span>
-            <span><span class="b"><i data-fx="grow-x" /></span>Social</span>
+            {t.g.src.map((s, i) => (
+              <span class={`src src--${i + 1}`}>
+                <span class="b">
+                  <i data-fx="grow-x" />
+                </span>
+                {s}
+              </span>
+            ))}
           </div>
         </div>
       )
@@ -316,45 +632,33 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
       scene === 'flow' && (
         <div class="win">
           <div class="bar">
-            <span>Month-end report</span>
-            <span class="mono">Automated</span>
+            <span class="ttl">{t.l.title}</span>
+            <span class="chip chip--auto">{t.l.n}</span>
           </div>
           <div class="flow">
-            <span class="node" data-step="1">
-              Bank feeds
-            </span>
-            <span class="wire" data-step="2" data-fx="grow-x" />
-            <span class="node" data-step="2">
-              Reconcile
-            </span>
-            <span class="wire" data-step="3" data-fx="grow-x" />
-            <span class="node node--hi" data-step="3">
-              Dashboard
-            </span>
+            {t.l.nodes.map((n, i) => (
+              <>
+                {i > 0 && <span class="wire" data-step={String(i + 1)} data-fx="grow-x" />}
+                <span class:list={['node', `node--${i + 1}`]} data-step={String(i + 1)}>
+                  <span class="n-ic" />
+                  {n}
+                </span>
+              </>
+            ))}
           </div>
           <table class="rows">
             <tbody>
-              <tr data-step="4">
-                <td>Revenue</td>
-                <td>AED 1.42M</td>
-                <td class="ok">✓</td>
-              </tr>
-              <tr data-step="4">
-                <td>Expenses</td>
-                <td>AED 0.97M</td>
-                <td class="ok">✓</td>
-              </tr>
-              <tr data-step="5">
-                <td>Unmatched</td>
-                <td>3 items</td>
-                <td class="flag">Review</td>
-              </tr>
+              {t.l.rows.map(([k, v], i) => (
+                <tr data-step={i < 2 ? '4' : '5'}>
+                  <td>{k}</td>
+                  <td>{v}</td>
+                  <td>{i < 2 ? <span class="okc">✓</span> : <span class="flag">{t.l.review}</span>}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <div class="actions">
-            <span class="ok" data-step="6" data-fx="pop">
-              ✓ Ready in 6 min, was 3 days
-            </span>
+            <span class="ok" data-step="6" data-fx="pop">{t.l.done}</span>
           </div>
         </div>
       )
@@ -363,23 +667,51 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
 </div>
 
 <style>
+  /* ---------- shared ---------- */
   .scene {
-    --s-bg: #121212;
-    --s-card: #1b1b1b;
-    --s-line: #2e2e2e;
-    --s-fg: #f3f3f1;
-    --s-muted: #9a9a9a;
+    --ink: #1d1b19;
+    --sub: #6f6a64;
+    --line: #ece8e3;
+    --soft: #f6f3ef;
+    --card: #fff;
+    --a: #e0572a;
+    --a-soft: #fde9df;
+    --bg1: #2a1a14;
+    --bg2: #5b2a17;
     position: relative;
     width: 100%;
     height: 100%;
     container-type: inline-size;
-    background-color: var(--s-bg);
-    background-image: radial-gradient(circle at 1px 1px, #2a2a2a 1px, transparent 0);
-    background-size: 22px 22px;
-    color: var(--s-fg);
+    background-color: var(--bg1);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 0),
+      radial-gradient(120% 90% at 85% 10%, var(--bg2), transparent 70%);
+    background-size: 22px 22px, 100% 100%;
+    color: var(--ink);
     overflow: hidden;
     display: grid;
     place-items: center;
+  }
+  .scene--saas { --a: #c0398a; --a-soft: #fbe3f1; --bg1: #241326; --bg2: #6a2457; }
+  .scene--hr { --a: #0f9488; --a-soft: #dcf4f1; --bg1: #0d2321; --bg2: #145d55; }
+  .scene--campaign { --a: #c8901f; --a-soft: #fbf0d6; --bg1: #121933; --bg2: #2c3a78; }
+  .scene--inbox { --a: #1fa855; --a-soft: #dff5e7; --bg1: #0f231a; --bg2: #1d5a3b; }
+  .scene--fleet { --a: #2f6fe4; --a-soft: #e2ecfd; --bg1: #0e1830; --bg2: #1f3f85; }
+  .scene--growth { --a: #7c3aed; --a-soft: #efe6fe; --bg1: #1a1233; --bg2: #4b2a91; }
+  .scene--flow { --a: #d97706; --a-soft: #fdf0dc; --bg1: #1f1a10; --bg2: #6b4a12; }
+
+  .ex {
+    position: absolute;
+    inset-block-start: 0.9rem;
+    inset-inline-start: 0.9rem;
+    z-index: 2;
+    padding: 0.25rem 0.65rem;
+    border-radius: 99px;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    color: rgb(255 255 255 / 0.85);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
   }
   .stage {
     /* Fades in and out on a loop: keep it on its own layer so it never repaints. */
@@ -388,95 +720,120 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
     height: 100%;
     display: grid;
     place-items: center;
-    padding: clamp(14px, 6cqi, 4rem);
-    font-size: clamp(10.5px, 2.2cqi, 15px);
+    padding: clamp(2.6rem, 6cqi, 4rem) clamp(12px, 6cqi, 4rem) clamp(14px, 6cqi, 4rem);
+    font-size: clamp(10px, 2.2cqi, 15px);
   }
   .win {
     width: min(100%, 34em);
     display: grid;
-    gap: 1em;
-    padding: 1.25em;
-    background: var(--s-card);
-    border: 1px solid var(--s-line);
-    border-radius: 0.6em;
-    box-shadow: 0 2em 4em -1.5em rgb(0 0 0 / 0.7);
+    gap: 0.95em;
+    padding: 1.2em;
+    background: var(--card);
+    border-radius: 0.8em;
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.04),
+      0 2em 4em -1.5em rgb(0 0 0 / 0.6);
     line-height: 1.35;
   }
   .bar {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    padding-bottom: 0.85em;
-    border-bottom: 1px solid var(--s-line);
-    font-weight: 500;
+    align-items: center;
+    gap: 0.8em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px solid var(--line);
   }
-  .mono {
-    font-family: var(--font-mono);
-    font-size: 0.78em;
-    letter-spacing: 0.04em;
-    color: var(--s-muted);
-    text-transform: uppercase;
-  }
-
-  /* inbox */
-  .msgs {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.5em;
-  }
-  .msgs li {
+  .ttl {
     display: flex;
     align-items: center;
-    gap: 0.75em;
-    padding: 0.6em 0.7em;
-    border: 1px solid var(--s-line);
-    border-radius: 0.45em;
+    gap: 0.5em;
+    font-weight: 600;
+  }
+  .chip {
+    flex: none;
+    padding: 0.2em 0.7em;
+    border-radius: 99px;
+    background: var(--a-soft);
+    color: var(--a);
+    font-size: 0.78em;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .chip--hot {
+    background: #ff5a3c;
+    color: #fff;
+  }
+  .kl {
+    flex-basis: 100%;
+    margin-bottom: 0.25em;
+    color: var(--sub);
+    font-size: 0.78em;
+    font-weight: 500;
+  }
+  .kpis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6em;
+  }
+  .kpis--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .k {
+    --kc: var(--a);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.15em;
+    padding: 0.65em 0.75em;
+    border-radius: 0.55em;
+    background: var(--soft);
+    border-top: 0.22em solid var(--kc);
+    min-width: 0;
+  }
+  .k b {
+    font-size: 1.9em;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .kpis--3 .k b {
+    font-size: 1.5em;
+  }
+  .k i {
+    font-style: normal;
+    color: var(--sub);
+    font-size: 0.85em;
+  }
+  .k .num {
+    display: flex;
+    align-items: baseline;
+    gap: 0.05em;
   }
   .av {
     flex: none;
     display: grid;
     place-items: center;
-    width: 2.2em;
-    height: 2.2em;
+    width: 2.1em;
+    height: 2.1em;
     border-radius: 50%;
-    background: #2b2b2b;
-    font-size: 0.8em;
-    font-weight: 600;
+    color: #fff;
+    font-size: 0.78em;
+    font-weight: 700;
+    background: var(--a);
   }
-  .txt {
-    display: grid;
-    min-width: 0;
-    flex: 1;
-  }
-  .txt b {
-    font-weight: 500;
-  }
-  .txt span {
-    color: var(--s-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .tag {
-    flex: none;
-    font-size: 0.75em;
-    padding: 0.2em 0.6em;
-    border: 1px solid var(--s-line);
+  .av--1 { background: #e0572a; }
+  .av--2 { background: #2f6fe4; }
+  .av--3 { background: #8b5cf6; }
+  .btn-s {
+    padding: 0.5em 1.05em;
     border-radius: 99px;
-    color: var(--s-muted);
-  }
-  .draft {
-    display: grid;
-    gap: 0.4em;
-    padding: 0.8em 0.9em;
-    background: var(--s-fg);
-    color: #111;
-    border-radius: 0.45em;
-  }
-  .draft .mono {
-    color: #555;
+    background: var(--a);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.88em;
+    white-space: nowrap;
   }
   .actions {
     display: flex;
@@ -485,444 +842,422 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
     align-items: center;
     justify-content: flex-end;
   }
-  .btn-s {
-    padding: 0.5em 1em;
-    border-radius: 99px;
-    background: var(--s-fg);
-    color: #111;
-    font-weight: 500;
-    font-size: 0.9em;
-  }
   .ok {
-    font-size: 0.9em;
-    color: var(--s-fg);
-    font-weight: 500;
-  }
-
-  /* fleet and growth kpis */
-  .kpis {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6em;
-  }
-  .kpis div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0 0.1em;
-    padding: 0.7em 0.8em;
-    border: 1px solid var(--s-line);
-    border-radius: 0.45em;
-  }
-  .kpis .mono {
-    flex-basis: 100%;
-    margin-bottom: 0.3em;
-  }
-  .kpis b {
-    font-size: 2em;
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .kpis i {
-    font-style: normal;
-    color: var(--s-muted);
-  }
-  .devices {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-  }
-  .devices li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.55em 0;
-    border-bottom: 1px solid var(--s-line);
-  }
-  .dev {
-    display: flex;
-    gap: 0.75em;
-    align-items: baseline;
-  }
-  .dev b {
-    font-weight: 500;
-  }
-  .dev span {
-    color: var(--s-muted);
-    font-size: 0.85em;
-  }
-  .status {
-    font-size: 0.8em;
-    padding: 0.2em 0.65em;
+    padding: 0.35em 0.8em;
     border-radius: 99px;
-    background: var(--s-fg);
-    color: #111;
-    font-weight: 500;
+    background: #e3f6ea;
+    color: #13804a;
+    font-size: 0.88em;
+    font-weight: 600;
   }
   .progress {
     display: flex;
     align-items: center;
     gap: 0.8em;
+    font-size: 0.85em;
+  }
+  .pl {
+    color: var(--sub);
+    font-weight: 500;
+  }
+  .pv {
+    font-weight: 600;
+    color: var(--a);
   }
   .track {
     flex: 1;
-    height: 0.35em;
-    background: #2b2b2b;
+    height: 0.5em;
+    background: var(--soft);
     border-radius: 99px;
     overflow: hidden;
   }
   .fill {
     display: block;
     height: 100%;
-    background: var(--s-fg);
-    transform-origin: left;
-  }
-
-  /* growth */
-  .chart {
-    width: 100%;
-    height: 9em;
-    overflow: visible;
-  }
-  .chart .axis {
-    stroke: #444;
-    stroke-width: 0.3;
-  }
-  .chart .grid {
-    stroke: #2a2a2a;
-    stroke-width: 0.3;
-    stroke-dasharray: 1 1;
-  }
-  .chart .line {
-    fill: none;
-    stroke: var(--s-fg);
-    stroke-width: 0.9;
-    vector-effect: non-scaling-stroke;
-    stroke-width: 2px;
-    stroke-linejoin: round;
-  }
-  .chart .area {
-    fill: rgb(243 243 241 / 0.08);
-    stroke: none;
-  }
-  .sources {
-    display: grid;
-    gap: 0.35em;
-    font-size: 0.85em;
-    color: var(--s-muted);
-  }
-  .sources > span {
-    display: grid;
-    grid-template-columns: 1fr 4em;
-    align-items: center;
-    gap: 0.6em;
-  }
-  .sources .b {
-    display: block;
-  }
-  .sources i {
-    transform-origin: left;
-  }
-  .sources > span:nth-child(1) i {
-    width: 74%;
-  }
-  .sources > span:nth-child(2) i {
-    width: 50%;
-  }
-  .sources > span:nth-child(3) i {
-    width: 37%;
-  }
-  .sources i {
-    display: block;
-    flex: none;
-    height: 0.45em;
-    background: var(--s-fg);
     border-radius: 99px;
-  }
-
-  /* flow */
-  .flow {
-    display: flex;
-    align-items: center;
-    padding-block: 0.5em;
-  }
-  .node {
-    flex: none;
-    padding: 0.55em 0.8em;
-    border: 1px solid var(--s-line);
-    border-radius: 0.45em;
-    font-size: 0.9em;
-    white-space: nowrap;
-  }
-  .node--hi {
-    background: var(--s-fg);
-    color: #111;
-    border-color: var(--s-fg);
-    font-weight: 500;
-  }
-  .wire {
-    flex: 1;
-    min-width: 1em;
-    height: 1px;
-    background: var(--s-muted);
+    background: linear-gradient(90deg, var(--a), color-mix(in srgb, var(--a) 60%, #fff));
     transform-origin: left;
   }
-  .rows {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
+  [dir='rtl'] .fill,
+  [dir='rtl'] .wire {
+    transform-origin: right;
   }
-  .rows td {
-    padding: 0.55em 0;
-    border-bottom: 1px solid var(--s-line);
-  }
-  .rows td:nth-child(2) {
-    text-align: right;
-    padding-right: 1em;
-  }
-  .rows td:last-child {
-    text-align: right;
-    width: 4.5em;
-  }
-  .rows .flag {
-    font-size: 0.8em;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+  [dir='rtl'] .fill {
+    background: linear-gradient(270deg, var(--a), color-mix(in srgb, var(--a) 60%, #fff));
   }
 
-  .muted {
-    color: var(--s-muted);
-  }
-  .logo-s {
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    font-size: 0.8em;
-  }
-
-  /* website */
+  /* ---------- website ---------- */
   .site-wrap {
     position: relative;
-    width: min(100%, 36em);
-    padding-right: 3.5em;
-    padding-bottom: 1.5em;
+    width: min(100%, 37em);
+    padding-inline-end: 3.8em;
+    padding-bottom: 1.6em;
   }
   .browser {
-    background: var(--s-card);
-    border: 1px solid var(--s-line);
-    border-radius: 0.6em;
+    background: #fffaf3;
+    border-radius: 0.7em;
     overflow: hidden;
-    box-shadow: 0 2em 4em -1.5em rgb(0 0 0 / 0.7);
+    box-shadow: 0 2em 4em -1.5em rgb(0 0 0 / 0.65);
   }
   .b-bar {
     display: flex;
     align-items: center;
     gap: 1em;
-    padding: 0.6em 0.8em;
-    border-bottom: 1px solid var(--s-line);
+    padding: 0.55em 0.8em;
+    background: #efe7dc;
   }
   .dots {
     display: flex;
     gap: 0.35em;
   }
   .dots i {
-    width: 0.55em;
-    height: 0.55em;
+    width: 0.6em;
+    height: 0.6em;
     border-radius: 50%;
-    background: #3a3a3a;
+    background: #ff5f57;
   }
+  .dots i:nth-child(2) { background: #febc2e; }
+  .dots i:nth-child(3) { background: #28c840; }
   .url {
     flex: 1;
-    padding: 0.25em 0.8em;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.2em 0.8em;
     border-radius: 99px;
-    background: #242424;
-    color: var(--s-muted);
-    font-size: 0.8em;
+    background: #fff;
+    color: #7d746a;
+    font-size: 0.78em;
+  }
+  .lock {
+    width: 0.75em;
+    fill: none;
+    stroke: #4a9b5b;
+    stroke-width: 1.4;
   }
   .b-page {
     display: grid;
-    gap: 1.1em;
-    padding: 1em 1.2em 1.3em;
+    gap: 1em;
+    padding: 0.9em 1.1em 1.2em;
   }
   .b-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1em;
+    font-size: 0.82em;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #1f3b2d;
+  }
+  .sun {
+    width: 1.4em;
+    fill: #e9a23b;
   }
   .links {
     display: flex;
-    gap: 0.6em;
-  }
-  .links i {
-    width: 2.2em;
-    height: 0.3em;
-    border-radius: 99px;
-    background: #3a3a3a;
+    gap: 1.1em;
+    color: #5e554b;
   }
   .lang {
-    font-size: 0.75em;
-    color: var(--s-muted);
+    padding: 0.15em 0.6em;
+    border: 1px solid #d9cdbf;
+    border-radius: 99px;
+    color: #5e554b;
+    font-size: 0.9em;
   }
   .b-hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1em;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 1.1em;
     align-items: center;
   }
   .b-copy {
     display: grid;
-    gap: 0.5em;
+    gap: 0.45em;
     justify-items: start;
   }
-  .ln {
-    display: block;
-    height: 0.75em;
-    border-radius: 0.2em;
-    background: var(--s-fg);
-    transform-origin: left;
+  .w-eye {
+    color: #c2410c;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .ln-1 {
-    width: 95%;
+  [lang='ar'] .w-eye {
+    letter-spacing: 0;
   }
-  .ln-2 {
-    width: 80%;
+  .headline {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.55em;
+    line-height: 1.12;
+    color: #1f3b2d;
+    font-weight: 700;
   }
-  .ln-3 {
-    width: 55%;
-    height: 0.45em;
-    background: #4a4a4a;
+  [lang='ar'] .headline {
+    font-family: inherit;
+    font-size: 1.35em;
+    line-height: 1.4;
+  }
+  .sub {
+    color: #6f655a;
+    font-size: 0.8em;
+  }
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    margin-top: 0.3em;
+  }
+  .cta-s,
+  .cta-o {
+    padding: 0.45em 0.95em;
+    border-radius: 99px;
+    font-size: 0.74em;
+    font-weight: 700;
+    white-space: nowrap;
   }
   .cta-s {
-    margin-top: 0.4em;
-    padding: 0.35em 0.9em;
-    border-radius: 99px;
-    background: var(--s-fg);
-    color: #111;
-    font-size: 0.75em;
-    font-weight: 600;
+    background: #e0572a;
+    color: #fff;
+    box-shadow: 0 0.4em 0.9em -0.4em rgb(224 87 42 / 0.8);
+  }
+  .cta-o {
+    border: 1px solid #1f3b2d;
+    color: #1f3b2d;
+  }
+  .b-img,
+  .p-img {
+    display: block;
+    border-radius: 0.6em;
+    overflow: hidden;
+    background: linear-gradient(140deg, #f0a64a, #c4492a 75%);
   }
   .b-img {
-    display: block;
     aspect-ratio: 4 / 3;
-    border-radius: 0.4em;
-    background:
-      radial-gradient(circle at 70% 30%, #6a6a6a 0 18%, transparent 19%),
-      linear-gradient(160deg, #3b3b3b, #1f1f1f 70%);
+  }
+  .b-img :global(svg),
+  .p-img :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   .b-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.6em;
   }
-  .b-cards span {
-    height: 2.6em;
-    border-radius: 0.35em;
-    background: #262626;
-    border: 1px solid var(--s-line);
+  .mi {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.5em;
+    border-radius: 0.55em;
+    background: #fff;
+    box-shadow: 0 0.2em 0.8em -0.3em rgb(80 50 20 / 0.25);
+    min-width: 0;
+  }
+  .mi-pic {
+    flex: none;
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 50%;
+    border: 0.22em solid #fff;
+    box-shadow: 0 0 0 1px #eadfd2;
+  }
+  .mi-pic--rice {
+    background:
+      radial-gradient(circle at 35% 40%, #8a4b2a 0 18%, transparent 19%),
+      radial-gradient(circle at 65% 60%, #6f9e3a 0 10%, transparent 11%),
+      #f2c14e;
+  }
+  .mi-pic--mezze {
+    background:
+      conic-gradient(#e7c88f 0 33%, #6f9e3a 0 66%, #d9452b 0);
+  }
+  .mi-pic--sweet {
+    background:
+      radial-gradient(circle at 50% 50%, #6f9e3a 0 12%, transparent 13%),
+      repeating-linear-gradient(45deg, #f08c2b 0 3px, #e06f17 3px 6px);
+  }
+  .mi-t {
+    display: grid;
+    min-width: 0;
+    line-height: 1.25;
+  }
+  .mi-t b {
+    font-size: 0.74em;
+    font-weight: 650;
+    color: #2b241d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mi-t i {
+    font-style: normal;
+    font-size: 0.7em;
+    color: #c2410c;
+    font-weight: 600;
   }
   .phone {
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     bottom: 0;
-    width: 8.5em;
+    width: 9em;
     display: grid;
-    gap: 0.45em;
+    gap: 0.5em;
     justify-items: start;
-    padding: 1.1em 0.7em 0.9em;
-    background: #0e0e0e;
-    border: 1px solid #3a3a3a;
-    border-radius: 1.2em;
+    padding: 1.3em 0.65em 0.9em;
+    background: #fffaf3;
+    border: 0.35em solid #161616;
+    border-radius: 1.4em;
     box-shadow: 0 1.5em 3em -1em rgb(0 0 0 / 0.8);
   }
   .notch {
     position: absolute;
-    top: 0.4em;
+    top: 0.35em;
     left: 50%;
-    width: 2.4em;
-    height: 0.35em;
+    width: 2.6em;
+    height: 0.4em;
     border-radius: 99px;
-    background: #2a2a2a;
+    background: #161616;
     transform: translateX(-50%);
   }
-  .phone .p-img {
-    display: block;
+  .p-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    aspect-ratio: 1;
-    border-radius: 0.5em;
-    background:
-      radial-gradient(circle at 70% 30%, #6a6a6a 0 18%, transparent 19%),
-      linear-gradient(160deg, #3b3b3b, #1f1f1f 70%);
+    font-size: 0.7em;
+    letter-spacing: 0.08em;
+    color: #1f3b2d;
   }
-  .phone .ln-2 {
-    width: 90%;
+  .burger {
+    display: grid;
+    gap: 0.2em;
+  }
+  .burger i {
+    width: 1.1em;
+    height: 0.14em;
+    border-radius: 99px;
+    background: #1f3b2d;
+  }
+  .p-img {
+    width: 100%;
+    aspect-ratio: 4 / 3.2;
+  }
+  .p-h {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 0.85em;
+    line-height: 1.15;
+    color: #1f3b2d;
+  }
+  [lang='ar'] .p-h {
+    font-family: inherit;
+    line-height: 1.45;
+  }
+  .phone .cta-s {
+    justify-self: stretch;
+    text-align: center;
+    font-size: 0.7em;
   }
   .score {
     position: absolute;
-    left: -0.6em;
-    bottom: 0.2em;
+    inset-inline-start: -0.5em;
+    bottom: 0.1em;
     display: flex;
-    align-items: baseline;
-    gap: 0.35em;
-    padding: 0.45em 0.8em;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.45em 0.9em 0.45em 0.55em;
     border-radius: 99px;
-    background: var(--s-fg);
-    color: #111;
+    background: #fff;
+    color: #2b241d;
     font-size: 0.85em;
     font-weight: 500;
+    box-shadow: 0 1em 2em -0.8em rgb(0 0 0 / 0.6);
+  }
+  [dir='rtl'] .score {
+    padding: 0.45em 0.55em 0.45em 0.9em;
+  }
+  .ring {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, #fff 0 55%, transparent 56%),
+      conic-gradient(#16a34a 0 98%, #e5e7eb 0);
   }
   .score b {
     font-size: 1.2em;
+    color: #15803d;
     font-variant-numeric: tabular-nums;
   }
 
-  /* saas */
+  /* ---------- saas (salon) ---------- */
   .app {
-    grid-template-columns: 3.2em 1fr;
-    gap: 1.1em;
+    grid-template-columns: 3.1em 1fr;
+    gap: 1em;
+    padding: 0;
+    overflow: hidden;
   }
   .side {
     display: grid;
     align-content: start;
     justify-items: center;
     gap: 0.9em;
-    padding-right: 0.9em;
-    border-right: 1px solid var(--s-line);
+    padding: 1.1em 0;
+    background: linear-gradient(180deg, #3b1239, #1f0b20);
+  }
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 0.5em;
+    background: linear-gradient(135deg, #f472b6, #c0398a);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9em;
   }
   .side i {
     width: 1.3em;
     height: 1.3em;
-    border-radius: 0.35em;
-    background: #2b2b2b;
+    border-radius: 0.4em;
+    background: rgb(255 255 255 / 0.12);
   }
   .side i.on {
-    background: var(--s-fg);
+    background: rgb(244 114 182 / 0.85);
   }
   .app-main {
     display: grid;
-    gap: 0.9em;
+    gap: 0.85em;
     min-width: 0;
+    padding: 1.1em;
+    padding-inline-start: 0;
   }
-  .kpis--3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .kpis--3 b {
-    font-size: 1.6em;
+  .k--1 { --kc: #c0398a; }
+  .k--2 { --kc: #f59e0b; }
+  .k--3 { --kc: #10b981; }
+  .bars-wrap {
+    display: grid;
+    gap: 0.3em;
   }
   .bars {
     display: flex;
     align-items: flex-end;
     gap: 0.5em;
-    height: 5.5em;
-    padding-bottom: 0.2em;
-    border-bottom: 1px solid var(--s-line);
+    height: 5em;
   }
   .bars span {
     flex: 1;
-    border-radius: 0.25em 0.25em 0 0;
-    background: #3a3a3a;
+    border-radius: 0.3em 0.3em 0.1em 0.1em;
+    background: #f5d0e6;
     transform-origin: bottom;
   }
   .bars .bar-0 { height: 40%; }
@@ -930,38 +1265,94 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
   .bars .bar-2 { height: 48%; }
   .bars .bar-3 { height: 70%; }
   .bars .bar-4 { height: 62%; }
-  .bars .bar-5 { height: 88%; background: var(--s-fg); }
+  .bars .bar-5 { height: 88%; background: linear-gradient(180deg, #f472b6, #c0398a); }
   .bars .bar-6 { height: 76%; }
+  .days {
+    display: flex;
+    gap: 0.5em;
+    font-size: 0.68em;
+    color: var(--sub);
+  }
+  .days span {
+    flex: 1;
+    text-align: center;
+  }
   .appts {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
+    gap: 0.4em;
   }
   .appts li {
     display: grid;
-    grid-template-columns: 3.5em 1fr auto;
+    grid-template-columns: auto 1fr auto;
     gap: 0.6em;
     align-items: center;
-    padding: 0.5em 0;
-    border-bottom: 1px solid var(--s-line);
-    font-size: 0.92em;
+    padding: 0.4em 0.55em;
+    border-radius: 0.5em;
+    background: var(--soft);
+    font-size: 0.88em;
+  }
+  .time {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--a);
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    min-width: 0;
+  }
+  .who .av {
+    width: 1.8em;
+    height: 1.8em;
+  }
+  .appts li:nth-child(1) .av { background: #c0398a; }
+  .appts li:nth-child(2) .av { background: #f59e0b; }
+  .what {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .pill {
     font-size: 0.78em;
-    padding: 0.15em 0.6em;
+    padding: 0.2em 0.65em;
     border-radius: 99px;
-    background: var(--s-fg);
-    color: #111;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
   }
-  .pill--o {
-    background: transparent;
-    color: var(--s-fg);
-    border: 1px solid var(--s-line);
-  }
+  .pill--ok { background: #dcfce7; color: #15803d; }
+  .pill--info { background: #fef3c7; color: #b45309; }
 
-  /* hr */
+  /* ---------- hr ---------- */
+  .person {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    min-width: 0;
+  }
+  .av--big {
+    width: 2.5em;
+    height: 2.5em;
+    font-size: 0.85em;
+    background: linear-gradient(135deg, #2dd4bf, #0f766e);
+  }
+  .pn {
+    display: grid;
+    min-width: 0;
+  }
+  .pn b {
+    font-weight: 650;
+  }
+  .pn small {
+    font-size: 0.8em;
+    color: var(--sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .fill--75 {
     width: 75%;
   }
@@ -970,89 +1361,467 @@ const pts = growth.map((v, i) => `${(i / (growth.length - 1)) * 100},${40 - (v /
     margin: 0;
     padding: 0;
     display: grid;
+    gap: 0.35em;
   }
   .checks li {
     display: flex;
     align-items: center;
-    gap: 0.75em;
-    padding: 0.6em 0;
-    border-bottom: 1px solid var(--s-line);
+    gap: 0.7em;
+    padding: 0.5em 0.6em;
+    border-radius: 0.5em;
+    background: #f1faf8;
+  }
+  .checks li.pending {
+    background: transparent;
+    border: 1px dashed #b8d9d4;
+    color: var(--sub);
   }
   .box {
     flex: none;
     display: grid;
     place-items: center;
-    width: 1.4em;
-    height: 1.4em;
-    border-radius: 0.35em;
-    background: var(--s-fg);
-    color: #111;
-    font-size: 0.8em;
-    font-weight: 700;
+    width: 1.45em;
+    height: 1.45em;
+    border-radius: 50%;
+    background: var(--a);
+    color: #fff;
+    font-size: 0.78em;
+    font-weight: 800;
   }
   .box--empty {
     background: transparent;
-    border: 1px solid #555;
+    border: 2px solid #9ccfc8;
   }
   .leave {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 1em;
-    padding: 0.7em 0.8em;
-    border: 1px solid var(--s-line);
-    border-radius: 0.45em;
+    gap: 0.7em;
+    padding: 0.65em 0.75em;
+    border-radius: 0.6em;
+    background: #fff7e6;
+    border: 1px solid #fde3a7;
   }
-  .leave > span:first-child {
+  .lv-ic {
+    flex: none;
     display: grid;
+    place-items: center;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 0.5em;
+    background: #f59e0b;
   }
-  .leave b {
-    font-weight: 500;
+  .lv-ic svg {
+    width: 1.2em;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+  .lv-t {
+    flex: 1;
+    display: grid;
+    min-width: 0;
+  }
+  .lv-t b {
+    font-weight: 650;
+  }
+  .lv-t span {
+    font-size: 0.85em;
+    color: #8a6a2b;
+  }
+  .scene--hr .btn-s {
+    background: #16a34a;
   }
 
-  /* campaign */
+  /* ---------- campaign ---------- */
+  .moon {
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    box-shadow: inset -0.3em 0.05em 0 0 #c8901f;
+    transform: rotate(-20deg);
+  }
+  [dir='rtl'] .moon {
+    box-shadow: inset 0.3em 0.05em 0 0 #c8901f;
+    transform: rotate(20deg);
+  }
   .ads {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.6em;
   }
   .ad {
     display: grid;
     gap: 0.3em;
-    padding: 0.45em 0.45em 0.6em;
-    border: 1px solid var(--s-line);
-    border-radius: 0.45em;
+    padding: 0.4em 0.4em 0.6em;
+    border-radius: 0.6em;
+    background: var(--soft);
     min-width: 0;
   }
   .ad-img {
     display: block;
     aspect-ratio: 1;
-    border-radius: 0.3em;
+    border-radius: 0.45em;
+    overflow: hidden;
   }
-  .ad-img--1 {
-    background:
-      radial-gradient(circle at 30% 35%, #e9e9e6 0 14%, transparent 15%),
-      linear-gradient(180deg, #4a4a4a, #1d1d1d);
-  }
-  .ad-img--2 {
-    background:
-      radial-gradient(circle at 65% 30%, #bdbdbd 0 10%, transparent 11%),
-      repeating-linear-gradient(135deg, #2e2e2e 0 6px, #232323 6px 12px);
-  }
-  .ad-img--3 {
-    background:
-      linear-gradient(0deg, #e9e9e6 0 22%, transparent 22%),
-      linear-gradient(160deg, #3d3d3d, #191919);
+  .ad-img :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   .ad-t {
-    font-size: 0.85em;
-    font-weight: 500;
+    font-size: 0.8em;
+    font-weight: 650;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .ad-s {
+    justify-self: start;
+    padding: 0.1em 0.6em;
+    border-radius: 99px;
+    background: #1b2550;
+    color: #fff;
+    font-size: 0.68em;
+    font-weight: 600;
+  }
+  .scene--campaign .k--1 { --kc: #2c3a78; }
+  .scene--campaign .k--2 { --kc: #c8901f; }
+  .scene--campaign .k--3 { --kc: #16a34a; }
+
+  /* ---------- inbox ---------- */
+  .msgs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4em;
+  }
+  .msgs li {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    padding: 0.5em 0.6em;
+    border-radius: 0.55em;
+    background: var(--soft);
+  }
+  .msgs li:first-child {
+    background: #e9f8ef;
+    box-shadow: inset 0.22em 0 0 var(--a);
+  }
+  [dir='rtl'] .msgs li:first-child {
+    box-shadow: inset -0.22em 0 0 var(--a);
+  }
+  .txt {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+  }
+  .txt b {
+    font-weight: 650;
+  }
+  .txt span {
+    color: var(--sub);
+    font-size: 0.92em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tag {
+    flex: none;
     font-size: 0.72em;
-    color: var(--s-muted);
+    padding: 0.2em 0.65em;
+    border-radius: 99px;
+    font-weight: 650;
+  }
+  .tag--wa { background: #dcf8e5; color: #128c4a; }
+  .tag--web { background: #e2ecfd; color: #2357c2; }
+  .tag--mail { background: #fdebdc; color: #c2410c; }
+  .draft {
+    display: grid;
+    gap: 0.35em;
+    padding: 0.75em 0.9em;
+    background: #dcf8c6;
+    color: #12301f;
+    border-radius: 0.8em;
+    border-end-end-radius: 0.2em;
+    margin-inline-start: 2.5em;
+  }
+  .draft p {
+    margin: 0;
+  }
+  .dl {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: 0.75em;
+    font-weight: 650;
+    color: #1d7a45;
+  }
+  .spark {
+    color: #8b5cf6;
+  }
+
+  /* ---------- fleet ---------- */
+  .shield svg {
+    display: block;
+    width: 1.3em;
+    fill: var(--a);
+  }
+  .shield .tick {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .scene--fleet .k--1 { --kc: #2f6fe4; }
+  .scene--fleet .k--2 { --kc: #16a34a; }
+  .devices {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35em;
+  }
+  .devices li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.4em 0.55em;
+    border-radius: 0.5em;
+    background: var(--soft);
+  }
+  .dev {
+    display: flex;
+    gap: 0.6em;
+    align-items: center;
+    min-width: 0;
+  }
+  .dev-ic {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 0.5em;
+    background: var(--a-soft);
+  }
+  .dev-ic svg {
+    width: 1.25em;
+    fill: none;
+    stroke: var(--a);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+  .dn {
+    display: flex;
+    gap: 0.6em;
+    align-items: baseline;
+    min-width: 0;
+  }
+  .dn b {
+    font-weight: 600;
+  }
+  .dn span {
+    color: var(--sub);
+    font-size: 0.85em;
+    white-space: nowrap;
+  }
+  .status {
+    flex: none;
+    font-size: 0.78em;
+    padding: 0.2em 0.65em;
+    border-radius: 99px;
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 650;
+  }
+
+  /* ---------- growth ---------- */
+  .scene--growth .k--1 { --kc: #7c3aed; }
+  .scene--growth .k--2 { --kc: #10b981; }
+  .scene--growth .k--2 b {
+    color: #059669;
+  }
+  .chart {
+    width: 100%;
+    height: 8.5em;
+    overflow: visible;
+  }
+  .chart .axis {
+    stroke: #d9d4ce;
+    stroke-width: 0.3;
+  }
+  .chart .grid {
+    stroke: #ece8e3;
+    stroke-width: 0.3;
+    stroke-dasharray: 1 1;
+  }
+  .chart .line {
+    fill: none;
+    stroke: #7c3aed;
+    vector-effect: non-scaling-stroke;
+    stroke-width: 2.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .chart .area {
+    fill: url(#g-area);
+    stroke: none;
+  }
+  .sources {
+    display: grid;
+    gap: 0.4em;
+    font-size: 0.85em;
+    color: var(--sub);
+  }
+  .src {
+    display: grid;
+    grid-template-columns: 1fr 5.5em;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .sources .b {
+    display: block;
+    height: 0.55em;
+    border-radius: 99px;
+    background: var(--soft);
+    overflow: hidden;
+  }
+  .sources i {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    transform-origin: left;
+  }
+  [dir='rtl'] .sources i {
+    transform-origin: right;
+  }
+  .src--1 i { width: 74%; background: #7c3aed; }
+  .src--2 i { width: 50%; background: #f59e0b; }
+  .src--3 i { width: 37%; background: #ec4899; }
+
+  /* ---------- flow ---------- */
+  .chip--auto {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  .flow {
+    display: flex;
+    align-items: center;
+    padding-block: 0.4em;
+  }
+  .node {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.5em 0.75em;
+    border-radius: 0.55em;
+    background: var(--soft);
+    font-size: 0.88em;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .n-ic {
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 0.2em;
+  }
+  .node--1 .n-ic { background: #2f6fe4; }
+  .node--2 .n-ic { background: #d97706; }
+  .node--3 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+  }
+  .node--3 .n-ic { background: #fff; }
+  .wire {
+    flex: 1;
+    min-width: 1em;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, #d97706 0 5px, transparent 5px 9px);
+    transform-origin: left;
+  }
+  .rows {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  .rows td {
+    padding: 0.5em 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .rows td:nth-child(2) {
+    text-align: end;
+    padding-inline-end: 1em;
+    font-weight: 600;
+  }
+  .rows td:last-child {
+    text-align: end;
+    width: 5em;
+  }
+  .okc {
+    display: inline-grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 0.8em;
+    font-weight: 800;
+  }
+  .flag {
+    padding: 0.15em 0.6em;
+    border-radius: 99px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.78em;
+    font-weight: 650;
+  }
+
+  /* ---------- small containers (phones) ---------- */
+  @container (max-width: 26rem) {
+    .stage {
+      font-size: 10px;
+      padding-top: 3rem;
+    }
+    .ex {
+      inset-block-start: 0.7rem;
+      inset-inline-start: 0.7rem;
+    }
+    .b-cards .mi:nth-child(3) {
+      display: none;
+    }
+    .b-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-inline-end: 4.5em;
+    }
+    .site-wrap {
+      padding-inline-end: 2.6em;
+    }
+    .phone {
+      width: 7.6em;
+    }
+    .links {
+      display: none;
+    }
+    .b-hero {
+      grid-template-columns: 1.2fr 1fr;
+    }
+    .mi-pic {
+      display: none;
+    }
+    .app {
+      grid-template-columns: 2.6em 1fr;
+    }
+    .kpis--3 .k b {
+      font-size: 1.3em;
+    }
+    .node {
+      padding: 0.45em 0.55em;
+    }
   }
 </style>
