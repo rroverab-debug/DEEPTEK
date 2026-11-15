@@ -204,8 +204,11 @@ function scenes() {
       groups.set(n, [...(groups.get(n) ?? []), el]);
     });
 
+    const loops = Boolean(stage.dataset.batches);
     const tl = gsap.timeline({
-      repeat: -1,
+      // Only scenes with rotating batches (the hero feed) loop. Project demos
+      // build up once and then stay complete, like a real screen.
+      repeat: loops ? -1 : 0,
       repeatDelay: 0.1,
       paused: true,
       defaults: { ease: EASE },
@@ -279,10 +282,12 @@ function scenes() {
         });
       });
 
-    tl.to({}, { duration: 6 });
-    tl.to(stage, { opacity: 0, duration: 0.3, ease: 'power1.in' });
-    // The build-up plays at double speed; the hold above is scaled too (about 3s).
-    tl.timeScale(2);
+    if (loops) {
+      tl.to({}, { duration: 6 });
+      tl.to(stage, { opacity: 0, duration: 0.3, ease: 'power1.in' });
+    }
+    // Looping scenes play at double speed (hold about 3s); one-off demos at triple.
+    tl.timeScale(loops ? 2 : 3);
 
     ScrollTrigger.create({
       trigger: scene,
