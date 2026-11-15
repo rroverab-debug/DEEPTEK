@@ -5,7 +5,7 @@
 // motion.ts sets --max (how far the page can scroll) so CSS can auto-scroll
 // it like a live site; without that, or with reduced motion, it stays at the top.
 import type { Lang } from '../i18n';
-import { heroPhoto, dishPhoto, interiorPhoto } from './scene-art';
+import { heroPhoto, dishPhoto } from './scene-art';
 
 interface Props {
   kind: 'property' | 'restaurant';
@@ -33,7 +33,9 @@ const copy = {
         ['4', 'bedrooms'],
         ['15', 'minutes to the city'],
       ],
-      gal: ['Finished and ready to move in', 'Landscaped private gardens'],
+      gal: ['Furnished and ready to move in', 'Landscaped private garden'],
+      bandK: 'Villas',
+      band: 'Luxury villa homes with private gardens and pools',
       formK: 'Contact',
       formT: 'Leave your details and we will arrange a private viewing or a live video tour. We reply the same day.',
       fields: ['Name', 'Phone', 'Email'],
@@ -56,7 +58,9 @@ const copy = {
         ['4', 'غرف نوم'],
         ['15', 'دقيقة إلى المدينة'],
       ],
-      gal: ['مكتملة وجاهزة للسكن', 'حدائق خاصة منسّقة'],
+      gal: ['مفروشة وجاهزة للسكن', 'حديقة خاصة منسّقة'],
+      bandK: 'الفلل',
+      band: 'فلل فاخرة بحدائق ومسابح خاصة',
       formK: 'تواصل',
       formT: 'اترك بياناتك وسنرتب لك معاينة خاصة أو جولة فيديو مباشرة. نرد في اليوم نفسه.',
       fields: ['الاسم', 'الهاتف', 'البريد'],
@@ -194,14 +198,23 @@ const villa = mobile
   {
     kind === 'property' ? (
       <section class="lp-gal">
-        <span class="lp-shot">
-          <Fragment set:html={interiorPhoto} />
+        <span class="lp-shot lp-shot--living">
+          <img class="lp-photo lp-fill" src="/demo/wadi-living.webp" alt="" width="610" height="424" loading="lazy" decoding="async" />
           <span class="lp-cap">{c.gal[0]}</span>
         </span>
-        <span class="lp-shot">
-          <img class="lp-photo lp-photo--garden" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+        <span class="lp-shot lp-shot--pool">
+          <img class="lp-photo lp-fill" src="/demo/wadi-pool.webp" alt="" width="596" height="615" loading="lazy" decoding="async" />
           <span class="lp-cap">{c.gal[1]}</span>
         </span>
+        {mobile && (
+          <span class="lp-shot lp-shot--band">
+            <img class="lp-photo lp-fill" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+            <span class="lp-cap lp-cap--big">
+              <span class="lp-k">{c.bandK}</span>
+              <b>{c.band}</b>
+            </span>
+          </span>
+        )}
       </section>
     ) : (
       <section class="lp-menu">
@@ -326,10 +339,13 @@ const villa = mobile
   .lp--m .lp-photo {
     object-position: 72% 50%;
   }
-  .lp-shot .lp-photo--garden {
+  .lp-shot .lp-fill {
     position: absolute;
     inset: 0;
-    object-position: 18% 60%;
+    object-position: 50% 50%;
+  }
+  .lp-shot--band .lp-fill {
+    object-position: 20% 40%;
   }
   .lp-photo--door {
     object-position: 80% 70%;
@@ -560,7 +576,8 @@ const villa = mobile
   /* gallery */
   .lp-gal {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
     gap: 0.8em;
     padding: 0 2em 4em;
   }
@@ -570,9 +587,28 @@ const villa = mobile
   }
   .lp-shot {
     position: relative;
-    aspect-ratio: 4 / 3.4;
-    border-radius: 0.4em;
+    aspect-ratio: 8 / 7;
+    border-radius: 0.6em;
     overflow: hidden;
+  }
+  .lp-shot--pool {
+    aspect-ratio: 8 / 9;
+  }
+  .lp--m .lp-shot {
+    aspect-ratio: 4 / 3;
+  }
+  .lp--m .lp-shot--pool {
+    aspect-ratio: 1;
+  }
+  .lp-cap--big {
+    display: grid;
+    gap: 0.3em;
+    padding: 0.8em 0.9em;
+  }
+  .lp-cap--big b {
+    font-size: 1.3em;
+    font-weight: 400;
+    line-height: 1.25;
   }
   .lp-cap {
     position: absolute;

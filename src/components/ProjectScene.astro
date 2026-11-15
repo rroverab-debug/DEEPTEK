@@ -8,7 +8,7 @@
 import type { Project } from '../data/site';
 import { langOf, dirOf } from '../i18n';
 import AppShell from './AppShell.astro';
-import { foodDefs, propDefs, adArt } from './scene-art';
+import { foodDefs, adArt } from './scene-art';
 import LiveSite from './LiveSite.astro';
 
 interface Props {
@@ -800,7 +800,6 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
     {
       scene === 'growth' && (
         <div class="duo">
-          <Fragment set:html={propDefs} />
           <div class="laptop" data-step="1">
             <div class="lid">
               <span class="cam" />
