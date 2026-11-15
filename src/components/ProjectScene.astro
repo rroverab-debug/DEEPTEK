@@ -280,6 +280,25 @@ const t = {
   },
 }[lang];
 
+const m = {
+  en: {
+    saas: { brand: 'Glow Salon', h: 'Book an appointment', svc: 'Hair colour · 90 min', days: ['Wed', 'Thu', 'Fri'], cta: 'Confirm booking', note: 'Pay online or at the salon' },
+    hr: { h: 'Welcome, Sara', first: 'Your first day: Sunday, 9:00', tasks: ['Upload passport copy', 'Sign your contract', 'Read the staff handbook'], cta: 'Request leave' },
+    flow: { h: 'Month-end report is ready', when: 'Just now', k: 'Net profit', v: 'AED 0.45M', review: '3 items need review', cta: 'Review now' },
+    ad: { shop: 'Shop now', cap: 'The Ramadan collection is here, with free delivery across the GCC.' },
+    chat: { av: 'C', name: 'Clinic', online: 'Replies in minutes', type: 'Message', msgs: [['in', 'Do you have a slot on Thursday?'], ['out', 'Yes, Thursday 4:30pm is free at our Al Barsha branch. Shall I book it for you?'], ['in', 'Yes please'], ['out', 'Booked ✓ See you on Thursday at 4:30pm.']] },
+    auth: { h: 'Approve sign-in?', hint: 'Enter this number on the laptop', no: 'Deny', yes: 'Approve' },
+  },
+  ar: {
+    saas: { brand: 'صالون جلو', h: 'احجزي موعدًا', svc: 'صبغة شعر · 90 دقيقة', days: ['الأربعاء', 'الخميس', 'الجمعة'], cta: 'تأكيد الحجز', note: 'ادفعي أونلاين أو في الصالون' },
+    hr: { h: 'أهلًا يا سارة', first: 'يومك الأول: الأحد الساعة 9:00', tasks: ['رفع نسخة من الجواز', 'توقيع العقد', 'قراءة دليل الموظفين'], cta: 'طلب إجازة' },
+    flow: { h: 'تقرير نهاية الشهر جاهز', when: 'الآن', k: 'صافي الربح', v: '0.45 مليون د.إ', review: '3 بنود تحتاج مراجعة', cta: 'راجع الآن' },
+    ad: { shop: 'تسوق الآن', cap: 'وصلت مجموعة رمضان، مع توصيل مجاني لكل دول الخليج.' },
+    chat: { av: 'ع', name: 'العيادة', online: 'نرد خلال دقائق', type: 'رسالة', msgs: [['in', 'هل لديكم موعد يوم الخميس؟'], ['out', 'نعم، الخميس الساعة 4:30 مساءً متاح في فرع البرشاء. هل أحجزه لكِ؟'], ['in', 'نعم، من فضلك'], ['out', 'تم الحجز ✓ نراكِ الخميس الساعة 4:30 مساءً.']] },
+    auth: { h: 'الموافقة على تسجيل الدخول؟', hint: 'أدخل هذا الرقم على الحاسوب', no: 'رفض', yes: 'موافقة' },
+  },
+}[lang];
+
 const devices = [
   ['Finance-01', 'Windows 11 · Laptop', 'laptop'],
   ['Sales-07', 'macOS · MacBook', 'laptop'],
@@ -327,7 +346,13 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
 
     {
       scene === 'saas' && (
-        <AppShell url="app.glowbook.example" brand="Glow" nav={t.s.nav} icons={['home', 'cal', 'users', 'card', 'gear']} search={t.s.search} me="NA" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="app.glowbook.example" brand="Glow" nav={t.s.nav} icons={['home', 'cal', 'users', 'card', 'gear']} search={t.s.search} me="NA">
           <div class="head">
             <span class="hd">
               <b>{t.s.hello}</b>
@@ -387,12 +412,48 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             </tbody>
           </table>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--saas">
+                <span class="m-top"><span class="m-mark">G</span><b>{m.saas.brand}</b></span>
+                <b class="m-h">{m.saas.h}</b>
+                <span class="m-card m-svc"><span class="m-dot" />{m.saas.svc}</span>
+                <span class="m-days">{m.saas.days.map((d, i) => <span class:list={{ on: i === 1 }}>{d}</span>)}</span>
+                <span class="m-slots">{['10:00', '10:30', '11:15', '12:00'].map((x, i) => <span class:list={{ on: i === 2, off: i === 1 }}>{x}</span>)}</span>
+                <span class="m-btn">{m.saas.cta}</span>
+                <small class="m-note">{m.saas.note}</small>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
     {
       scene === 'hr' && (
-        <AppShell url="people.teamhub.example" brand="TeamHub" nav={t.h.nav} icons={['home', 'users', 'target', 'cal', 'doc']} active={2} search={t.h.search} me="HR" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="people.teamhub.example" brand="TeamHub" nav={t.h.nav} icons={['home', 'users', 'target', 'cal', 'doc']} active={2} search={t.h.search} me="HR">
           <div class="head">
             <span class="person">
               <span class="av av--big">{t.h.av}</span>
@@ -441,12 +502,46 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             <span class="btn-s" data-step="8" data-fx="pop">{t.h.ok}</span>
           </div>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--hr">
+                <span class="m-top"><span class="m-mark">T</span><b>TeamHub</b></span>
+                <b class="m-h">{m.hr.h}</b>
+                <span class="m-card m-hi">{m.hr.first}</span>
+                {m.hr.tasks.map((x, i) => <span class:list={['m-row', { done: i < 2 }]}><span class="m-tick">{i < 2 ? '✓' : ''}</span>{x}</span>)}
+                <span class="m-btn">{m.hr.cta}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
     {
       scene === 'campaign' && (
-        <AppShell url="ads.campaigndesk.example" brand="AdDesk" nav={t.c.nav} icons={['megaphone', 'doc', 'users', 'chart']} search={t.c.search} me="MK" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="ads.campaigndesk.example" brand="AdDesk" nav={t.c.nav} icons={['megaphone', 'doc', 'users', 'chart']} search={t.c.search} me="MK">
           <div class="head">
             <span class="hd">
               <b>{t.c.title}</b>
@@ -495,12 +590,50 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             </div>
           </div>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--ad">
+                <span class="m-post">
+                  <span class="ad-av" />
+                  <span class="m-who"><b>{t.c.brand}</b><small>{t.c.sp}</small></span>
+                  <span class="m-more">···</span>
+                </span>
+                <span class="m-adimg"><Fragment set:html={adArt[0]} /></span>
+                <span class="m-cta"><span>{m.ad.shop}</span><i>›</i></span>
+                <span class="m-icons"><i /><i /><i /></span>
+                <span class="m-cap"><b>{t.c.brand}</b> {m.ad.cap}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
     {
       scene === 'inbox' && (
-        <AppShell url="inbox.clinicdesk.example" brand="ClinicDesk" nav={t.i.nav} icons={['inbox', 'users', 'cal', 'doc', 'gear']} search={t.i.search} me="RC" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="inbox.clinicdesk.example" brand="ClinicDesk" nav={t.i.nav} icons={['inbox', 'users', 'cal', 'doc', 'gear']} search={t.i.search} me="RC">
           <div class="head">
             <span class="hd">
               <b>{t.i.title}</b>
@@ -534,12 +667,46 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             <span class="ok" data-step="7" data-fx="pop">{t.i.sent}</span>
           </div>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--chat">
+                <span class="m-chat-top"><span class="av av--2">{m.chat.av}</span><span class="m-who"><b>{m.chat.name}</b><small>{m.chat.online}</small></span></span>
+                <span class="m-thread">
+                  {m.chat.msgs.map(([who, text]) => <span class:list={['m-bub', who]}>{text}</span>)}
+                </span>
+                <span class="m-input"><span>{m.chat.type}</span><i /></span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
     {
       scene === 'fleet' && (
-        <AppShell url="it.devicehub.example" brand="DeviceHub" nav={t.f.nav} icons={['laptop', 'users', 'shield', 'cloud', 'chart']} search={t.f.search} me="IT" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="it.devicehub.example" brand="DeviceHub" nav={t.f.nav} icons={['laptop', 'users', 'shield', 'cloud', 'chart']} search={t.f.search} me="IT">
           <div class="head">
             <span class="hd">
               <b>{t.f.title}</b>
@@ -597,6 +764,36 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             <span class="pv">{t.f.done}</span>
           </div>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--auth">
+                <span class="m-top"><span class="m-mark">D</span><b>DeviceHub</b></span>
+                <span class="m-shield"><svg viewBox="0 0 20 20"><path d="M10 1.5 3 4.3v5c0 4.4 3 7.7 7 9.2 4-1.5 7-4.8 7-9.2v-5z" /><path d="m6.7 10 2.3 2.3 4.4-4.6" class="tick" /></svg></span>
+                <b class="m-h m-c">{m.auth.h}</b>
+                <small class="m-c m-sub" dir="ltr">Finance-01 · Windows 11</small>
+                <span class="m-code">47</span>
+                <small class="m-c m-sub">{m.auth.hint}</small>
+                <span class="m-two"><span class="m-btn m-btn--ghost">{m.auth.no}</span><span class="m-btn">{m.auth.yes}</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
@@ -635,7 +832,13 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
 
     {
       scene === 'flow' && (
-        <AppShell url="finance.ledgerly.example" brand="Ledgerly" nav={t.l.nav} icons={['home', 'chart', 'bank', 'flow', 'gear']} active={1} search={t.l.search} me="FN" step="1">
+        <div class="duo duo--app">
+          <div class="laptop" data-step="1">
+            <div class="lid">
+              <span class="cam" />
+              <div class="screen" data-live-view>
+                <div class="app-page" data-live-page>
+                  <AppShell url="finance.ledgerly.example" brand="Ledgerly" nav={t.l.nav} icons={['home', 'chart', 'bank', 'flow', 'gear']} active={1} search={t.l.search} me="FN">
           <div class="head">
             <span class="hd">
               <b>{t.l.title}</b>
@@ -671,6 +874,34 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
             <span class="ok" data-step="7" data-fx="pop">{t.l.done}</span>
           </div>
         </AppShell>
+                </div>
+              </div>
+            </div>
+            <div class="base">
+              <span class="notch-b" />
+            </div>
+          </div>
+          <div class="mphone" data-step="9" data-fx="pop">
+            <span class="island" />
+            <span class="sbar" dir="ltr">
+              <b>9:41</b>
+              <span class="sig">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            <div class="mscreen">
+              <div class="mapp mapp--flow">
+                <span class="m-top"><span class="m-mark">L</span><b>Ledgerly</b></span>
+                <span class="m-card m-alert"><b>{m.flow.h}</b><small>{m.flow.when}</small></span>
+                <span class="m-card m-big"><small>{m.flow.k}</small><b>{m.flow.v}</b><span class="m-spark" dir="ltr">{[30, 45, 38, 55, 50, 68, 74].map((h) => <i class={`h${h}`} />)}</span></span>
+                <span class="m-row warn"><span class="m-tick">!</span>{m.flow.review}</span>
+                <span class="m-btn">{m.flow.cta}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
   </div>
@@ -1092,6 +1323,415 @@ const bars = [40, 55, 48, 70, 62, 88, 76];
   .sig i:nth-child(3) { height: 0.8em; }
   .mscreen {
     border-radius: 0 0 1.45em 1.45em;
+  }
+
+
+  /* ---------- app demos in a laptop, with a phone companion ---------- */
+  .duo--app .screen {
+    background: #f6f8fb;
+  }
+  .app-page {
+    font-size: 2.3cqi;
+    animation: app-scroll 20s ease-in-out infinite paused;
+  }
+  :global([data-live-on]) > .app-page {
+    animation-play-state: running;
+  }
+  .app-page :global(.shell-win) {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  @keyframes app-scroll {
+    0%,
+    30% {
+      transform: translateY(0);
+    }
+    50%,
+    80% {
+      transform: translateY(calc(var(--max, 0px) * -1));
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-page {
+      animation: none;
+    }
+  }
+  .mapp {
+    display: grid;
+    align-content: start;
+    gap: 0.7em;
+    height: 100%;
+    padding: 0.9em 0.9em 1.1em;
+    background: #fff;
+    font-size: 6.2cqi;
+    line-height: 1.3;
+    color: #0f172a;
+  }
+  .mscreen {
+    background: #fff;
+  }
+  .m-top {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    font-size: 0.9em;
+  }
+  .m-mark {
+    display: grid;
+    place-items: center;
+    width: 1.7em;
+    height: 1.7em;
+    border-radius: 0.45em;
+    background: var(--a);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.85em;
+  }
+  .m-h {
+    font-size: 1.3em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .m-c {
+    text-align: center;
+    justify-self: center;
+  }
+  .m-sub {
+    color: var(--sub);
+    font-size: 0.78em;
+  }
+  .m-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.7em 0.8em;
+    border-radius: 0.7em;
+    background: var(--soft);
+    font-size: 0.86em;
+  }
+  .m-dot {
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+    background: var(--a);
+  }
+  .m-btn {
+    display: block;
+    padding: 0.75em;
+    border-radius: 0.7em;
+    background: var(--a);
+    color: #fff;
+    font-weight: 650;
+    font-size: 0.9em;
+    text-align: center;
+  }
+  .m-btn--ghost {
+    background: var(--soft);
+    color: #334155;
+  }
+  .m-note {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.72em;
+  }
+  .m-days,
+  .m-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4em;
+    font-size: 0.78em;
+    text-align: center;
+  }
+  .m-slots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .m-days span,
+  .m-slots span {
+    padding: 0.55em 0.2em;
+    border-radius: 0.55em;
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+  }
+  .m-days .on,
+  .m-slots .on {
+    background: var(--a);
+    border-color: var(--a);
+    color: #fff;
+    font-weight: 650;
+  }
+  .m-slots .off {
+    color: #cbd5e1;
+    text-decoration: line-through;
+  }
+  .m-hi {
+    background: var(--a-soft);
+    color: #115e59;
+    font-weight: 600;
+  }
+  .m-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.55em 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.84em;
+    color: var(--sub);
+  }
+  .m-row.done {
+    color: #0f172a;
+  }
+  .m-tick {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 50%;
+    border: 2px dashed #cbd5e1;
+    font-size: 0.75em;
+    font-weight: 800;
+  }
+  .m-row.done .m-tick {
+    border: 0;
+    background: var(--a);
+    color: #fff;
+  }
+  .m-row.warn {
+    color: #b91c1c;
+    font-weight: 600;
+  }
+  .m-row.warn .m-tick {
+    border: 0;
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  .m-alert {
+    display: grid;
+    gap: 0.1em;
+    background: #ecfdf5;
+  }
+  .m-alert small,
+  .m-big small {
+    color: var(--sub);
+    font-size: 0.85em;
+  }
+  .m-big {
+    display: grid;
+    gap: 0.3em;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .m-big b {
+    font-size: 1.6em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .m-spark {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25em;
+    height: 2.4em;
+  }
+  .m-spark i {
+    flex: 1;
+    border-radius: 0.2em 0.2em 0 0;
+    background: #fcd9a8;
+  }
+  .m-spark i:last-child {
+    background: var(--a);
+  }
+  .m-spark .h30 { height: 30%; }
+  .m-spark .h45 { height: 45%; }
+  .m-spark .h38 { height: 38%; }
+  .m-spark .h55 { height: 55%; }
+  .m-spark .h50 { height: 50%; }
+  .m-spark .h68 { height: 68%; }
+  .m-spark .h74 { height: 74%; }
+
+  /* social ad in a feed */
+  .mapp--ad {
+    gap: 0.5em;
+    padding-inline: 0;
+  }
+  .m-post {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-inline: 0.8em;
+  }
+  .m-post .ad-av {
+    width: 2em;
+    height: 2em;
+  }
+  .m-who {
+    display: grid;
+    flex: 1;
+    line-height: 1.15;
+  }
+  .m-who b {
+    font-size: 0.85em;
+  }
+  .m-who small {
+    color: var(--sub);
+    font-size: 0.7em;
+  }
+  .m-more {
+    color: var(--sub);
+  }
+  .m-adimg {
+    display: block;
+    aspect-ratio: 1;
+  }
+  .m-adimg :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .m-cta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -0.5em;
+    padding: 0.6em 0.8em;
+    background: #3446a8;
+    color: #fff;
+    font-size: 0.82em;
+    font-weight: 650;
+  }
+  .m-cta i {
+    font-style: normal;
+  }
+  .m-icons {
+    display: flex;
+    gap: 0.7em;
+    padding-inline: 0.8em;
+  }
+  .m-icons i {
+    width: 1.1em;
+    height: 1.1em;
+    border: 2px solid #0f172a;
+    border-radius: 50%;
+  }
+  .m-icons i:nth-child(2) {
+    border-radius: 0.3em 0.3em 0.3em 0;
+  }
+  .m-icons i:nth-child(3) {
+    border-radius: 0.15em;
+    transform: rotate(45deg) scale(0.85);
+  }
+  .m-cap {
+    padding-inline: 0.8em;
+    font-size: 0.78em;
+    color: #334155;
+  }
+
+  /* chat */
+  .mapp--chat {
+    grid-template-rows: auto 1fr auto;
+    gap: 0;
+    padding: 0;
+    background: #efe7dd;
+  }
+  .m-chat-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.7em 0.8em;
+    background: #0f6b4f;
+    color: #fff;
+  }
+  .m-chat-top .m-who small {
+    color: rgb(255 255 255 / 0.75);
+  }
+  .m-thread {
+    display: grid;
+    align-content: start;
+    gap: 0.5em;
+    padding: 0.8em 0.7em;
+  }
+  .m-bub {
+    max-width: 82%;
+    padding: 0.5em 0.7em;
+    border-radius: 0.8em;
+    font-size: 0.8em;
+    line-height: 1.35;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+  }
+  .m-bub.in {
+    justify-self: start;
+    background: #fff;
+    border-end-start-radius: 0.2em;
+  }
+  .m-bub.out {
+    justify-self: end;
+    background: #d9fdd3;
+    border-end-end-radius: 0.2em;
+  }
+  .m-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5em 0.6em 0.8em;
+  }
+  .m-input span {
+    flex: 1;
+    padding: 0.5em 0.8em;
+    border-radius: 99px;
+    background: #fff;
+    color: #94a3b8;
+    font-size: 0.8em;
+  }
+  .m-input i {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+
+  /* two-step sign-in */
+  .mapp--auth {
+    justify-items: stretch;
+  }
+  .m-shield {
+    justify-self: center;
+    display: grid;
+    place-items: center;
+    width: 3.6em;
+    height: 3.6em;
+    margin-top: 1em;
+    border-radius: 50%;
+    background: var(--a-soft);
+  }
+  .m-shield svg {
+    width: 2em;
+    fill: var(--a);
+  }
+  .m-shield .tick {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .m-code {
+    justify-self: center;
+    margin-top: 0.4em;
+    padding: 0.2em 0.8em;
+    border-radius: 0.5em;
+    background: var(--soft);
+    font-size: 2.2em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .m-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5em;
+    margin-top: 0.6em;
   }
 
   /* ---------- website (legacy styles) ---------- */

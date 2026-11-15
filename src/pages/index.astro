@@ -67,12 +67,13 @@ const t = {
 
 // Three work sections shown on the home page; everything else is on /work/.
 const homeWork = [
-  { ...t.homeWork[0], slug: 'clinic-automation', href: l('/work/#ai-it') },
-  { ...t.homeWork[1], slug: 'hr-onboarding', href: l('/work/#hr-operations') },
-  { ...t.homeWork[2], slug: 'hospitality-website', href: l('/work/#websites') },
+  { ...t.homeWork[0], slugs: ['clinic-automation'], href: l('/work/#ai-it') },
+  { ...t.homeWork[1], slugs: ['hr-onboarding'], href: l('/work/#hr-operations') },
+  // Websites shows both live website demos: hospitality and property.
+  { ...t.homeWork[2], slugs: ['hospitality-website', 'realestate-growth'], href: l('/work/#websites') },
 ]
-  .map((w) => ({ ...w, project: projects.find((p) => p.slug === w.slug) }))
-  .filter((w) => w.project);
+  .map((w) => ({ ...w, items: w.slugs.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean) }))
+  .filter((w) => w.items.length);
 ---
 
 <Base darkTop seoTitle={t.seoTitle} description={t.seoDescription}>
@@ -114,7 +115,9 @@ const homeWork = [
                   {w.more} <span class="arrow" aria-hidden="true">→</span>
                 </a>
               </div>
-              <ProjectShowcase project={w.project!} index={i} />
+              {w.items.map((project, j) => (
+                <ProjectShowcase project={project} index={i + j} />
+              ))}
             </div>
           ))
         }
