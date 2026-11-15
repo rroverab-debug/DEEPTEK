@@ -5,7 +5,7 @@
 // motion.ts sets --max (how far the page can scroll) so CSS can auto-scroll
 // it like a live site; without that, or with reduced motion, it stays at the top.
 import type { Lang } from '../i18n';
-import { heroPhoto, dishPhoto, villaPhoto, interiorPhoto } from './scene-art';
+import { heroPhoto, dishPhoto, interiorPhoto } from './scene-art';
 
 interface Props {
   kind: 'property' | 'restaurant';
@@ -33,7 +33,7 @@ const copy = {
         ['4', 'bedrooms'],
         ['15', 'minutes to the city'],
       ],
-      gal: ['Finished and ready to move in', 'Private pool and garden'],
+      gal: ['Finished and ready to move in', 'Landscaped private gardens'],
       formK: 'Contact',
       formT: 'Leave your details and we will arrange a private viewing or a live video tour. We reply the same day.',
       fields: ['Name', 'Phone', 'Email'],
@@ -56,7 +56,7 @@ const copy = {
         ['4', 'غرف نوم'],
         ['15', 'دقيقة إلى المدينة'],
       ],
-      gal: ['مكتملة وجاهزة للسكن', 'مسبح وحديقة خاصة'],
+      gal: ['مكتملة وجاهزة للسكن', 'حدائق خاصة منسّقة'],
       formK: 'تواصل',
       formT: 'اترك بياناتك وسنرتب لك معاينة خاصة أو جولة فيديو مباشرة. نرد في اليوم نفسه.',
       fields: ['الاسم', 'الهاتف', 'البريد'],
@@ -122,13 +122,23 @@ const copy = {
   },
 };
 const c = copy[kind][lang] as (typeof copy)['restaurant']['en'] & (typeof copy)['property']['en'];
-const hero = kind === 'property' ? villaPhoto() : heroPhoto;
-const formImg = kind === 'property' ? villaPhoto('40 20 100 56') : heroPhoto;
+const property = kind === 'property';
+// The villa picture is a generated concept image for this fictional demo,
+// supplied by the owner. It is decorative, so it has an empty alt.
+const villa = mobile
+  ? { src: '/demo/wadi-villas-640.webp' }
+  : {
+      src: '/demo/wadi-villas-1280.webp',
+      srcset: '/demo/wadi-villas-640.webp 640w, /demo/wadi-villas-1280.webp 1280w',
+      sizes: '(min-width: 56rem) 50vw, 90vw',
+    };
 ---
 
 <div class:list={['lp', `lp--${kind}`, { 'lp--m': mobile }]} data-live-page>
   <header class="lp-hero">
-    <span class="lp-img"><Fragment set:html={hero} /></span>
+    <span class="lp-img">
+      {property ? <img class="lp-photo" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" /> : <Fragment set:html={heroPhoto} />}
+    </span>
     <span class="lp-veil"></span>
     <nav class="lp-nav">
       <span class="lp-logo">
@@ -189,7 +199,7 @@ const formImg = kind === 'property' ? villaPhoto('40 20 100 56') : heroPhoto;
           <span class="lp-cap">{c.gal[0]}</span>
         </span>
         <span class="lp-shot">
-          <Fragment set:html={villaPhoto('20 46 100 44')} />
+          <img class="lp-photo lp-photo--garden" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" />
           <span class="lp-cap">{c.gal[1]}</span>
         </span>
       </section>
@@ -214,7 +224,9 @@ const formImg = kind === 'property' ? villaPhoto('40 20 100 56') : heroPhoto;
   }
 
   <section class="lp-form">
-    <span class="lp-img"><Fragment set:html={formImg} /></span>
+    <span class="lp-img">
+      {property ? <img class="lp-photo lp-photo--door" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" /> : <Fragment set:html={heroPhoto} />}
+    </span>
     <span class="lp-card">
       <span class="lp-k">{c.formK}</span>
       <span class="lp-ft">{c.formT}</span>
@@ -303,6 +315,24 @@ const formImg = kind === 'property' ? villaPhoto('40 20 100 56') : heroPhoto;
   .lp--m .lp-hero {
     min-height: 30em;
     padding: 1em 1.1em 1.6em;
+  }
+  .lp-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 62% 50%;
+  }
+  .lp--m .lp-photo {
+    object-position: 72% 50%;
+  }
+  .lp-shot .lp-photo--garden {
+    position: absolute;
+    inset: 0;
+    object-position: 18% 60%;
+  }
+  .lp-photo--door {
+    object-position: 80% 70%;
   }
   .lp-img {
     position: absolute;
