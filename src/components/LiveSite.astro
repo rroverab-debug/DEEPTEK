@@ -5,7 +5,6 @@
 // motion.ts sets --max (how far the page can scroll) so CSS can auto-scroll
 // it like a live site; without that, or with reduced motion, it stays at the top.
 import type { Lang } from '../i18n';
-import { heroPhoto, dishPhoto } from './scene-art';
 
 interface Props {
   kind: 'property' | 'restaurant';
@@ -70,14 +69,17 @@ const copy = {
   restaurant: {
     en: {
       brand: 'Al Noor',
-      links: ['Menu', 'Branches', 'Catering'],
+      brand2: ['Al Noor', 'Kitchen'],
+      links: ['Home', 'Menu', 'About', 'Gallery', 'Contact'],
       pill: 'Book',
-      h: 'Slow-cooked flavours, served fresh',
-      sub: 'Arabic and Mediterranean kitchen. Open daily, 12pm to midnight.',
+      h: 'Authentic Arabic flavours,',
+      h2: 'served fresh',
+      sub: 'Traditional recipes, quality ingredients and a warm dining experience.',
       cta: 'Book a table',
+      services: ['Dine in', 'Takeaway', 'Delivery'],
       aboutK: 'Our kitchen',
       about:
-        'Rice cooked the slow way, bread from the oven every hour and family recipes we have kept for years. Come hungry, stay for tea.',
+        'Kunafa baked to order, coffee poured from the dallah and family recipes we have kept for years. Come hungry, stay for coffee.',
       numK: 'At a glance',
       numH: 'Three branches, one family recipe book.',
       stats: [
@@ -86,11 +88,11 @@ const copy = {
         ['12', 'hours open daily'],
       ],
       dishes: [
-        ['Chicken machboos', 'AED 48', 'rice'],
-        ['Hummus and bread', 'AED 28', 'mezze'],
-        ['Kunafa', 'AED 26', 'sweet'],
+        ['Kunafa with pistachio', 'AED 26', 'kunafa'],
+        ['Arabic coffee', 'AED 14', 'coffee'],
+        ['Medjool dates', 'AED 18', 'dates'],
       ],
-      menuK: 'Signature dishes',
+      menuK: 'Our signature dishes',
       formK: 'Reservations',
       formT: 'Tell us when you are coming and we will hold your table. We confirm on WhatsApp within minutes.',
       fields: ['Date', 'Guests', 'Phone'],
@@ -98,13 +100,16 @@ const copy = {
     },
     ar: {
       brand: 'النور',
-      links: ['المنيو', 'الفروع', 'الضيافة'],
+      brand2: ['مطبخ', 'النور'],
+      links: ['الرئيسية', 'المنيو', 'من نحن', 'المعرض', 'تواصل'],
       pill: 'احجز',
-      h: 'نكهات مطهوّة على مهل، تُقدَّم طازجة',
-      sub: 'مطبخ عربي ومتوسطي. مفتوح يوميًا من 12 ظهرًا حتى منتصف الليل.',
+      h: 'نكهات عربية أصيلة،',
+      h2: 'تُقدَّم طازجة',
+      sub: 'وصفات تقليدية ومكونات عالية الجودة وتجربة ضيافة دافئة.',
       cta: 'احجز طاولة',
+      services: ['داخل المطعم', 'سفري', 'توصيل'],
       aboutK: 'مطبخنا',
-      about: 'أرز مطهو على مهل، وخبز يخرج من الفرن كل ساعة، ووصفات عائلية نحافظ عليها منذ سنوات. تعال جائعًا وابقَ لشرب الشاي.',
+      about: 'كنافة تُخبز عند الطلب، وقهوة تُصب من الدلة، ووصفات عائلية نحافظ عليها منذ سنوات. تعال جائعًا وابقَ لشرب القهوة.',
       numK: 'لمحة سريعة',
       numH: 'ثلاثة فروع، ودفتر وصفات عائلي واحد.',
       stats: [
@@ -113,9 +118,9 @@ const copy = {
         ['12', 'ساعة عمل يوميًا'],
       ],
       dishes: [
-        ['مجبوس دجاج', '48 د.إ', 'rice'],
-        ['حمص وخبز', '28 د.إ', 'mezze'],
-        ['كنافة', '26 د.إ', 'sweet'],
+        ['كنافة بالفستق', '26 د.إ', 'kunafa'],
+        ['قهوة عربية', '14 د.إ', 'coffee'],
+        ['تمر مجدول', '18 د.إ', 'dates'],
       ],
       menuK: 'أطباقنا المميزة',
       formK: 'الحجوزات',
@@ -127,6 +132,12 @@ const copy = {
 };
 const c = copy[kind][lang] as (typeof copy)['restaurant']['en'] & (typeof copy)['property']['en'];
 const property = kind === 'property';
+// Dine in, takeaway and delivery icons for the restaurant demo.
+const icons = [
+  'M3 17h18M5 17a7 7 0 0 1 14 0M12 7V5.5M10.5 5.5h3M2.5 19.5h19',
+  'M6 8h12l1 12H5zM9 8V6.5a3 3 0 0 1 6 0V8',
+  'M5 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM16 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0zM9 17h7M4 15v-3h5l2 3M13 8h3l3 7M11 15l2-7M3 9h4',
+];
 // The villa picture is a generated concept image for this fictional demo,
 // supplied by the owner. It is decorative, so it has an empty alt.
 const villa = mobile
@@ -138,42 +149,121 @@ const villa = mobile
     };
 ---
 
-<div class:list={['lp', `lp--${kind}`, { 'lp--m': mobile }]} data-live-page>
-  <header class="lp-hero">
-    <span class="lp-img">
-      {property ? <img class="lp-photo" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" /> : <Fragment set:html={heroPhoto} />}
-    </span>
-    <span class="lp-veil"></span>
-    <nav class="lp-nav">
-      <span class="lp-logo">
-        <span class="lp-mark"></span>
-        {c.brand}
-      </span>
-      {
-        mobile ? (
-          <span class="lp-burger">
+<div class:list={['lp', `lp--${kind}`, { 'lp--m': mobile }]} dir={lang === 'ar' ? 'rtl' : 'ltr'} data-live-page>
+  {
+    property ? (
+      <header class="lp-hero">
+        <span class="lp-img">
+          <img class="lp-photo" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+        </span>
+        <span class="lp-veil"></span>
+        <nav class="lp-nav">
+          <span class="lp-logo">
+            <span class="lp-mark"></span>
+            {c.brand}
+          </span>
+          {
+            mobile ? (
+              <span class="lp-burger">
+                <i />
+                <i />
+              </span>
+            ) : (
+              <span class="lp-links">
+                {c.links.map((l) => (
+                  <span>{l}</span>
+                ))}
+                <span class="lp-pill">{c.pill}</span>
+              </span>
+            )
+          }
+        </nav>
+        <div class="lp-hero-t">
+          <span class="lp-h1">{c.h}</span>
+          <span class="lp-sub">{c.sub}</span>
+          <span class="lp-btn">
+            {c.cta}
+            <i>→</i>
+          </span>
+        </div>
+      </header>
+    ) : (
+      <>
+      <nav class="rn">
+        <span class="rn-brand">
+          {c.brand2[0]}
+          <br />
+          {c.brand2[1]}
+        </span>
+        {mobile ? (
+          <span class="rn-burger">
+            <i />
             <i />
             <i />
           </span>
         ) : (
-          <span class="lp-links">
-            {c.links.map((l) => (
-              <span>{l}</span>
-            ))}
-            <span class="lp-pill">{c.pill}</span>
+          <>
+            <span class="rn-links">
+              {c.links.map((l, i) => (
+                <span class:list={{ on: i === 0 }}>{l}</span>
+              ))}
+            </span>
+            <span class="rn-cta">{c.cta}</span>
+          </>
+        )}
+      </nav>
+      <header class="rh">
+        <img class="rh-img" src="/demo/alnoor-hero.webp" alt="" width="666" height="535" loading="lazy" decoding="async" />
+        <span class="rh-fade" />
+        <div class="rh-t">
+          <span class="rh-h">
+            {c.h}
+            <em>{c.h2}</em>
           </span>
-        )
-      }
-    </nav>
-    <div class="lp-hero-t">
-      <span class="lp-h1">{c.h}</span>
-      <span class="lp-sub">{c.sub}</span>
-      <span class="lp-btn">
-        {c.cta}
-        <i>→</i>
-      </span>
-    </div>
-  </header>
+          <span class="rh-rule" />
+          <span class="rh-sub">{c.sub}</span>
+          <span class="rh-btn">
+            {c.cta}
+            <i>→</i>
+          </span>
+          <span class="rh-dots">
+            <i />
+            <i />
+            <i />
+          </span>
+        </div>
+      </header>
+      <section class="rs">
+        <span class="rs-items">
+          {c.services.map((sv, i) => (
+            <span>
+              <svg viewBox="0 0 24 24">
+                <path d={icons[i]} />
+              </svg>
+              {sv}
+            </span>
+          ))}
+        </span>
+        <span class="rs-h">{c.menuK}</span>
+      </section>
+      <section class="lp-menu">
+        <span class="lp-dishes">
+          {c.dishes.map(([n, p, k]) => (
+            <span class="lp-dish">
+              <span class="lp-dish-img">
+                <img class="lp-photo lp-fill" src={`/demo/alnoor-${k}.webp`} alt="" width="450" height="262" loading="lazy" decoding="async" />
+              </span>
+              <span class="lp-dish-t">
+                <b>{n}</b>
+                <i>{p}</i>
+              </span>
+            </span>
+          ))}
+        </span>
+      </section>
+      </>
+    )
+  }
 
   <section class="lp-about">
     <span class="lp-k">{c.aboutK}</span>
@@ -196,7 +286,7 @@ const villa = mobile
   </section>
 
   {
-    kind === 'property' ? (
+    property ? (
       <section class="lp-gal">
         <span class="lp-shot lp-shot--living">
           <img class="lp-photo lp-fill" src="/demo/wadi-living.webp" alt="" width="610" height="424" loading="lazy" decoding="async" />
@@ -216,29 +306,16 @@ const villa = mobile
           </span>
         )}
       </section>
-    ) : (
-      <section class="lp-menu">
-        <span class="lp-k">{c.menuK}</span>
-        <span class="lp-dishes">
-          {c.dishes.map(([n, p, k]) => (
-            <span class="lp-dish">
-              <span class="lp-dish-img">
-                <Fragment set:html={dishPhoto(k)} />
-              </span>
-              <span class="lp-dish-t">
-                <b>{n}</b>
-                <i>{p}</i>
-              </span>
-            </span>
-          ))}
-        </span>
-      </section>
-    )
+    ) : null
   }
 
   <section class="lp-form">
     <span class="lp-img">
-      {property ? <img class="lp-photo lp-photo--door" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" /> : <Fragment set:html={heroPhoto} />}
+      {property ? (
+        <img class="lp-photo lp-photo--door" {...villa} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+      ) : (
+        <img class="lp-photo" src="/demo/alnoor-hero.webp" alt="" width="666" height="535" loading="lazy" decoding="async" />
+      )}
     </span>
     <span class="lp-card">
       <span class="lp-k">{c.formK}</span>
@@ -713,5 +790,262 @@ const villa = mobile
   }
   .lp--m .lp-foot {
     padding: 1.2em 1.1em;
+  }
+
+  /* ---------- restaurant demo: green and gold, serif headings ---------- */
+  .lp--restaurant {
+    --lp-acc: #d9a441;
+    --r-green: #0f2a22;
+    --r-gold: #d9a441;
+    --r-cream: #fbf1e3;
+    background: var(--r-cream);
+    color: #1f1a14;
+  }
+  .rn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5em;
+    padding: 0.9em 2.4em;
+    background: var(--r-green);
+    color: #fff;
+  }
+  .lp--m .rn {
+    padding: 0.8em 1.1em;
+  }
+  .rn-brand {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.25em;
+    line-height: 1;
+  }
+  [lang='ar'] .rn-brand {
+    font-family: inherit;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  .rn-links {
+    display: flex;
+    gap: 2em;
+    font-size: 0.85em;
+  }
+  .rn-links .on {
+    color: var(--r-gold);
+  }
+  .rn-cta,
+  .rh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.6em 1.3em;
+    border-radius: 99px;
+    background: var(--r-gold);
+    color: #1f1a14;
+    font-size: 0.85em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .rh-btn i {
+    font-style: normal;
+  }
+  [dir='rtl'] .rh-btn i {
+    transform: scaleX(-1);
+  }
+  .rn-burger {
+    display: grid;
+    gap: 0.28em;
+  }
+  .rn-burger i {
+    width: 1.3em;
+    height: 0.12em;
+    background: #fff;
+  }
+  .rh {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 27em;
+    padding: 2em 2.4em;
+    background: #1a110a;
+    color: #fff;
+    overflow: hidden;
+  }
+  .rh-img {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: 64%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% 50%;
+  }
+  [dir='rtl'] .rh-img {
+    transform: scaleX(-1);
+  }
+  .rh-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #1a110a 0%, #1a110a 36%, rgb(26 17 10 / 0.75) 48%, rgb(26 17 10 / 0) 68%);
+  }
+  [dir='rtl'] .rh-fade {
+    background: linear-gradient(270deg, #1a110a 0%, #1a110a 36%, rgb(26 17 10 / 0.75) 48%, rgb(26 17 10 / 0) 68%);
+  }
+  .rh-t {
+    position: relative;
+    display: grid;
+    gap: 1em;
+    justify-items: start;
+    max-width: 24em;
+  }
+  .rh-h {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.9em;
+    line-height: 1.05;
+  }
+  .rh-h em {
+    display: block;
+    color: var(--r-gold);
+    font-style: normal;
+  }
+  [lang='ar'] .rh-h {
+    font-family: inherit;
+    font-size: 2.4em;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  .rh-rule {
+    width: 2.6em;
+    height: 0.14em;
+    background: var(--r-gold);
+  }
+  .rh-sub {
+    max-width: 21em;
+    color: rgb(255 255 255 / 0.9);
+    font-size: 0.92em;
+  }
+  .rh-dots {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 0.8em;
+  }
+  .rh-dots i {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.35);
+  }
+  .rh-dots i:first-child {
+    background: var(--r-gold);
+  }
+  .lp--m .rh {
+    align-items: start;
+    min-height: 31em;
+    padding: 1.6em 1.1em;
+  }
+  .lp--m .rh-img {
+    inset-block: auto 0;
+    width: 100%;
+    height: 58%;
+    object-position: 70% 60%;
+  }
+  .lp--m .rh-fade,
+  [dir='rtl'] .lp--m .rh-fade {
+    background: linear-gradient(180deg, #1a110a 0%, #1a110a 40%, rgb(26 17 10 / 0.7) 52%, rgb(26 17 10 / 0) 70%);
+  }
+  .lp--m .rh-h {
+    font-size: 2em;
+  }
+  .lp--m .rh-dots {
+    display: none;
+  }
+  .rs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 2em;
+    padding: 1.8em 2.4em 0.6em;
+  }
+  .lp--m .rs {
+    grid-template-columns: 1fr;
+    gap: 1.4em;
+    padding: 1.4em 1.1em 0.2em;
+  }
+  .rs-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+    font-size: 0.85em;
+  }
+  .rs-items > span {
+    display: grid;
+    justify-items: center;
+    gap: 0.5em;
+    border-inline-start: 1px solid #e6d8c2;
+  }
+  .rs-items > span:first-child {
+    border: 0;
+  }
+  .rs-items svg {
+    width: 2.2em;
+    height: 2.2em;
+    fill: none;
+    stroke: #b8862c;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .rs-h {
+    justify-self: center;
+    padding-bottom: 0.5em;
+    border-bottom: 0.12em solid var(--r-gold);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.7em;
+  }
+  [lang='ar'] .rs-h {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1.5em;
+  }
+  .lp--restaurant .lp-menu {
+    padding-top: 1.6em;
+  }
+  .lp--restaurant .lp-dish-img {
+    position: relative;
+  }
+  .lp--restaurant .lp-dish-t i {
+    color: #9a6b12;
+  }
+  .lp--restaurant .lp-big,
+  .lp--restaurant .lp-h2,
+  .lp--restaurant .lp-stats b {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+  }
+  [lang='ar'] .lp--restaurant .lp-big,
+  [lang='ar'] .lp--restaurant .lp-h2 {
+    font-family: inherit;
+  }
+  .lp--restaurant .lp-num {
+    background: var(--r-green);
+    color: #fff;
+  }
+  .lp--restaurant .lp-num .lp-k,
+  .lp--restaurant .lp-num small {
+    color: rgb(255 255 255 / 0.7);
+  }
+  .lp--restaurant .lp-stats b {
+    color: var(--r-gold);
+  }
+  .lp--restaurant .lp-btn {
+    border-radius: 99px;
+    background: var(--r-green);
+  }
+  .lp--restaurant .lp-btn i {
+    border-radius: 50%;
+    background: var(--r-gold);
+    color: #1f1a14;
+  }
+  .lp--restaurant .lp-foot {
+    background: var(--r-green);
+    color: rgb(255 255 255 / 0.7);
   }
 </style>
